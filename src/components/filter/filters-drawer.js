@@ -13,7 +13,7 @@ export const FiltersDrawer = ({ open, onClose }) => {
         left: 0,
         top: 0,
         bottom: 0,
-        borderRight: '1px solid #999',
+        borderRight: '1px solid var(--joy-palette-divider)',
         width: '360px',
         transform: open ?
           'translate3d(0, 0, 0)' :

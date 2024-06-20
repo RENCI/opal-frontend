@@ -1,8 +1,9 @@
-# PFAS Dashboard
+# OPAL
+Observational PFAS Access paneL
 
 ## 🚧 Development
 
-This is a React app developed with Node 20.11.1.
+This is a React app developed and deployed with Node 20.11.1.
 
 ### Environment Variables
 
