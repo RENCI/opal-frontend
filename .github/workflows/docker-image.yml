@@ -1,0 +1,52 @@
+# Copyright (c) 2024, The University of North Carolina at Chapel Hill All rights reserved.
+# SPDX-FileCopyrightText: 2022 Renaissance Computing Institute. All rights reserved.
+#
+# SPDX-License-Identifier: BSD 3-Clause
+
+name: Build and push the PFAS Dashboard UI Docker image tagged with "latest" and version number
+
+# trigger event is publishing a release in the repo
+on:
+  release:
+    types: [published]
+
+# working parameters that are specific to this script
+env:
+  REGISTRY: mvvatson/pfas-dashboard
+
+# job definition
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    # job steps
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Get the version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+      -
+        name: Create .env file
+        run: echo "API_HOST=${{ secrets.ENV_FILE }}" > .env
+      -
+        name: Build/Push the image to the registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          build-args: |
+            APP_VERSION=${{ steps.get_version.outputs.VERSION }}
+          tags: |
+            ${{ env.REGISTRY }}:latest
+            ${{ env.REGISTRY }}:${{ steps.get_version.outputs.VERSION }}

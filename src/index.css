@@ -1,0 +1,30 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+  font-weight: 300;
+  font-size: 13pt;
+}
+
+#root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 100vh;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+main {
+  min-width: 100vw;
+  margin: auto;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
