@@ -24,7 +24,7 @@ export const ChartView = () => {
         </Typography>
       </Toolbar>
 
-      <Grid container spacing={ 2 } sx={{ pr: 2 }}>
+      <Grid container sx={{ pr: 2, mb: 2, gridGap: 24 }}>
         <Grid xs={ 12 } sm={ 12 } md={ 12 } lg={ 11 } xl={ 6 }>
           <ChartCard title="Detection Counts">
             <ChemicalDetectionPieChart data={ table.getPrePaginationRowModel().rows } />
