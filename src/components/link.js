@@ -6,6 +6,9 @@ import { NavLink as ReactNavLink } from 'react-router-dom'
 //
 
 export const ExternalLink = ({ to, children }) => {
+  // assume no icon on non-string children
+  const noIcon = typeof children !== 'string'
+
   return (
     <Fragment>
       <a
@@ -13,7 +16,7 @@ export const ExternalLink = ({ to, children }) => {
         target="_blank"
         rel="noopener noreferrer"
       >{ children }</a>
-      <ExternalLinkIcon />
+      { noIcon ? null : <ExternalLinkIcon /> }
     </Fragment>
   )
 }

@@ -28,3 +28,10 @@ main {
   display: flex;
   flex-direction: column;
 }
+
+a {
+  color: var(--joy-palette-primary-main);
+  &:hover {
+    color: var(--joy-palette-primary-dark);
+  }
+}

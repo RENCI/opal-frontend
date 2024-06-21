@@ -1,9 +1,16 @@
 import { useMemo } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import {
+  Routes,
+  Route,
+} from 'react-router-dom'
 import { Sheet } from '@mui/joy'
 import { AuthMenu } from '@components/auth'
-import { DataProvider, PreferencesProvider } from '@context'
 import {
+  DataProvider,
+  PreferencesProvider,
+} from '@context'
+import {
+  DashboardFooter,
   DashboardHeader,
   DashboardMenu,
 } from '@components/layout'
@@ -65,6 +72,7 @@ export const DashboardView = () => {
             onClose={ filtersDrawer.unset }
           />
         </Sheet>
+        <DashboardFooter />
       </DataProvider>
     </PreferencesProvider>
   )
