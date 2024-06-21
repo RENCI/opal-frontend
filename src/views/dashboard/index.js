@@ -57,7 +57,7 @@ export const DashboardView = () => {
           overflow: 'auto',
           position: 'relative',
           px: 2,
-          pt: 8,
+          pt: 6,
         }}>
           <Routes>
             <Route index element={ <TableView /> } />

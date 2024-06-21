@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import {
   CircularProgress,
-  Divider,
   Stack,
   Typography,
 } from '@mui/joy'
+import { Toolbar } from '@components/layout'
 import { useData } from '@context'
 
 import {
@@ -63,24 +63,13 @@ export const NonTargetedView = () => {
     </Typography>
   )
 
-  const Toolbar = useCallback(() => (
-    <Stack
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="center"
-      gap={ 2 }
-      divider={ <Divider orientation="vertical" /> }
-      sx={{
-        position: 'sticky',
-        left: 0,
-        display: 'inline-flex',
-      }}
-    >
+  const TableToolbar = useCallback(() => (
+    <Toolbar>
       <RowsCount />
       <Pagination table={ table } />
       <ColumnSelect table={ table } />
       <TableCsvExportButton table={ table } />
-    </Stack>
+    </Toolbar>
   ))
 
   if (ntarData.isPending || ntarData.isLoading) {
@@ -96,15 +85,15 @@ export const NonTargetedView = () => {
   }
 
   return (
-    <Stack direction="column" gap={ 2 }>
-      <Toolbar />
+    <Stack>
+      <TableToolbar />
       
       <DataTable
         table={ table }
         sx={{ '.filter': { display: 'none' } }}
       />
 
-      <Toolbar />
+      <TableToolbar />
     </Stack>
   )
 }

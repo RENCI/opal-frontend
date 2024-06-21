@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/joy'
 import { Close as CloseIcon } from '@mui/icons-material'
+import { Toolbar } from '@components/layout'
 import { useData } from '@context'
 import {
   AnalyteCorrelationGrid,
@@ -22,6 +23,8 @@ import { CsvExportButton } from '@components/csv-export-button'
 import { Latex } from '@components/latex'
 import { pearsonsR, spearmanRankCorrelation } from '@util'
 import { PngDownloadButton } from '@components/dashboard'
+
+//
 
 const CompareContext = createContext({ })
 export const useCompare = () => useContext(CompareContext)
@@ -155,23 +158,16 @@ export const CompareView = () => {
       <Stack
         justifyContent="flex-start"
         alignItems="stretch"
-        gap={ 2 }
         sx={{ flex: 1 }}
       >
-        <Stack
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
-          gap={ 2 }
-          divider={ <Divider orientation="vertical" /> }
-          sx={{ display: 'inline-flex' }}
-        >
+        <Toolbar>
           <Typography level="body-md" sx={{ whiteSpace: 'nowrap' }}>
             { table.getPrePaginationRowModel().rows.length } samples
           </Typography>
           <CorrelationCoefficientSelect />
           <AnalyteSelect />
-        </Stack>
+        </Toolbar>
+
         <Card variant="soft">
           <Typography level="h3" component="h1">Correlation Matrix</Typography>
 
