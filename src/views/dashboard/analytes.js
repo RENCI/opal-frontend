@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { analyteColumns } from '@components/table'
+import { analyteColumns } from '@data'
 
 export const AnalytesView = () => {
   const { analytesData } = useData();

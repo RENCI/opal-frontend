@@ -38,7 +38,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { podmColumns } from '@components/table'
+import { podmColumns } from '@data'
 import {
   fetchAnalytes,
   fetchNonTargetedSampleData,

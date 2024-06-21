@@ -15,12 +15,12 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+import { nonTargetedColumns } from '@data'
 import {
   ColumnSelect,
   DataTable,
   ExportButton,
   Pagination,
-  nonTargetedColumns,
 } from '@components/table'
 
 const relevantFilterKeys = [
