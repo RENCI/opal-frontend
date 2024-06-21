@@ -19,10 +19,9 @@ import {
   Distribution,
   Instructions,
 } from '@components/compare'
-import { CsvExportButton } from '@components/csv-export-button'
 import { Latex } from '@components/latex'
 import { pearsonsR, spearmanRankCorrelation } from '@util'
-import { PngDownloadButton } from '@components/dashboard'
+import { CsvExportButton, PngDownloadButton } from '@components/buttons'
 
 //
 

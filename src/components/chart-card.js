@@ -2,12 +2,11 @@ import { useRef } from 'react'
 import PropTypes from 'prop-types'
 import {
   Card,
-  CardActions,
   CardContent,
   Divider,
   Typography,
 } from '@mui/joy'
-import { PngDownloadButton } from './png-download-button'
+import { PngDownloadButton } from '@components/buttons'
 
 export const ChartCard = ({ children, title }) => {
   const containerRef = useRef(null)
@@ -18,6 +17,8 @@ export const ChartCard = ({ children, title }) => {
         component="h1"
         level="h3"
         color="primary"
+        justifyContent="space-between"
+        endDecorator={ <PngDownloadButton containerRef={ containerRef } /> }
       >{ title }</Typography>
 
       <Divider />
@@ -36,12 +37,6 @@ export const ChartCard = ({ children, title }) => {
           }
         }}
       >{ children }</CardContent>
-
-      <Divider />
-
-      <CardActions buttonFlex="0 1 120px" sx={{ justifyContent: 'flex-end' }}>
-        <PngDownloadButton containerRef={ containerRef } />
-      </CardActions>
     </Card>
   )
 }

@@ -18,7 +18,7 @@ import {
   DataTable,
   Pagination,
 } from '@components/table'
-import { TableCsvExportButton } from '@components/csv-export-button'
+import { TableCsvExportButton } from '@components/buttons'
 import { SampleBrowser } from '@components/browse'
 import {
   ClearFiltersButton,

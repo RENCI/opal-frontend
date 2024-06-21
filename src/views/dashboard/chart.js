@@ -9,7 +9,7 @@ import {
   ChemicalDetectionPieChart,
   ChemicalsByMediumRadarChart,
 } from '@components/charts'
-import { ChartCard } from '@components/dashboard'
+import { ChartCard } from '@components/chart-card'
 
 //
 

@@ -8,7 +8,7 @@ import { Toolbar } from '@components/layout'
 import {
   DataTable,
 } from '@components/table'
-import { TableCsvExportButton } from '@components/csv-export-button'
+import { TableCsvExportButton } from '@components/buttons'
 import {
   getCoreRowModel,
   getSortedRowModel,

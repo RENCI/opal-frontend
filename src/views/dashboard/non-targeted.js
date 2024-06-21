@@ -21,7 +21,7 @@ import {
   DataTable,
   Pagination,
 } from '@components/table'
-import { TableCsvExportButton } from '@components/csv-export-button'
+import { TableCsvExportButton } from '@components/buttons'
 
 const relevantFilterKeys = [
   'sample_id', 'study', 'pi', 'units', 'medium',
