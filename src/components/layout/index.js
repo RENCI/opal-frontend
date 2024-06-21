@@ -1,6 +1,5 @@
 export * from './content-page'
 export * from './footer'
-export * from './fullscreen-page'
 export * from './header'
 export * from './menu'
 export * from './toolbar'
