@@ -24,13 +24,13 @@ export const ChartView = () => {
         </Typography>
       </Toolbar>
 
-      <Grid container sx={{ pr: 2, mb: 2, gridGap: 24 }}>
-        <Grid xs={ 12 } sm={ 12 } md={ 12 } lg={ 11 } xl={ 6 }>
+      <Grid container sx={{ mb: 2, gridGap: 24 }}>
+        <Grid xs={ 12 } sm={ 11 } md={ 11 } lg={ 5.5 } xl={ 5.5 }>
           <ChartCard title="Detection Counts">
             <ChemicalDetectionPieChart data={ table.getPrePaginationRowModel().rows } />
           </ChartCard>
         </Grid>
-        <Grid xs={ 12 } sm={ 12 } md={ 12 } lg={ 11 } xl={ 6 }>
+        <Grid xs={ 12 } sm={ 11 } md={ 11 } lg={ 5.5 } xl={ 5.5 }>
           <ChartCard title="Detection Counts by Medium">
             <ChemicalsByMediumRadarChart data={ table.getPrePaginationRowModel().rows } />
           </ChartCard>
