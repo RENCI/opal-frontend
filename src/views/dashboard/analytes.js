@@ -1,20 +1,22 @@
 import { useCallback, useState } from 'react'
 import {
-  Divider,
   Stack,
   Typography,
 } from '@mui/joy'
 import { useData } from '@context'
+import { Toolbar } from '@components/layout'
 import {
   DataTable,
-  ExportButton,
 } from '@components/table'
+import { TableCsvExportButton } from '@components/buttons'
 import {
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { analyteColumns } from '@components/table'
+import { analyteColumns } from '@data'
+
+//
 
 export const AnalytesView = () => {
   const { analytesData } = useData();
@@ -41,24 +43,17 @@ export const AnalytesView = () => {
 
   return (
     <Stack direction="column">
-      <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="center"
-        gap={ 2 }
-        divider={ <Divider orientation="vertical" /> }
-        sx={{
-          position: 'sticky',
-          left: 0,
-          mb: 2,
-          display: 'inline-flex'
-        }}
-      >
+      <Toolbar>
         <AnalyteCount />
-        <ExportButton table={ analytesTable } />
-      </Stack>
+        <TableCsvExportButton table={ analytesTable } />
+      </Toolbar>
 
       <DataTable table={ analytesTable } />
+
+      <Toolbar>
+        <AnalyteCount />
+        <TableCsvExportButton table={ analytesTable } />
+      </Toolbar>
     </Stack>
   )
 }

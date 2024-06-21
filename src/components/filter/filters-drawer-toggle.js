@@ -14,6 +14,7 @@ export const FiltersDrawerToggle = ({ active = false, onClick }) => {
       variant="soft"
       color="primary"
       onClick={ onClick }
+      sx={{ borderRight: '1px solid var(--joy-palette-divider)' }}
       startDecorator={
         <DrawerIcon
           fontSize="lg"

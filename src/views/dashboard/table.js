@@ -2,7 +2,6 @@ import { Fragment, useCallback, useState } from 'react'
 import {
   Button,
   CircularProgress,
-  Divider,
   Modal,
   ModalClose,
   Stack,
@@ -12,17 +11,20 @@ import {
   MenuBook as BrowseIcon,
   FilterList as FilterIcon,
 } from '@mui/icons-material'
+import { Toolbar } from '@components/layout'
 import { useData } from '@context'
 import {
   ColumnSelect,
   DataTable,
-  ExportButton,
   Pagination,
 } from '@components/table'
+import { TableCsvExportButton } from '@components/buttons'
 import { SampleBrowser } from '@components/browse'
 import {
   ClearFiltersButton,
 } from '@components/filter'
+
+//
 
 export const TableView = () => {
   const { pfasData, podmTable } = useData()
@@ -64,26 +66,14 @@ export const TableView = () => {
 
   return (
     <Fragment>      
-      <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="center"
-        gap={ 2 }
-        divider={ <Divider orientation="vertical" /> }
-        sx={{
-          position: 'sticky',
-          left: 0,
-          mb: 2,
-          display: 'inline-flex'
-        }}
-      >
+      <Toolbar>
         <SampleCount />
         <Pagination table={ table } />
         <ColumnSelect table={ table } />
         <FilterControls />
-        <ExportButton table={ table } />
+        <TableCsvExportButton table={ table } />
         <TableBrowser />
-      </Stack>
+      </Toolbar>
 
       <DataTable
         table={ table }
@@ -96,15 +86,10 @@ export const TableView = () => {
         }}
       />
 
-      <Stack
-        direction="row"
-        py={ 2 }
-        gap={ 2 }
-        divider={ <Divider orientation="vertical" /> }
-      >
+      <Toolbar>
         <SampleCount />
         <Pagination table={ table } />
-      </Stack>
+      </Toolbar>
     </Fragment>
   )
 }

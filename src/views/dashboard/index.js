@@ -1,14 +1,21 @@
 import { useMemo } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import {
+  Routes,
+  Route,
+} from 'react-router-dom'
 import { Sheet } from '@mui/joy'
 import { AuthMenu } from '@components/auth'
-import { DataProvider, PreferencesProvider } from '@context'
+import {
+  DataProvider,
+  PreferencesProvider,
+} from '@context'
 import {
   DashboardHeader,
   DashboardMenu,
+  Footer,
 } from '@components/layout'
 import { useToggleState } from '@hooks'
-import { ChartView } from './chart'
+import { ChartsView } from './charts'
 import { AnalytesView } from './analytes'
 import { CompareView } from './compare'
 import { NonTargetedView } from './non-targeted'
@@ -50,12 +57,12 @@ export const DashboardView = () => {
           overflow: 'auto',
           position: 'relative',
           px: 2,
-          pt: 8,
+          pt: 6,
         }}>
           <Routes>
             <Route index element={ <TableView /> } />
             <Route path="analytes" element={ <AnalytesView /> } />
-            <Route path="charts" element={ <ChartView /> } />
+            <Route path="charts" element={ <ChartsView /> } />
             <Route path="compare" element={ <CompareView /> } />
             <Route path="non-targeted" element={ <NonTargetedView /> } />
             <Route path="*" element={ <NotFoundView /> } />
@@ -65,6 +72,7 @@ export const DashboardView = () => {
             onClose={ filtersDrawer.unset }
           />
         </Sheet>
+        <Footer />
       </DataProvider>
     </PreferencesProvider>
   )

@@ -3,6 +3,7 @@ import { Warning as WarningIcon } from '@mui/icons-material'
 import { ContentPage } from '@components/layout'
 import { LoginButton } from '@components/auth'
 import { useAuth } from '@context'
+import { Brand } from '@components/brand'
 
 export const LoginView = () => {
   const auth = useAuth()
@@ -16,9 +17,12 @@ export const LoginView = () => {
         alignItems: 'stretch',
         gap: 2,
         width: '100%',
+        pt: 3,
       }}
     >
-      <Card color="warning" variant="soft" sx={{ mt: 5, mx: 'auto' }}>
+      <Brand />
+      
+      <Card color="warning" variant="soft" sx={{ mt: 1, mx: 'auto' }}>
         <Stack direction="row" justifyContent="center" alignItems="center" gap={ 2 }>
           <WarningIcon color="warning" fontSize="large" />
           <Typography level="title-lg" color="warning">Authentication Required</Typography>
@@ -33,10 +37,10 @@ export const LoginView = () => {
           sx={{ py: 2, px: 3 }}
         >
           <Typography level="body-lg">
-            <em>Access to the PFAS Dashboard is restricted!</em>
+            <em>Access to OPAL is restricted!</em>
             <br />
             <br />
-            Please use the button below to identify yourself and gain access this application.
+            Please use the button below to identify yourself and gain access.
           </Typography>
 
           <Typography level="body-xs" fontStyle="italic">

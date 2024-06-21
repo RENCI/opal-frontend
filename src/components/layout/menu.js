@@ -8,8 +8,8 @@ import {
   Biotech as AnalytesIcon,
   Science as NonTargetedIcon,
   DonutSmall as ChartIcon,
-  Difference as CompareIcon,
-  TableRows as TableIcon,
+  SyncAlt as CompareIcon,
+  ViewList as TableIcon,
 } from '@mui/icons-material'
 import { usePreferences } from '@context'
 import { Link } from '@components/link'
@@ -31,7 +31,7 @@ export const DashboardMenu = () => {
       orientation="horizontal"
       color="primary"
       sx={{
-        '--List-gap': '8px',
+        '--List-gap': 0,
         '--List-flex': 1,
         justifyContent: 'flex-end',
         p: 0,

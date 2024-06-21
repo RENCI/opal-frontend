@@ -1,0 +1,42 @@
+import {
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/joy'
+import { Toolbar } from '@components/layout'
+import { useData } from '@context'
+import {
+  ChemicalDetectionPieChart,
+  ChemicalsByMediumRadarChart,
+} from '@components/charts'
+import { ChartCard } from '@components/chart-card'
+
+//
+
+export const ChartsView = () => {
+  const { podmTable: { table } } = useData()
+
+  return (
+    <Stack direction="column">
+      <Toolbar>
+        <Typography level="body-md" sx={{ whiteSpace: 'nowrap' }}>
+          { table.getPrePaginationRowModel().rows.length } samples
+        </Typography>
+      </Toolbar>
+
+      <Grid container sx={{ mb: 2, gridGap: 24 }}>
+        <Grid xs={ 12 } sm={ 11 } md={ 11 } lg={ 5.5 } xl={ 5.5 }>
+          <ChartCard title="Detection Counts">
+            <ChemicalDetectionPieChart data={ table.getPrePaginationRowModel().rows } />
+          </ChartCard>
+        </Grid>
+        <Grid xs={ 12 } sm={ 11 } md={ 11 } lg={ 5.5 } xl={ 5.5 }>
+          <ChartCard title="Detection Counts by Medium">
+            <ChemicalsByMediumRadarChart data={ table.getPrePaginationRowModel().rows } />
+          </ChartCard>
+        </Grid>
+      </Grid>
+    </Stack>
+  )
+}
+

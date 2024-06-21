@@ -11,7 +11,7 @@ const csvConfig = mkConfig({
 })
 
 export const ExportButton = ({ table }) => {
-  const handleClickDownload = () => {
+  const handleClick = () => {
     const visibleColumnIds = table.getVisibleLeafColumns().map(c => c.id)
 
     const rows = table.getFilteredRowModel().rows
@@ -32,7 +32,7 @@ export const ExportButton = ({ table }) => {
   return (
     <Tooltip title="Download data as CSV">
       <Button
-        onClick={ handleClickDownload }
+        onClick={ handleClick }
         size="sm"
         variant="outlined"
         color="neutral"
