@@ -27,8 +27,8 @@ Commands similar to the following should suffice to build an image
 and run an NGINX container that serves only the application bundle on port 80.
 
 ```bash
-docker build -t pfas-dashboard:1.0.4 . \
-docker run --rm -p 80:80 pfas-dashboard:1.0.4
+docker build -t opal:1.0.4 . \
+docker run --rm -p 80:80 opal:1.0.4
 ```
 
 ## 🚢 Deployment
@@ -66,5 +66,5 @@ docker run --rm -d \
   -p 80:80 -p 443:443
   -v <PATH_TO_CERT>:/ssl.cer
   -v <PATH_TO_KEY>:/ssl.key
-  --name pfas-ui pfas-dashboard:0.1.10
+  --name opal-ui mvvatson/opal:0.1.10
 ```
