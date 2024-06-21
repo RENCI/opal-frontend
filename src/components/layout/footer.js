@@ -36,11 +36,11 @@ export const Footer = () => {
       }}
     >
       <Stack
-        direction={{ xs: 'column', md: 'row' }}
-        gap={ 2 }
+        direction={{ xs: 'column', sm: 'row' }}
+        gap={ 1 }
         className="logo-list"
-        justifyContent={{ xs: 'center', md: 'space-between' }}
-        alignItems={{ xs: 'center', md: 'flex-end' }}
+        justifyContent={{ xs: 'center', sm: 'space-around' }}
+        alignItems={{ xs: 'center', sm: 'flex-end' }}
       >
         <Link to="https://ie.unc.edu/"><img
           src={ ieLogo }
