@@ -15,7 +15,7 @@ import {
   Footer,
 } from '@components/layout'
 import { useToggleState } from '@hooks'
-import { ChartView } from './chart'
+import { ChartsView } from './charts'
 import { AnalytesView } from './analytes'
 import { CompareView } from './compare'
 import { NonTargetedView } from './non-targeted'
@@ -62,7 +62,7 @@ export const DashboardView = () => {
           <Routes>
             <Route index element={ <TableView /> } />
             <Route path="analytes" element={ <AnalytesView /> } />
-            <Route path="charts" element={ <ChartView /> } />
+            <Route path="charts" element={ <ChartsView /> } />
             <Route path="compare" element={ <CompareView /> } />
             <Route path="non-targeted" element={ <NonTargetedView /> } />
             <Route path="*" element={ <NotFoundView /> } />

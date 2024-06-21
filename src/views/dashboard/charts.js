@@ -13,7 +13,7 @@ import { ChartCard } from '@components/chart-card'
 
 //
 
-export const ChartView = () => {
+export const ChartsView = () => {
   const { podmTable: { table } } = useData()
 
   return (
