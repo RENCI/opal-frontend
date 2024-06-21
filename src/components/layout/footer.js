@@ -13,7 +13,7 @@ import silsLogo from '@images/sils-logo.png'
 
 //
 
-export const DashboardFooter = () => {
+export const Footer = () => {
   const { colorMode } = usePreferences()
 
   return (

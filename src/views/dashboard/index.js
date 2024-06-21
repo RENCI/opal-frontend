@@ -10,7 +10,7 @@ import {
   PreferencesProvider,
 } from '@context'
 import {
-  DashboardFooter,
+  Footer,
   DashboardHeader,
   DashboardMenu,
 } from '@components/layout'
@@ -72,7 +72,7 @@ export const DashboardView = () => {
             onClose={ filtersDrawer.unset }
           />
         </Sheet>
-        <DashboardFooter />
+        <Footer />
       </DataProvider>
     </PreferencesProvider>
   )
