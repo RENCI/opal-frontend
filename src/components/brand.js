@@ -24,7 +24,7 @@ export const Brand = () => {
           display: { sm: 'none', md: 'block' },
           maxWidth: { md: '9rem', lg: 'none' }
         }}
-      >Observational PFAS Access paneL</Typography>
+      >Observational PFAS Access portaL</Typography>
     </Stack>
   )
 }
