@@ -66,7 +66,7 @@ export const Footer = () => {
         p={ 2 } pb={ 0 }
       >
         <Typography level="body-sm" textAlign="center">
-          This was developed under funding from the U.S. EPA
+          OPAL was developed under funding from the U.S. EPA
           under Contract 68HERD21A0002 Task Order 68HERH23F0157 to the University of North Carolina at Chapel Hill
           {' '}<Link to="https://ie.unc.edu/">UNC Institute for the Environment (UNC-IE)</Link>,
           {' '}<Link to="https://renci.org">Renaissance Computing Insititute (RENCI)</Link> and
