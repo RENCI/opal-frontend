@@ -10,9 +10,9 @@ import {
   PreferencesProvider,
 } from '@context'
 import {
-  Footer,
   DashboardHeader,
   DashboardMenu,
+  Footer,
 } from '@components/layout'
 import { useToggleState } from '@hooks'
 import { ChartView } from './chart'

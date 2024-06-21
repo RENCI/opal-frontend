@@ -5,6 +5,7 @@ import {
   DashboardView,
   LoginView,
 } from './views'
+import { Footer } from '@components/layout'
 
 //
 
@@ -13,6 +14,7 @@ const ClosedApp = () => (
     <Routes>
       <Route path="*" element={ <LoginView /> } />
     </Routes>
+    <Footer />
   </Sheet>
 )
 

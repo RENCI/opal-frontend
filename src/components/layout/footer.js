@@ -43,7 +43,7 @@ export const Footer = () => {
         alignItems={{ xs: 'center', md: 'flex-end' }}
       >
         <Link to="https://renci.org/"><img
-          src={ colorMode.light ? renciLogo : renciLogoDark }
+          src={ (!colorMode || colorMode.light) ? renciLogo : renciLogoDark }
           height="35px"
         /></Link>
         <Link to="https://ie.unc.edu/"><img
