@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Tooltip } from '@mui/joy'
 import {
@@ -10,22 +11,36 @@ const csvConfig = mkConfig({
   useKeysAsHeaders: true,
 })
 
-export const ExportButton = ({ table }) => {
-  const handleClick = () => {
+export const TableCsvExportButton = ({ table, tooltip = 'Download data as CSV' }) => {
+  const data = useMemo(() => {
     const visibleColumnIds = table.getVisibleLeafColumns().map(c => c.id)
-
-    const rows = table.getFilteredRowModel().rows
+    return table.getFilteredRowModel().rows
       .map(r => r.original)
       .reduce((acc, row) => {
         const reducedRow = Object.fromEntries(
-          Object.entries(row).filter(([key, ]) => {
-            return visibleColumnIds.includes(key)
-          })
+          Object.entries(row).filter(([key, ]) => visibleColumnIds.includes(key))
         )
         acc.push(reducedRow)
         return acc
       }, [])
-    const csv = generateCsv(csvConfig)(rows)
+  }, [table])
+
+  return (
+    <CsvExportButton
+      data={ data }
+      title={ tooltip }
+    />
+  )
+}
+
+TableCsvExportButton.propTypes = {
+  table: PropTypes.object.isRequired,
+  tooltip: PropTypes.string,
+}
+
+export const CsvExportButton = ({ data }) => {
+  const handleClick = () => {
+    const csv = generateCsv(csvConfig)(data)
     download(csvConfig)(csv)
   }
 
@@ -42,6 +57,9 @@ export const ExportButton = ({ table }) => {
   )
 }
 
-ExportButton.propTypes = {
-  table: PropTypes.object.isRequired,
+CsvExportButton.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.object
+  ).isRequired,
+  tooltip: PropTypes.string,
 }

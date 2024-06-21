@@ -15,10 +15,10 @@ import {
   AnalyteCorrelationScatterplot,
   AnalyteSelect,
   CorrelationCoefficientSelect,
-  CsvExportButton,
   Distribution,
   Instructions,
 } from '@components/compare'
+import { CsvExportButton } from '@components/csv-export-button'
 import { Latex } from '@components/latex'
 import { pearsonsR, spearmanRankCorrelation } from '@util'
 import { PngDownloadButton } from '@components/dashboard'

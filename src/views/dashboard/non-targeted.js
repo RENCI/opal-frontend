@@ -19,9 +19,9 @@ import { nonTargetedColumns } from '@data'
 import {
   ColumnSelect,
   DataTable,
-  ExportButton,
   Pagination,
 } from '@components/table'
+import { TableCsvExportButton } from '@components/csv-export-button'
 
 const relevantFilterKeys = [
   'sample_id', 'study', 'pi', 'units', 'medium',
@@ -79,7 +79,7 @@ export const NonTargetedView = () => {
       <RowsCount />
       <Pagination table={ table } />
       <ColumnSelect table={ table } />
-      <ExportButton table={ table } />
+      <TableCsvExportButton table={ table } />
     </Stack>
   ))
 

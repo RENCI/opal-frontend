@@ -7,8 +7,8 @@ import {
 import { useData } from '@context'
 import {
   DataTable,
-  ExportButton,
 } from '@components/table'
+import { TableCsvExportButton } from '@components/csv-export-button'
 import {
   getCoreRowModel,
   getSortedRowModel,
@@ -55,7 +55,7 @@ export const AnalytesView = () => {
         }}
       >
         <AnalyteCount />
-        <ExportButton table={ analytesTable } />
+        <TableCsvExportButton table={ analytesTable } />
       </Stack>
 
       <DataTable table={ analytesTable } />

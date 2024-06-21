@@ -16,9 +16,9 @@ import { useData } from '@context'
 import {
   ColumnSelect,
   DataTable,
-  ExportButton,
   Pagination,
 } from '@components/table'
+import { TableCsvExportButton } from '@components/csv-export-button'
 import { SampleBrowser } from '@components/browse'
 import {
   ClearFiltersButton,
@@ -81,7 +81,7 @@ export const TableView = () => {
         <Pagination table={ table } />
         <ColumnSelect table={ table } />
         <FilterControls />
-        <ExportButton table={ table } />
+        <TableCsvExportButton table={ table } />
         <TableBrowser />
       </Stack>
 
