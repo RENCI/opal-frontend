@@ -3,10 +3,25 @@ import { Stack, Typography } from '@mui/joy'
 export const Brand = () => {
   return (
     <Stack
-      alignItems={{ md: 'flex-end', lg: 'flex-start' }}
-      justifyContent="center"
       direction={{ md: 'row', lg: 'column' }}
+      alignItems={{ md: 'flex-end', lg: 'flex-start' }}
+      justifyContent="flex-start"
       gap={{ md: 1, lg: 0 }}
+      sx={{
+        width: '100%',
+        containerType: 'inline-size',
+        containerName: 'brand-container',
+        '.MuiTypography-root': {
+          '@container brand-container (max-width: 250px)': {
+            '.primary': {
+              display: 'block',
+            },
+            '.secondary': {
+              display: 'none',
+            },
+          },
+        },
+      }}
     >
       <Typography
         level="h4"
@@ -14,17 +29,15 @@ export const Brand = () => {
         color="primary.text"
         fontSize="22pt"
         sx={{ lineHeight: 1 }}
-      >OPAL</Typography>
+      ><span className="primary">OPAL</span></Typography>
       <Typography
         level="body-xs"
         color="primary.text"
         sx={{
           fontSize: '9pt',
           lineHeight: 1,
-          display: { sm: 'none', md: 'block' },
-          maxWidth: { md: '9rem', lg: 'none' }
         }}
-      >Observational PFAS Access portaL</Typography>
+      ><span className="secondary">Observational PFAS Access portaL</span></Typography>
     </Stack>
   )
 }
