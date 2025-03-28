@@ -60,7 +60,11 @@ We will need to mount the aforementioned certificate files from the host VM into
 
 ### 🚀 Launching the application container
 
-The entire command to bring up the application, say `v0.1.10`, looks like:
+view a list of running containers with `docker ps`. There should one.
+First, bring that previous container down: `docker stop opal-ui`.
+
+Then bring the up the next version of the application, with mounted certs.
+This entire command for, say `v0.1.10`, looks like:
 ```
 docker run --rm -d \
   -p 80:80 -p 443:443
