@@ -12,7 +12,7 @@ Create `.env` from `sample.env` and fill in the missing values.
 ### Development Server
 
 Install dependencies with `npm i`, and spin up the development server with `npm start`.
-The app should be running at [http://localhost:8080/](http://localhost:8080/).
+The app should be running at [http://localhost:8000/](http://localhost:8000/).
 
 ## 📦 Building for Production
 
