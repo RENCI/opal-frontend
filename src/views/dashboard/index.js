@@ -25,6 +25,7 @@ import {
   FiltersDrawer,
   FiltersDrawerToggle,
 } from '@components/filter'
+import { PolicyAgreementDialog } from '@components/policy-agreement'
 
 //
 
@@ -73,6 +74,7 @@ export const DashboardView = () => {
           />
         </Sheet>
         <Footer />
+        <PolicyAgreementDialog />
       </DataProvider>
     </PreferencesProvider>
   )
