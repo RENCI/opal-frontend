@@ -10,22 +10,24 @@ import {
 } from '@mui/joy';
 import Markdown from 'react-markdown';
 
-const Policy = () => <Markdown>{`
+const Policy = () => <Markdown components={{
+  ol: props => <ol { ...props } type="a" />,
+}}>{`
 By closing this window and continuing to the data page, you acknowledge the 
 following:
 
 Individuals who use data in any communication (including but not limited to 
 abstracts, presentations, grant proposals and journal articles) from the OPAL will:
 
-- Contact the investigator(s) who generated the data prior to publication to 
+1. Contact the investigator(s) who generated the data prior to publication to 
 discuss how the data will be used.
-- Cite the dataset in the body of the communication and provide a 
+1. Cite the dataset in the body of the communication and provide a 
 corresponding reference in a bibliography/reference list to ensure each 
 investigator receives appropriate recognition for their work.
-- Offer co-authorship or collaborator status to the investigator(s) who 
+1. Offer co-authorship or collaborator status to the investigator(s) who 
 generated the data if the data contributes significantly to the communicated 
 work.
-- Acknowledge funding sources of the data using the following statement (or 
+1. Acknowledge funding sources of the data using the following statement (or 
 similar language):
 This dataset was developed by researchers with the U.S. Environmental 
 Protection Agency (EPA) through its Office of Research and Development. 
@@ -45,9 +47,9 @@ Children’s Study specimens that was used for this research. We appreciate
 the contributions of the NCS NICHD Principal Investigator Jack Moye, and 
 the NCS Principal Investigators, their study teams, and the NCS 
 participants.
-- Contact US EPA principal investigators for ethics and human subject 
+1. Contact US EPA principal investigators for ethics and human subject 
 information.
-- Principal Investigators US EPA measurement data (NCS and AHHS targeted
+1. Principal Investigators US EPA measurement data (NCS and AHHS targeted
 and nontargeted):  James P McCord, Elaine A Cohen Hubal, Jason D 
 Boettger, Lisa Melnyk
 `}</Markdown>
@@ -64,10 +66,10 @@ export const PolicyAgreementDialog = () => {
 
   return (
     <Modal open={ !accepted } onClose={ handleClose }>
-      <ModalDialog role="alertdialog" color="primary" size="lg">
+      <ModalDialog role="alertdialog" color="primary" size="md">
         <DialogTitle>OPAL Data Sharing and Use Policy</DialogTitle>
         <Divider />
-        <DialogContent sx={{ width: '100vw', maxWidth: '66vw' }}>
+        <DialogContent sx={{ width: '800px', maxWidth: 'calc(100vw - 4rem)' }}>
           <Policy />
         </DialogContent>
         <Divider />
