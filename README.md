@@ -67,8 +67,8 @@ Then bring the up the next version of the application, with mounted certs.
 This entire command for, say `v0.1.10`, looks like:
 ```
 docker run --rm -d \
-  -p 80:80 -p 443:443
-  -v <PATH_TO_CERT>:/ssl.cer
-  -v <PATH_TO_KEY>:/ssl.key
+  -p 80:80 -p 443:443 \
+  -v <PATH_TO_CERT>:/ssl.cer \
+  -v <PATH_TO_KEY>:/ssl.key \
   --name opal-ui mvvatson/opal:0.1.10
 ```
