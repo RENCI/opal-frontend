@@ -1,12 +1,17 @@
 import axios from 'axios'
+import pLimit from 'p-limit'
 
 const API_URL = `${ process.env.API_HOST }/podm/api`
+const PER_PAGE = 1000
+const CONCURRENT_LIMIT = 5 // Limit concurrent requests to avoid rate limits
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export const fetchNonTargetedSampleData = accessToken => async () => {
-  console.log(`fetching data from ${ API_URL }/ntar_sample_data...`)
+  console.log(`Fetching data from ${ API_URL }/ntar_sample_data...`)
 
   if (!accessToken) {
-    console.error('missing access token')
+    console.error('Missing access token')
     return []
   }
 
@@ -14,8 +19,8 @@ export const fetchNonTargetedSampleData = accessToken => async () => {
     try {
       const { data } = await axios.get(
         `${ API_URL }/ntar_sample_data?`
-          + `fields=sample_id,study,pi,units,medium,city,state,zipcode,pfas_short_name,pfas_long_name,flags,measurement`
-          + `&page=1&psize=1`,
+        + `fields=sample_id,study,pi,units,medium,city,state,zipcode,pfas_short_name,pfas_long_name,flags,measurement`
+        + `&page=1&psize=1`,
         {
           timeout: 1000 * 5, // 5 seconds
           headers: {
@@ -31,40 +36,36 @@ export const fetchNonTargetedSampleData = accessToken => async () => {
     }
   }
 
-  // first, let's get the first page and check the total number of pages.
+  // Fetch first page to determine total count
   const data = await getFirstPage()
+  if (!data || !data.count) return []
 
-  if (!data.count) {
-    return []
+  const numPages = Math.ceil(data.count / PER_PAGE)
+  const limit = pLimit(CONCURRENT_LIMIT)
+
+  const fetchPage = async (page) => {
+    await delay(page * 100) // Stagger requests by 200ms per page
+    try {
+      const { data } = await axios.get(
+        `${ API_URL }/ntar_sample_data?`
+        + `fields=sample_id,study,pi,units,medium,city,state,zipcode,pfas_short_name,pfas_long_name,flags,measurement`
+        + `&page=${ page + 1 }&psize=${ PER_PAGE }`,
+        {
+          timeout: 1000 * 5, // 5 seconds
+          headers: {
+            Authorization: `Bearer ${ accessToken }`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      return data.results
+    } catch (error) {
+      console.error(`Error fetching page ${page + 1}:`, error.message)
+      return []
+    }
   }
 
-  // if we're here, we have a non-zero number of pages,
-  // so we make the neccssary number of requests.
-  const PER_PAGE = 1000
-  const promises = [...Array(Math.ceil(data.count / PER_PAGE)).keys()]
-    .map(p => axios.get(
-      `${ API_URL }/ntar_sample_data?`
-        + `fields=sample_id,study,pi,units,medium,city,state,zipcode,pfas_short_name,pfas_long_name,flags,measurement`
-        + `&page=${ p + 1 }&psize=${ PER_PAGE }`,
-      {
-        timeout: 1000 * 5, // 5 seconds
-        headers: {
-          Authorization: `Bearer ${ accessToken }`,
-          'Content-Type': 'application/json',
-        },
-      }
-    ))
-
-  // return all results in one array.
-  return Promise.all(promises)
-    .then(responses => responses.map(r => r.data.results)
-      .reduce((allData, d) => {
-        allData.push(...d)
-        return allData
-      }, [])
-    )
-    .catch(error => {
-      console.error(error)
-      return []
-    })
+  // Fetch all pages with concurrency control
+  const fetchTasks = Array.from({ length: numPages }, (_, p) => limit(() => fetchPage(p)))
+  return Promise.all(fetchTasks).then(responses => responses.flat())
 }
