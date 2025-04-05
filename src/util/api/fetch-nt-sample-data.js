@@ -3,7 +3,7 @@ import pLimit from 'p-limit'
 
 const API_URL = `${ process.env.API_HOST }/podm/api`
 const PER_PAGE = 1000
-const CONCURRENT_LIMIT = 5 // Limit concurrent requests to avoid rate limits
+const CONCURRENT_LIMIT = 5 // number of concurrent requests
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -36,7 +36,7 @@ export const fetchNonTargetedSampleData = accessToken => async () => {
     }
   }
 
-  // Fetch first page to determine total count
+  // fetch first page; determine total count
   const data = await getFirstPage()
   if (!data || !data.count) return []
 
@@ -44,7 +44,7 @@ export const fetchNonTargetedSampleData = accessToken => async () => {
   const limit = pLimit(CONCURRENT_LIMIT)
 
   const fetchPage = async (page) => {
-    await delay(page * 100) // Stagger requests by 200ms per page
+    await delay(page * 10) // stagger requests per page
     try {
       const { data } = await axios.get(
         `${ API_URL }/ntar_sample_data?`
@@ -65,7 +65,7 @@ export const fetchNonTargetedSampleData = accessToken => async () => {
     }
   }
 
-  // Fetch all pages with concurrency control
+  // fetch all pages with concurrency control
   const fetchTasks = Array.from({ length: numPages }, (_, p) => limit(() => fetchPage(p)))
   return Promise.all(fetchTasks).then(responses => responses.flat())
 }

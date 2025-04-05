@@ -34,7 +34,7 @@ export const fetchSampleData = accessToken => async () => {
     }
   }
 
-  // Fetch first page to determine total count
+  // fetch first page; determine total count
   const data = await getFirstPage()
   if (!data || !data.count) return []
 
@@ -42,7 +42,7 @@ export const fetchSampleData = accessToken => async () => {
   const limit = pLimit(CONCURRENT_LIMIT)
 
   const fetchPage = async (page) => {
-    await delay(page * 100) // Stagger requests by 200ms per page
+    await delay(page * 10) // stagger requests per page
     try {
       const { data } = await axios.get(
         `${ API_URL }/pfas_sample_data?page=${ page + 1 }&psize=${ PER_PAGE }`,
@@ -61,7 +61,7 @@ export const fetchSampleData = accessToken => async () => {
     }
   }
 
-  // Fetch all pages with concurrency control
+  // fetch all pages with concurrency control
   const fetchTasks = Array.from({ length: numPages }, (_, p) => limit(() => fetchPage(p)))
   return Promise.all(fetchTasks).then(responses => responses.flat())
 }
