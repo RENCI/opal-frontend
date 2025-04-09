@@ -1,11 +1,10 @@
 import axios from 'axios'
 import pLimit from 'p-limit'
+import { delay } from '../delay'
 
 const API_URL = `${ process.env.API_HOST }/podm/api`
-const PER_PAGE = 1000
+const PER_PAGE = 500
 const CONCURRENT_LIMIT = 5 // number of concurrent requests
-
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export const fetchNonTargetedSampleData = accessToken => async () => {
   console.log(`Fetching data from ${ API_URL }/ntar_sample_data...`)
@@ -44,20 +43,21 @@ export const fetchNonTargetedSampleData = accessToken => async () => {
   const limit = pLimit(CONCURRENT_LIMIT)
 
   const fetchPage = async (page) => {
-    await delay(page * 10) // stagger requests per page
+    await delay(page * 50) // stagger requests per page
     try {
       const { data } = await axios.get(
         `${ API_URL }/ntar_sample_data?`
         + `fields=sample_id,study,pi,units,medium,city,state,zipcode,pfas_short_name,pfas_long_name,flags,measurement`
         + `&page=${ page + 1 }&psize=${ PER_PAGE }`,
         {
-          timeout: 1000 * 5, // 5 seconds
+          timeout: 1000 * 10, // 5 seconds
           headers: {
             Authorization: `Bearer ${ accessToken }`,
             'Content-Type': 'application/json',
           },
         }
       )
+      console.log(`ntar_sample_data: ${ page + 1 } / ${ numPages }`)
       return data.results
     } catch (error) {
       console.error(`Error fetching page ${page + 1}:`, error.message)
