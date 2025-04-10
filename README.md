@@ -20,7 +20,7 @@ The app should be running at [http://localhost:8000/](http://localhost:8000/).
 
 Execute `npm ci` to install locked dependencies, and `npm run build` to build a production bundle. The bundle will export to the `dist` directory.
 
-### With Docker
+### Docker
 
 There's a Dockerfile for easy deployment.
 Commands similar to the following should suffice to build an image
@@ -30,6 +30,19 @@ and run an NGINX container that serves only the application bundle on port 80.
 docker build -t opal:1.0.4 . \
 docker run --rm -p 80:80 opal:1.0.4
 ```
+
+### Make
+Define these variables
+```
+IMAGE=registry/namespace
+TAG=1.0.4
+```
+in the `.env` file, and use the following commands instead.
+
+- Build Docker image: `make build`
+- Run Docker image: `make run`
+- Push to registry: `make push`
+- Build and push: `make publish`
 
 ## 🚢 Deployment
 
