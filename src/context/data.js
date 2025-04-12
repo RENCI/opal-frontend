@@ -1,32 +1,24 @@
-/*
-  this context provider is responsible for application data.
-  it fetches, massages, assembles, and--of course--provides data.
-*/
 import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
-import {
-  CircularProgress,
-  Sheet,
-  Stack,
-  Typography,
-} from '@mui/joy'
-import {
-  ErrorOutline as ErrorIcon
-} from '@mui/icons-material'
+
+import { useLocation } from 'react-router-dom';
 
 import { QueryClient, useQuery } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import { set, get, del } from 'idb-keyval'
 
 import { compress, decompress } from 'lz-string'
 
 import { usePreferences } from '@context'
-import { analytes } from '@data'
+import { analytes, podmColumns } from '@data'
+import { ConnectionStatus } from '@components/connection-status'
 
 import {
   getCoreRowModel,
@@ -38,7 +30,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { podmColumns } from '@data'
 import {
   fetchAnalytes,
   fetchNonTargetedSampleData,
@@ -46,77 +37,64 @@ import {
   useToken,
 } from '@util'
 
-//
+// utility hook to track loading progress
+export function useProgress() {
+  const [fetched, setFetched] = useState(0)
+  const [total, setTotal] = useState(0)
 
-const CACHE_KEY = 'PFAS_DATA_CACHE'
+  const onProgress = useCallback((rowsFetched, totalRows) => {
+    setFetched(rowsFetched)
+    setTotal(totalRows)
+  }, [])
 
-const CONNECTION_STATE_ICONS = {
-  busy: <CircularProgress size="sm" />,
-  error: <ErrorIcon color="error" />
+  const percent = total ? Math.round((fetched / total) * 100) : 0
+
+  return {
+    fetched,
+    total,
+    percent,
+    onProgress,
+  }
 }
 
-const ConnectionStatus = ({
-  message = '',
-  status = 'busy',
-}) => {
-  return (
-    <Sheet
-      component={ Stack }
-      variant="solid"
-      justifyContent="center"
-      alignItems="center"
-      sx={{
-        position: 'absolute',
-        left: 0, right: 0,
-        top: 0, bottom: 0,
-        '.MuiTypography-root': {
-          p: 2,
-        },
-      }}
-    >
-      <Typography
-        level="body-xl"
-        variant="soft"
-        startDecorator={ CONNECTION_STATE_ICONS[status] }
-      >{ message }</Typography>
-    </Sheet>
-  )
-}
-
-ConnectionStatus.propTypes = {
-  message: PropTypes.string,
-  status: PropTypes.oneOf(Object.keys(CONNECTION_STATE_ICONS)),
-}
-
-
-// we want tanstack's queryClient available within our data context,
-// so we create a wrapper that provides tanstack query functionality.
-
+// context for the app's data (and table)
 const DataContext = createContext({ })
 export const useData = () => useContext(DataContext)
 
 export const DataWrangler = ({ accessToken, children }) => {
+  const location = useLocation()
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
+  const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
 
+  const pfasProgress = useProgress()
+
+  // queries for PFAS, NTAR, and analytes
+  const pfasQueryEnabled = true // always
   const pfasDataQuery = useQuery({
-    queryKey: ['pfas_sample_data'],
-    queryFn: fetchSampleData(accessToken),
+    queryKey: ['pfas_sample_data', accessToken],
+    queryFn: fetchSampleData(accessToken, pfasProgress.onProgress),
+    enabled: pfasQueryEnabled,
   })
 
+  const nonTargetedQueryEnabled = location.pathname === '/non-targeted'
   const nonTargetedDataQuery = useQuery({
-    queryKey: ['ntar_sample_data'],
+    queryKey: ['non_targeted_sample_data', accessToken],
     queryFn: fetchNonTargetedSampleData(accessToken),
+    enabled: nonTargetedQueryEnabled,
   })
 
+  const analytesQueryEnabled = location.pathname === '/analytes'
   const analytesQuery = useQuery({
-    queryKey: ['pfas_name_classification_info'],
-    queryFn: fetchAnalytes(accessToken)
-  });
+    queryKey: ['analytes', accessToken],
+    queryFn: fetchAnalytes(accessToken),
+    enabled: analytesQueryEnabled,
+  })
 
+  // table for displaying PFAS data
   const table = useReactTable({
-    data: pfasDataQuery.data,
+    data: pfasDataQuery.data ?? [],
     columns: podmColumns,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
@@ -135,6 +113,13 @@ export const DataWrangler = ({ accessToken, children }) => {
       sorting,
     },
   })
+
+  // once data is available and table is initialized, set `isPreparingTable` to false
+  useEffect(() => {
+    if (pfasDataQuery.isSuccess && table.getRowModel().rows.length > 0) {
+      setIsPreparingTable(false); // data is now processed and table can be rendered
+    }
+  }, [pfasDataQuery.isSuccess, table.getRowModel().rows.length])
 
   const filterCount = table.getAllLeafColumns().filter(col => col.getIsFiltered()).length
 
@@ -155,9 +140,12 @@ export const DataWrangler = ({ accessToken, children }) => {
       filterCount,
     }}>
       {
+        // hasn't started       or is still going
         pfasDataQuery.isPending || pfasDataQuery.isLoading
-          ? <ConnectionStatus message="Fetching data" />
-          : children
+          ? <ConnectionStatus message={ `Loading PFAS data :: ${pfasProgress.percent}%` } />
+          : isPreparingTable
+            ? <ConnectionStatus message="Preparing table" />
+            : children
       }
     </DataContext.Provider>
   )
@@ -168,17 +156,22 @@ DataWrangler.propTypes = {
   accessToken: PropTypes.string,
 }
 
-// Tanstack Query machinery
-const persister = createSyncStoragePersister({
-  key: CACHE_KEY,
-  storage: window.localStorage,
-  // we're potentially dealing with a significant
-  // amount of data, and local storage isn't huge,
-  // so we want to pack it down as much as we can.
-  serialize: data => compress(JSON.stringify(data)),
-  deserialize: data => JSON.parse(decompress(data)),
+// tanstack Query machinery
+const asyncPersister = createAsyncStoragePersister({
+  storage: {
+    getItem: async (key) => {
+      const raw = await get(key);
+      return raw ? JSON.parse(decompress(raw)) : null;
+    },
+    setItem: async (key, value) => {
+      const compressed = compress(JSON.stringify(value));
+      await set(key, compressed);
+    },
+    removeItem: async (key) => {
+      await del(key);
+    },
+  },
 })
-
 const queryClient = new QueryClient({
   defaultOptions: { queries: {
     staleTime: 1000 * 60 * 60 * 24, // 1 day,
@@ -209,11 +202,11 @@ export const DataProvider = ({ children }) => {
 
   return (
     <PersistQueryClientProvider
-      client={ queryClient }
+      client={queryClient}
       persistOptions={{
-        persister,
+        persister: asyncPersister,
         dehydrateOptions: {
-          shouldDehydrateQuery: () => preferences.cache.enabled,
+          shouldDehydrateQuery: preferences.cache.enabled,
         },
       }}
     >
