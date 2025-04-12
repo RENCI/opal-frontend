@@ -112,6 +112,7 @@ export const DataWrangler = ({ accessToken, children }) => {
       pagination,
       sorting,
     },
+    debugAll: false,
   })
 
   // once data is available and table is initialized, set `isPreparingTable` to false
