@@ -9,6 +9,8 @@ RUN mkdir /app
 WORKDIR /app
 
 # env vars
+ARG APP_VERSION=latest
+ENV APP_VERSION=$APP_VERSION
 ENV PATH /app/node_modules/.bin:$PATH
 
 # install deps

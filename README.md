@@ -23,12 +23,28 @@ Execute `npm ci` to install locked dependencies, and `npm run build` to build a 
 ### Docker
 
 There's a Dockerfile for easy deployment.
-Commands similar to the following should suffice to build an image
-and run an NGINX container that serves only the application bundle on port 80.
+Commands similar to the following should suffice to
+build an image and run an NGINX container
+that serves only the application bundle on port 80.
+Currently, images are pushed to `hub.docker.com/r/mvvatson/opal`
 
 ```bash
-docker build -t opal:1.0.4 . \
-docker run --rm -p 80:80 opal:1.0.4
+docker build -t mvvatson/opal:1.0.4 . &&
+docker run --rm -p 80:80 mvvatson/opal:1.0.4
+```
+
+To bring in the app version, based on Git tag, build with this command.
+
+```bash
+docker build \
+  --build-arg APP_VERSION=$(git describe --tags --always) \
+  -t mvvatson/opal:$(git describe --tags --always) .
+```
+
+There is a script defined in the app's `package.json` to do this more simply:
+
+```bash
+npm run docker-build -- --tag=1.0.4
 ```
 
 ### Make
