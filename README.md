@@ -39,10 +39,12 @@ TAG=1.0.4
 ```
 in the `.env` file, and use the following commands instead.
 
+- Generate local certs (to match deployment env): `make certs`
 - Build Docker image: `make build`
 - Run Docker image: `make run`
 - Push to registry: `make push`
 - Build and push: `make publish`
+- Clean up: `make clean` (simply removes certs dir)
 
 ## 🚢 Deployment
 
