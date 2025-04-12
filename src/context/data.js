@@ -206,7 +206,7 @@ export const DataProvider = ({ children }) => {
       persistOptions={{
         persister: asyncPersister,
         dehydrateOptions: {
-          shouldDehydrateQuery: preferences.cache.enabled,
+          shouldDehydrateQuery: () => preferences.cache.enabled,
         },
       }}
     >
