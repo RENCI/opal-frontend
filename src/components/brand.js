@@ -24,7 +24,14 @@ export const Brand = () => {
         component="h1"
         color="primary.text"
         fontSize="22pt"
-        sx={{ lineHeight: 1 }}
+        sx={{
+          lineHeight: 1,
+          cursor: 'default',
+          transition: 'text-shadow 250ms',
+          '&:hover': {
+            textShadow: '0 0 4px var(--joy-palette-primary-plainColor)',
+          },
+        }}
       ><span className="primary">OPAL</span></Typography>
       <Typography
         level="body-xs"
