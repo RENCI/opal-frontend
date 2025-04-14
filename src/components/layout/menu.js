@@ -27,8 +27,9 @@ import { Link } from '@components/link'
 const menuItems = [
   { id: 'pfas',    path: '/pfas',         label: 'PFAS',             Icon: TableIcon, subitems: [
     { id: 'table',   path: '/pfas/table',   label: 'Data Table',       Icon: TableIcon },
+    { id: 'charts',  path: '/pfas/charts',  label: 'Visualizations',   Icon: ChartsIcon },
     { id: 'compare', path: '/pfas/compare', label: 'Comparison',       Icon: CompareIcon },
-    { id: 'charts',  path: '/pfas/charts',  label: 'Visualizations',   Icon: ChartsIcon } ] },
+  ] },
   { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted', Icon: NonTargetedIcon },
   { id: 'analytes',     path: 'analytes',     label: 'Analytes',     Icon: AnalytesIcon },
 ]
