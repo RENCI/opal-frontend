@@ -4,7 +4,7 @@ import {
   Close as ClearIcon,
 } from '@mui/icons-material'
 import { useData } from '@context'
-import { useCompare } from '@views/dashboard/compare'
+import { useCompare } from '@views/pfas/compare'
 import { Latex } from '@components/latex'
 
 export const AnalyteSelect = () => {

@@ -7,7 +7,7 @@ import {
 import { Link } from '@components/link';
 import { Latex } from '@components/latex';
 import { IndicatorBox } from './correlation-indicator-box';
-import { useCompare } from '@views/dashboard/compare';
+import { useCompare } from '@views/pfas/compare';
 
 export const Instructions = () => {
   const { correlationCoefficient } = useCompare();

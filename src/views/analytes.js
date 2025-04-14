@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Stack,
   Typography,
@@ -15,16 +15,18 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { analyteColumns } from '@data'
+import { AppStatus } from '@components/app-status'
 
 //
 
 export const AnalytesView = () => {
-  const { analytesData } = useData();
+  const { analytesData, analytesProgress } = useData();
+  const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
 
   const [sorting, setSorting] = useState([]);
 
   const analytesTable = useReactTable({
-    data: analytesData.data,
+    data: analytesData.data ?? [],
     columns: analyteColumns,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
@@ -41,6 +43,13 @@ export const AnalytesView = () => {
     </Typography>
   ), [analytesTable.getCoreRowModel().rows.length])
 
+  // once data is available and table is initialized, set `isPreparingTable` to false
+  useEffect(() => {
+    if (analytesData.isSuccess && analytesTable.getRowModel().rows.length > 0) {
+      setIsPreparingTable(false); // data is now processed and table can be rendered
+    }
+  }, [analytesData.isSuccess, analytesTable.getRowModel().rows.length])
+
   return (
     <Stack direction="column">
       <Toolbar>
@@ -48,7 +57,14 @@ export const AnalytesView = () => {
         <TableCsvExportButton table={ analytesTable } />
       </Toolbar>
 
-      <DataTable table={ analytesTable } />
+      {
+        // has not started or is still going
+        analytesData.isPending || analytesData.isLoading
+          ? <AppStatus message={ `Loading analytes data :: ${analytesProgress.percent}%` } />
+          : isPreparingTable
+            ? <AppStatus message="Preparing table" />
+            : <DataTable table={ analytesTable } />
+      }
 
       <Toolbar>
         <AnalyteCount />

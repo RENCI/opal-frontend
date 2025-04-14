@@ -15,12 +15,17 @@ import {
   Footer,
 } from '@components/layout'
 import { useToggleState } from '@hooks'
-import { ChartsView } from './charts'
+
+import { HomeView } from './home'
+
+import { PfasView } from './pfas'
+import { TableView } from './pfas/table'
+import { ChartsView } from './pfas/charts'
+import { CompareView } from './pfas/compare'
+
 import { AnalytesView } from './analytes'
-import { CompareView } from './compare'
 import { NonTargetedView } from './non-targeted'
-import { NotFoundView } from '../'
-import { TableView } from './table'
+import { NotFoundView } from './'
 import { 
   FiltersDrawer,
   FiltersDrawerToggle,
@@ -61,10 +66,14 @@ export const DashboardView = () => {
           pt: 6,
         }}>
           <Routes>
-            <Route index element={ <TableView /> } />
+            <Route index element={ <HomeView /> } />
+            <Route path="pfas" element={ <PfasView /> }>
+              <Route index element={ <TableView /> } />
+              <Route path="table" element={ <TableView /> } />
+              <Route path="charts" element={ <ChartsView /> } />
+              <Route path="compare" element={ <CompareView /> } />
+            </Route>
             <Route path="analytes" element={ <AnalytesView /> } />
-            <Route path="charts" element={ <ChartsView /> } />
-            <Route path="compare" element={ <CompareView /> } />
             <Route path="non-targeted" element={ <NonTargetedView /> } />
             <Route path="*" element={ <NotFoundView /> } />
           </Routes>

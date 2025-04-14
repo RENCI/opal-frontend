@@ -184,7 +184,7 @@ export const CompareView = () => {
               flex: 1,
               mt: 1,
               p: 2,
-              backgroundImage: 'linear-gradient(120deg, var(--joy-palette-background-surface) 50%, transparent 100%)',
+              backgroundImage: 'linear-gradient(120deg, var(--joy-palette-primary-solidDisabledBg) 50%, transparent 100%)',
               borderBottomLeftRadius: '6px',
               borderTopLeftRadius: '6px',
             }}>

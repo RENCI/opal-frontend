@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Box, Typography } from '@mui/joy'
 import { ResponsiveScatterPlot } from '@nivo/scatterplot'
 import { chartTheme } from '../../theme'
-import { useCompare } from '@views/dashboard/compare'
+import { useCompare } from '@views/pfas/compare'
 
 //
 

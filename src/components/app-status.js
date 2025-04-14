@@ -15,7 +15,7 @@ const CONNECTION_STATE_ICONS = {
   error: <ErrorIcon color="error" />
 }
 
-export const ConnectionStatus = ({
+export const AppStatus = ({
   message = '',
   status = 'busy',
 }) => {
@@ -29,6 +29,9 @@ export const ConnectionStatus = ({
         position: 'absolute',
         left: 0, right: 0,
         top: 0, bottom: 0,
+        backgroundColor: 'color-mix(in srgb, var(--joy-palette-background-surface) 20%, transparent)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 99,
         '.MuiTypography-root': {
           p: 2,
         },
@@ -43,7 +46,7 @@ export const ConnectionStatus = ({
   )
 }
 
-ConnectionStatus.propTypes = {
+AppStatus.propTypes = {
   message: PropTypes.string,
   status: PropTypes.oneOf(Object.keys(CONNECTION_STATE_ICONS)),
 }

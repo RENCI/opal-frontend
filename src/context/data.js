@@ -2,7 +2,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from 'react'
 import PropTypes from 'prop-types'
@@ -18,7 +17,6 @@ import { compress, decompress } from 'lz-string'
 
 import { usePreferences } from '@context'
 import { analytes, podmColumns } from '@data'
-import { ConnectionStatus } from '@components/connection-status'
 
 import {
   getCoreRowModel,
@@ -36,6 +34,7 @@ import {
   fetchSampleData,
   useToken,
 } from '@util'
+import { AppStatus } from '@components/app-status'
 
 // utility hook to track loading progress
 export function useProgress() {
@@ -66,9 +65,10 @@ export const DataWrangler = ({ accessToken, children }) => {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
-  const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
 
   const pfasProgress = useProgress()
+  const ntarProgress = useProgress()
+  const analytesProgress = useProgress()
 
   // queries for PFAS, NTAR, and analytes
   const pfasQueryEnabled = true // always
@@ -81,14 +81,14 @@ export const DataWrangler = ({ accessToken, children }) => {
   const nonTargetedQueryEnabled = location.pathname === '/non-targeted'
   const nonTargetedDataQuery = useQuery({
     queryKey: ['non_targeted_sample_data', accessToken],
-    queryFn: fetchNonTargetedSampleData(accessToken),
+    queryFn: fetchNonTargetedSampleData(accessToken, ntarProgress.onProgress),
     enabled: nonTargetedQueryEnabled,
   })
 
   const analytesQueryEnabled = location.pathname === '/analytes'
   const analytesQuery = useQuery({
     queryKey: ['analytes', accessToken],
-    queryFn: fetchAnalytes(accessToken),
+    queryFn: fetchAnalytes(accessToken, analytesProgress.onProgress),
     enabled: analytesQueryEnabled,
   })
 
@@ -115,13 +115,6 @@ export const DataWrangler = ({ accessToken, children }) => {
     debugAll: false,
   })
 
-  // once data is available and table is initialized, set `isPreparingTable` to false
-  useEffect(() => {
-    if (pfasDataQuery.isSuccess && table.getRowModel().rows.length > 0) {
-      setIsPreparingTable(false); // data is now processed and table can be rendered
-    }
-  }, [pfasDataQuery.isSuccess, table.getRowModel().rows.length])
-
   const filterCount = table.getAllLeafColumns().filter(col => col.getIsFiltered()).length
 
   const abbreviate = useCallback(id => analytes?.find(a => a.id === id)?.abbreviation || 'Unknown', [])
@@ -129,8 +122,11 @@ export const DataWrangler = ({ accessToken, children }) => {
   return (
     <DataContext.Provider value={{
       pfasData: pfasDataQuery,
+      pfasProgress,
       ntarData: nonTargetedDataQuery,
+      ntarProgress,
       analytesData: analytesQuery,
+      analytesProgress,
       analytes,
       abbreviate,
       podmTable: {
@@ -141,12 +137,7 @@ export const DataWrangler = ({ accessToken, children }) => {
       filterCount,
     }}>
       {
-        // hasn't started       or is still going
-        pfasDataQuery.isPending || pfasDataQuery.isLoading
-          ? <ConnectionStatus message={ `Loading PFAS data :: ${pfasProgress.percent}%` } />
-          : isPreparingTable
-            ? <ConnectionStatus message="Preparing table" />
-            : children
+        children
       }
     </DataContext.Provider>
   )
@@ -186,7 +177,7 @@ export const DataProvider = ({ children }) => {
 
   if (!accessToken && !error) {
     return (
-      <ConnectionStatus
+      <AppStatus
         message="Establishing connection to API"
       />
     )
@@ -194,7 +185,7 @@ export const DataProvider = ({ children }) => {
 
   if (!accessToken && error) {
     return (
-      <ConnectionStatus
+      <AppStatus
         message={ error }
         status="error"
       />

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box } from '@mui/joy';
 import { useData, usePreferences } from '@context';
 import { IndicatorBox } from './correlation-indicator-box';
-import { useCompare } from '@views/dashboard/compare';
+import { useCompare } from '@views/pfas/compare';
 
 //
 

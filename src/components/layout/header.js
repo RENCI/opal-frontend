@@ -13,7 +13,7 @@ export const DashboardHeader = ({ endActions = [], startAction = null }) => {
         position: 'fixed',
         top: 0,
         width: '100%',
-        zIndex: 99,
+        zIndex: 999,
         borderBottom: '1px solid var(--joy-palette-divider)',
       }}
     >
@@ -33,7 +33,6 @@ export const DashboardHeader = ({ endActions = [], startAction = null }) => {
 
         <Stack
           direction="row"
-          gap={ 1 }
           divider={ <Divider orientation="vertical" />}
         >{ endActions }</Stack>
       </Stack>

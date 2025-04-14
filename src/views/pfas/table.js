@@ -1,10 +1,8 @@
-import { Fragment, useCallback, useState } from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import {
   Button,
-  CircularProgress,
   Modal,
   ModalClose,
-  Stack,
   Typography,
 } from '@mui/joy'
 import {
@@ -20,9 +18,8 @@ import {
 } from '@components/table'
 import { TableCsvExportButton } from '@components/buttons'
 import { SampleBrowser } from '@components/browse'
-import {
-  ClearFiltersButton,
-} from '@components/filter'
+import { ClearFiltersButton } from '@components/filter'
+import { AppStatus } from '@components/app-status'
 
 //
 
@@ -30,6 +27,7 @@ export const TableView = () => {
   const { pfasData, podmTable } = useData()
   const [filtersVisibility, setFiltersVisibility] = useState(false)
   const { table, columnFilters } = podmTable
+  const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
 
   const handleToggleFiltersVisibility = () => setFiltersVisibility(!filtersVisibility)
 
@@ -52,17 +50,12 @@ export const TableView = () => {
     </Typography>
   ), [table.getPrePaginationRowModel().rows.length])
 
-  if (pfasData.isLoading) {
-    return (
-      <Stack
-        justifyContent="center"
-        alignItems="center"
-        sx={{ mt: 'calc(100px + 5rem)' }}
-      >
-        <CircularProgress size="lg" />
-      </Stack>
-    )
-  }
+  // once data is available and table is initialized, set `isPreparingTable` to false
+  useEffect(() => {
+    if (pfasData.isSuccess && table.getRowModel().rows.length > 0) {
+      setIsPreparingTable(false); // data is now processed and table can be rendered
+    }
+  }, [pfasData.isSuccess, table.getRowModel().rows.length])
 
   return (
     <Fragment>      
@@ -75,16 +68,20 @@ export const TableView = () => {
         <TableBrowser />
       </Toolbar>
 
-      <DataTable
-        table={ table }
-        sx={{
-          '.filter': {
-            maxHeight: filtersVisibility ? '48px' : 0,
-            overflow: 'hidden',
-            transition: 'max-height 250ms',
-          },
-        }}
-      />
+      {
+        isPreparingTable
+          ? <AppStatus message="Preparing table" />
+          : <DataTable
+              table={ table }
+              sx={{
+                '.filter': {
+                  maxHeight: filtersVisibility ? '48px' : 0,
+                  overflow: 'hidden',
+                  transition: 'max-height 250ms',
+                },
+              }}
+            />
+      }
 
       <Toolbar>
         <SampleCount />
