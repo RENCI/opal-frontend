@@ -27,14 +27,8 @@ const relevantFilterKeys = [
 ]
 
 export const NonTargetedView = () => {
-  const { ntarData, ntarProgress, podmTable } = useData()
+  const { ntarData, ntarProgress } = useData()
   const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
-
-  const relevantFilters = useMemo(() => podmTable
-      .columnFilters
-      .filter(f => relevantFilterKeys.includes(f.id)),
-    [podmTable.columnFilters.length]
-  )
   
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = useState([])
@@ -50,7 +44,6 @@ export const NonTargetedView = () => {
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     state: {
-      columnFilters: relevantFilters,
       pagination,
       sorting,
     },
