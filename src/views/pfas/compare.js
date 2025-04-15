@@ -96,7 +96,10 @@ export const CompareView = () => {
     ), [table.getPrePaginationRowModel().rows])
 
     if (selectedAnalytes[0] === selectedAnalytes[1]) {
-      return <Distribution analyte={ selectedAnalytes[0] } />
+      return <Distribution
+        analyte={ selectedAnalytes[0] }
+        data={ correlationData }
+      />
     }
 
     return (
