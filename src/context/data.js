@@ -4,7 +4,6 @@ import { QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { set, get, del } from 'idb-keyval'
-// import { compress, decompress } from 'lz-string'
 import { usePreferences } from '@context'
 
 // context for the app's data (and table)
