@@ -1,10 +1,9 @@
-import axios from 'axios'
+import api from './api'
 import { delay } from '../delay'
 
 const baseUrl = `${process.env.API_HOST}/podm/api`
 
 export const batchFetch = async ({
-  accessToken,
   endpoint,
   fields = '',
   perPage = 100,
@@ -13,25 +12,11 @@ export const batchFetch = async ({
 }) => {
   const API_URL = `${baseUrl}${endpoint}`
 
-  if (!accessToken) {
-    console.error('Missing access token')
-    return []
-  }
-
   const fieldParam = fields ? `fields=${fields}&` : ''
 
   const getFirstPage = async () => {
     try {
-      const { data } = await axios.get(
-        `${API_URL}?${fieldParam}page=1&psize=1`,
-        {
-          timeout: 5000,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      const { data } = await api.get(`${API_URL}?${fieldParam}page=1&psize=1`)
       return data
     } catch (error) {
       console.error(error.message)
@@ -48,16 +33,7 @@ export const batchFetch = async ({
 
   const fetchPage = async (page) => {
     try {
-      const { data } = await axios.get(
-        `${API_URL}?${fieldParam}page=${page + 1}&psize=${perPage}`,
-        {
-          timeout: 5000,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
+      const { data } = await api.get(`${API_URL}?${fieldParam}page=${page + 1}&psize=${perPage}`)
       pagesFetched += 1
 
       if (onProgress) onProgress(pagesFetched, numPages)

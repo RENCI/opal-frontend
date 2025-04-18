@@ -5,7 +5,6 @@ import {
   Box,
   Card,
   CardContent,
-  LinearProgress,
   Divider,
   Link as JoyLink,
   Stack,
@@ -14,12 +13,10 @@ import {
 import {
   TableChart as TableIcon,
 } from '@mui/icons-material'
-import { useData } from '@context'
 
-const ViewCard = ({ title, description, icon, path, progress = 0 }) => {
+const ViewCard = ({ title, description, icon, path }) => {
   return (
     <Card variant="soft" sx={{ padding: 0 }}>
-      <LinearProgress thickness={1} determinate value={ progress } />
       <CardContent component={ Stack } direction="column">
         <Stack sx={{
           padding: '1rem',
@@ -43,12 +40,9 @@ ViewCard.propTypes = {
   icon: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
-  progress: PropTypes.number,
 }
 
 export const HomeView = () => {
-  const { pfasProgress, ntarProgress, analytesProgress } = useData()
-
   return (
     <ContentPage maxWidth="lg">
       <Typography level="h1">OPAL</Typography>
@@ -75,7 +69,6 @@ export const HomeView = () => {
             Filter by location, media type (water, dust, blood), collection date, and collection
             details for specific analytes to uncover patterns in PFAS exposure.
           ` }
-          progress={ pfasProgress.percent }
         />
 
         <ViewCard
@@ -86,7 +79,6 @@ export const HomeView = () => {
             Browse unexpected analytes detected across studies. View findings grouped by each
             compound to discover non-targeted exposure identified in water, dust, and biological samples.
           ` }
-          progress={ ntarProgress.percent }
         />
 
         <ViewCard
@@ -96,7 +88,6 @@ export const HomeView = () => {
           description={ `
             Explore the full list of PFAS analytes.
           ` }
-          progress={ analytesProgress.percent }
         />
       </Stack>
     

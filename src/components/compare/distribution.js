@@ -1,10 +1,9 @@
-import { Fragment, useMemo } from 'react'
+import { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
 } from '@mui/joy'
 import { ResponsiveSwarmPlot } from '@nivo/swarmplot'
-import { useData } from '@context'
 
 export const Distribution = ({ analyte, data = [] }) => {
   return (

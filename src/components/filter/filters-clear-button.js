@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import {
   Close as ClearFiltersIcon,
 } from '@mui/icons-material'
-import { useData } from '@context'
+import { usePfas } from '@views/pfas'
 
 export const ClearFiltersButton = ({ sx = {}, ...props }) => {
-  const { podmTable: { table } } = useData()
+  const { table } = usePfas()
 
   const noActiveFilters = !table.getAllLeafColumns().some(col => col.getIsFiltered() )
 

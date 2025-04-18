@@ -26,23 +26,12 @@ import { CompareView } from './pfas/compare'
 import { AnalytesView } from './analytes'
 import { NonTargetedView } from './non-targeted'
 import { NotFoundView } from './'
-import { 
-  FiltersDrawer,
-  FiltersDrawerToggle,
-} from '@components/filter'
 import { PolicyAgreementDialog } from '@components/policy-agreement'
 
 //
 
 export const DashboardView = () => {
   const filtersDrawer = useToggleState(false)
-
-  const headerStartAction = useMemo(() => (
-    <FiltersDrawerToggle
-      active={ filtersDrawer.enabled }
-      onClick={ filtersDrawer.toggle }
-    />
-  ), [filtersDrawer.enabled])
 
   const headerEndActions = useMemo(() => [
     <DashboardMenu key="dashboard-menu" />,
@@ -53,7 +42,7 @@ export const DashboardView = () => {
     <PreferencesProvider>
       <DataProvider>
         <DashboardHeader
-          startAction={ headerStartAction }
+          startAction={ null }
           endActions={ headerEndActions }
         />
         <Sheet component="main" sx={{
@@ -77,10 +66,9 @@ export const DashboardView = () => {
             <Route path="non-targeted" element={ <NonTargetedView /> } />
             <Route path="*" element={ <NotFoundView /> } />
           </Routes>
-          <FiltersDrawer
-            open={ filtersDrawer.enabled }
-            onClose={ filtersDrawer.unset }
-          />
+{/*
+          <FiltersDrawer open={ filtersDrawer.enabled } onClose={ filtersDrawer.unset } />
+*/}
         </Sheet>
         <Footer />
         <PolicyAgreementDialog />

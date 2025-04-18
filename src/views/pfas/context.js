@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types'
 import { Outlet } from 'react-router-dom';
 import { AppStatus } from '@components/app-status'
 import { podmColumns } from '@data'
@@ -19,11 +20,10 @@ import {
 const PfasContext = createContext({ })
 export const usePfas = () => useContext(PfasContext)
 
-export const PfasView = () => {
+const PfasProvider = ({ children }) => {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
-  const [isPreparingTable, setIsPreparingTable] = useState(true)
 
   const progress = useProgress()
   const pfasData = useQuery({
@@ -54,13 +54,7 @@ export const PfasView = () => {
     debugAll: false,
   })
 
-  // once data is available and table is initialized, set `isPreparingTable` to false
-  useEffect(() => {
-    if (pfasData.isSuccess && table.getRowModel().rows.length > 0) {
-      setIsPreparingTable(false); // data is now processed and table can be rendered
-    }
-  }, [pfasData.isSuccess, table.getRowModel().rows.length])
-
+/*  const filterCount = table.getAllLeafColumns().filter(col => col.getIsFiltered()).length */
   return (
     <PfasContext.Provider value={{
       table,
@@ -68,11 +62,11 @@ export const PfasView = () => {
       sorting, setSorting,
       progress,
     }}>
-      {pfasData.isPending || pfasData.isLoading
-      ? <AppStatus message={ `Loading PFAS data :: ${progress.percent}%` } />
-      : isPreparingTable
-        ? <AppStatus message={ `Preparing table` } />
-        : <Outlet />}
+      { children }
     </PfasContext.Provider>
   )
+}
+
+PfasProvider.propTypes = {
+  children: PropTypes.node,
 }

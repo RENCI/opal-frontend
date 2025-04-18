@@ -28,7 +28,7 @@ export const DashboardHeader = ({ endActions = [], startAction = null }) => {
         <Stack
           alignItems="flex-start"
           justifyContent="center"
-          sx={{ flex: 1 }}
+          sx={{ flex: 1, marginLeft: '1rem' }}
         ><Brand /></Stack>
 
         <Stack

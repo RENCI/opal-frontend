@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useState } from 'react'
 import {
   Button,
   Modal,
@@ -10,7 +10,7 @@ import {
   FilterList as FilterIcon,
 } from '@mui/icons-material'
 import { Toolbar } from '@components/layout'
-import { useData } from '@context'
+import { usePfas } from '@views/pfas'
 import {
   ColumnSelect,
   DataTable,
@@ -19,15 +19,12 @@ import {
 import { TableCsvExportButton } from '@components/buttons'
 import { SampleBrowser } from '@components/browse'
 import { ClearFiltersButton } from '@components/filter'
-import { AppStatus } from '@components/app-status'
 
 //
 
 export const TableView = () => {
-  const { pfasData, podmTable } = useData()
+  const { table, columnFilters } = usePfas()
   const [filtersVisibility, setFiltersVisibility] = useState(false)
-  const { table, columnFilters } = podmTable
-  const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
 
   const handleToggleFiltersVisibility = () => setFiltersVisibility(!filtersVisibility)
 
@@ -50,13 +47,6 @@ export const TableView = () => {
     </Typography>
   ), [table.getPrePaginationRowModel().rows.length])
 
-  // once data is available and table is initialized, set `isPreparingTable` to false
-  useEffect(() => {
-    if (pfasData.isSuccess && table.getRowModel().rows.length > 0) {
-      setIsPreparingTable(false); // data is now processed and table can be rendered
-    }
-  }, [pfasData.isSuccess, table.getRowModel().rows.length])
-
   return (
     <Fragment>      
       <Toolbar>
@@ -68,20 +58,16 @@ export const TableView = () => {
         <TableBrowser />
       </Toolbar>
 
-      {
-        isPreparingTable
-          ? <AppStatus message="Preparing table" />
-          : <DataTable
-              table={ table }
-              sx={{
-                '.filter': {
-                  maxHeight: filtersVisibility ? '48px' : 0,
-                  overflow: 'hidden',
-                  transition: 'max-height 250ms',
-                },
-              }}
-            />
-      }
+      <DataTable
+        table={ table }
+        sx={{
+          '.filter': {
+            maxHeight: filtersVisibility ? '48px' : 0,
+            overflow: 'hidden',
+            transition: 'max-height 250ms',
+          },
+        }}
+      />
 
       <Toolbar>
         <SampleCount />
@@ -92,7 +78,7 @@ export const TableView = () => {
 }
 
 const TableBrowser = () => {
-  const { podmTable: { table } } = useData()
+  const { table } = usePfas()
   const [open, setOpen] = useState(false)
 
   return (

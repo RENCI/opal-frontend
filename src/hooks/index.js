@@ -1,4 +1,5 @@
 export * from './use-local-storage'
+export * from './use-progress'
 export * from './use-resize-observer'
 export * from './use-toggle-local-storage'
 export * from './use-toggle-state'

@@ -1,8 +1,10 @@
 import { memo, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { useData, usePreferences } from '@context'
+import { abbreviate } from '@util'
+import { usePreferences } from '@context'
 import { ResponsiveRadar } from '@nivo/radar'
 import { chartTheme } from '../../theme'
+import { analytes } from '@data'
 
 //
 
@@ -37,7 +39,6 @@ const capitalize = str => str[0].toUpperCase() + str.slice(1)
 
 export const ChemicalsByMediumRadarChart = ({ data }) => {
   const preferences = usePreferences()
-  const { abbreviate, analytes } = useData();
 
   // generate array of sampled media from data
   const sampledMedia = useMemo(() => {

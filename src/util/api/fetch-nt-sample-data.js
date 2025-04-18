@@ -1,8 +1,7 @@
 import { batchFetch } from './batch-fetch'
 
-export const fetchNonTargetedSampleData = (accessToken, onProgress) => async () =>
-  batchFetch({
-    accessToken,
+export const fetchNonTargetedSampleData = (onProgress) => async () =>
+  await batchFetch({
     endpoint: '/ntar_sample_data',
     perPage: 250,
     batchSize: 5,

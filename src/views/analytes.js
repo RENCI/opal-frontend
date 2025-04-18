@@ -3,11 +3,8 @@ import {
   Stack,
   Typography,
 } from '@mui/joy'
-import { useData } from '@context'
 import { Toolbar } from '@components/layout'
-import {
-  DataTable,
-} from '@components/table'
+import { DataTable } from '@components/table'
 import { TableCsvExportButton } from '@components/buttons'
 import {
   getCoreRowModel,
@@ -15,15 +12,22 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { analyteColumns } from '@data'
+import { useProgress } from '@hooks'
+import { fetchAnalytes } from '@util'
 import { AppStatus } from '@components/app-status'
+import { useQuery } from '@tanstack/react-query'
 
 //
 
 export const AnalytesView = () => {
-  const { analytesData, analytesProgress } = useData();
+  const progress = useProgress()
   const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
-
   const [sorting, setSorting] = useState([]);
+
+  const analytesData = useQuery({
+    queryKey: ['analytes'],
+    queryFn: fetchAnalytes,
+  })
 
   const analytesTable = useReactTable({
     data: analytesData.data ?? [],
@@ -60,7 +64,7 @@ export const AnalytesView = () => {
       {
         // has not started or is still going
         analytesData.isPending || analytesData.isLoading
-          ? <AppStatus message={ `Loading analytes data :: ${analytesProgress.percent}%` } />
+          ? <AppStatus message={ `Loading analytes data :: ${progress.percent}%` } />
           : isPreparingTable
             ? <AppStatus message="Preparing table" />
             : <DataTable table={ analytesTable } />

@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Stack, Typography } from '@mui/joy'
 import { Toolbar } from '@components/layout'
-import { useData } from '@context'
 
 import {
   getCoreRowModel,
@@ -18,16 +17,19 @@ import {
   Pagination,
 } from '@components/table'
 import { TableCsvExportButton } from '@components/buttons'
+import { useQuery } from '@tanstack/react-query'
+import { fetchNonTargetedSampleData } from '@util'
+import { useProgress } from '@hooks'
 
 import { AppStatus } from '@components/app-status'
 
-const relevantFilterKeys = [
-  'sample_id', 'study', 'pi', 'units', 'medium',
-  'city', 'state', 'zipcode',
-]
-
 export const NonTargetedView = () => {
-  const { ntarData, ntarProgress } = useData()
+  const progress = useProgress()
+  const ntarData = useQuery({
+    queryKey: ['non_targeted_sample_data'],
+    queryFn: fetchNonTargetedSampleData(progress.onProgress),
+  })
+
   const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
   
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
@@ -78,7 +80,7 @@ export const NonTargetedView = () => {
       {
         // has not started or is still going
         ntarData.isPending || ntarData.isLoading
-          ? <AppStatus message={ `Loading Non-targeted data :: ${ntarProgress.percent}%` } />
+          ? <AppStatus message={ `Loading Non-targeted data :: ${progress.percent}%` } />
           : isPreparingTable
             ? <AppStatus message="Preparing table" />
             : <DataTable
