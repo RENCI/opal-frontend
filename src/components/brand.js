@@ -26,11 +26,6 @@ export const Brand = () => {
         fontSize="22pt"
         sx={{
           lineHeight: 1,
-          cursor: 'default',
-          transition: 'text-shadow 250ms',
-          '&:hover': {
-            textShadow: '0 0 4px var(--joy-palette-primary-plainColor)',
-          },
         }}
       ><span className="primary">OPAL</span></Typography>
       <Typography
