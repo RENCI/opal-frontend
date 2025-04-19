@@ -16,10 +16,33 @@ import {
 
 const ViewCard = ({ title, description, icon, path }) => {
   return (
-    <Card variant="soft" sx={{ padding: 0 }}>
-      <CardContent component={ Stack } direction="column">
+    <Card variant="outlined" sx={{ padding: 0 }}>
+      <CardContent component={ Stack } direction="column" sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        zIndex: 1,
+        '&::before': {
+          zIndex: -1,
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: 'calc(100% + 2rem)',
+          height: '100%',
+          backgroundColor: 'var(--joy-palette-primary-200)',
+          filter: 'opacity(0.1)',
+          transform: 'translate(calc(100% - 3rem))',
+          clipPath: 'polygon(2rem 0, 100% 0, 100% 100%, 0 100%)',
+          transition: 'transform 150ms 100ms, filter 250ms',
+        },
+        '&:hover::before': {
+          filter: 'opacity(0.2)',
+          transform: ' translate(-2rem)',
+          transition: 'transform 150ms, filter 350ms',
+        }
+      }}>
         <Stack sx={{
-          padding: '1rem',
+          padding: '2rem',
           flex: '0 0 40px',
         }}>
           <Typography level="h3" startDecorator={ icon } sx={{ fontWeight: '300' }}>
@@ -76,17 +99,18 @@ export const HomeView = () => {
           icon={ <TableIcon /> }
           title="Non-Targeted Data"
           description={ `
-            Browse unexpected analytes detected across studies. View findings grouped by each
-            compound to discover non-targeted exposure identified in water, dust, and biological samples.
+            Browse analytes detected across studies. View records by compound to
+            discover non-targeted exposure identified samples.
           ` }
         />
 
         <ViewCard
           path="/analytes"
           icon={ <TableIcon /> }
-          title="Analytes Overview"
+          title="Analytes Index"
           description={ `
-            Explore the full list of PFAS analytes.
+            Explore the full list of analytes, each with a few details and a link
+            to their page in the CompTox Chemical Dashboard.
           ` }
         />
       </Stack>
