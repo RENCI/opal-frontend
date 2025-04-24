@@ -68,8 +68,10 @@ ViewCard.propTypes = {
 export const HomeView = () => {
   return (
     <ContentPage maxWidth="lg">
-      <Typography level="h1">OPAL</Typography>
-      <Typography level="h2" sx={{ fontWeight: '200' }}>Observational PFAS Access portaL</Typography>
+      <Box sx={{ textAlign: 'center' }}>
+        <Typography level="h1">OPAL</Typography>
+        <Typography level="h2" sx={{ fontWeight: '200' }}>Observational PFAS Access portaL</Typography>
+      </Box>
       
       <br />
       <Divider />
