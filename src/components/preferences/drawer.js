@@ -17,6 +17,7 @@ import { usePreferences } from '@context'
 import {
   CacheSelect,
   ColorModeSelect,
+  PolicyAgreementSelect,
 } from './settings'
 
 export const PreferencesDrawer = () => {
@@ -69,7 +70,14 @@ export const PreferencesDrawer = () => {
 
             <CacheSelect />
           </DialogContent>
+          
           <Divider />
+
+          <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography level="title-md">Data Sharing and Use Policy</Typography>
+
+            <PolicyAgreementSelect />
+          </DialogContent>
           
         </Stack>
       </Sheet>

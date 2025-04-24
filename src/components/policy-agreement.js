@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   Button,
+  Checkbox,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -9,6 +10,7 @@ import {
   ModalDialog,
 } from '@mui/joy';
 import Markdown from 'react-markdown';
+import { usePreferences } from '@context'
 
 const Policy = () => <Markdown components={{
   ol: props => <ol { ...props } type="a" />,
@@ -55,14 +57,32 @@ Boettger, Lisa Melnyk
 `}</Markdown>
 
 export const PolicyAgreementDialog = () => {
+  const [checked, setChecked] = useState(false);
+  const { showPolicyAgreementOnStart } = usePreferences()
   const [accepted, setAccepted] = useState(false);
+
+  const dontShowPopup = !showPolicyAgreementOnStart.enabled
+
+  if (dontShowPopup) {
+    return
+  }
+
+  const handleChangeChecked = event => setChecked(event.target.checked)
 
   const handleClose = (event, reason) => {
     if (reason === 'backdropClick') {
       return;
     }
-    setAccepted(true);
   };
+
+  const handleClickAccept = () => {
+    setAccepted(true);
+    if (checked) {
+      showPolicyAgreementOnStart.unset()
+      return
+    }
+    showPolicyAgreementOnStart.set()
+  }
 
   return (
     <Modal open={ !accepted } onClose={ handleClose }>
@@ -74,10 +94,18 @@ export const PolicyAgreementDialog = () => {
         </DialogContent>
         <Divider />
         <DialogActions>
-          <Button onClick={ () => setAccepted(true) }>Accept and Close</Button>
+          <Checkbox
+            onChange={ handleChangeChecked }
+            checked={ checked }
+            label="Don't show on startup"
+            sx={{ whiteSpace: 'nowrap'}}
+          />
+          <Button
+            fullWidth
+            onClick={ handleClickAccept }
+          >Accept and Close</Button>
         </DialogActions>
       </ModalDialog>
     </Modal>
   );
 };
-
