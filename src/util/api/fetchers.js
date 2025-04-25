@@ -1,10 +1,25 @@
-import api from './api'
+import api from './'
+import { batchFetch } from './batch-fetch'
 import { chemicalFormulaLaTeX } from '@util'
 
-const API_URL = `${ process.env.API_HOST }/podm/api`
+export const fetchSampleData = (onProgress) => async () =>
+  await batchFetch({
+    endpoint: '/pfas_sample_data',
+    perPage: 250,
+    batchSize: 9,
+    onProgress,
+  })
+
+export const fetchNonTargetedSampleData = (onProgress) => async () =>
+  await batchFetch({
+    endpoint: '/ntar_sample_data',
+    perPage: 250,
+    batchSize: 5,
+    onProgress,
+  })
 
 export const fetchAnalytes = async () => await api.get(
-    `${ API_URL }/pfas_name_classification_info/?`
+    `${ process.env.API_HOST }/podm/api/pfas_name_classification_info/?`
       + `fields=abbreviation,chemical_name,dtxsid,formula`
       + `&abbreviation__istartswith=PF`
       + `&psize=100`

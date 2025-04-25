@@ -1,6 +1,6 @@
 // auth.js
 import axios from 'axios'
-import { API_URL } from './'
+import { API_URL } from './url'
 
 let accessToken = null
 let tokenExpiry = null

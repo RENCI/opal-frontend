@@ -1,4 +1,4 @@
-import api from './api'
+import api from './'
 import { delay } from '../delay'
 
 const baseUrl = `${process.env.API_HOST}/podm/api`
