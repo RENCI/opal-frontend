@@ -31,7 +31,8 @@ main {
 
 a {
   color: var(--joy-palette-primary-main);
+  transition: color 250ms;
   &:hover {
-    color: var(--joy-palette-primary-dark);
+    color: var(--joy-palette-primary-light);
   }
 }

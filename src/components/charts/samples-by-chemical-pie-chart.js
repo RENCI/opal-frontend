@@ -1,9 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Divider, Typography } from '@mui/joy'
-import { useData, usePreferences } from '@context'
+import { usePreferences } from '@context'
 import { ResponsivePie } from '@nivo/pie'
 import { chartTheme } from '../../theme'
+import { analytes } from '@data'
+import { abbreviate } from '@util'
 
 const Tooltip = ({ datum }) => {
   return (
@@ -27,7 +29,6 @@ Tooltip.propTypes = {
 //
 
 export const ChemicalDetectionPieChart = ({ data }) => {
-  const { abbreviate, analytes } = useData();
   const preferences = usePreferences()
 
   const emptyChemicalBuckets = useMemo(() => analytes

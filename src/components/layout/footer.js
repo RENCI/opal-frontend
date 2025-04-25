@@ -11,7 +11,26 @@ import renciLogo from '@images/renci-logo.png'
 import renciLogoDark from '@images/renci-logo-dark.png'
 import silsLogo from '@images/sils-logo.png'
 
-//
+const version = process.env.TAG ?? 'local'
+
+const AppVersion = () => (
+  <Stack
+    direction="row"
+    sx={{
+      position: 'absolute',
+      bottom: '0.5rem',
+      right: '0.5rem',
+      fontSize: '75%',
+      zIndex: 999,
+      whiteSpace: 'no'
+    }}
+  >
+    <Typography color="default" level="body-xs" >
+      <Typography>Version:{' '}</Typography>
+      <Typography variant="soft" color="primary">{ version }</Typography>
+    </Typography>
+  </Stack>
+)
 
 export const Footer = () => {
   const { colorMode } = usePreferences()
@@ -22,6 +41,7 @@ export const Footer = () => {
       component="footer"
       gap={ 2 }
       sx={{
+        position: 'relative',
         p: 2,
         borderTop: '1px solid var(--joy-palette-divider)',
         '.logo-list': {
@@ -76,6 +96,7 @@ export const Footer = () => {
           &copy; { new Date().getFullYear() }
         </Typography>
       </Stack>
+      <AppVersion />
     </Sheet>
   )
 }

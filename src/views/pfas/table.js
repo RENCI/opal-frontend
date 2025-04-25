@@ -1,10 +1,8 @@
 import { Fragment, useCallback, useState } from 'react'
 import {
   Button,
-  CircularProgress,
   Modal,
   ModalClose,
-  Stack,
   Typography,
 } from '@mui/joy'
 import {
@@ -12,7 +10,7 @@ import {
   FilterList as FilterIcon,
 } from '@mui/icons-material'
 import { Toolbar } from '@components/layout'
-import { useData } from '@context'
+import { usePfas } from '@views/pfas'
 import {
   ColumnSelect,
   DataTable,
@@ -20,16 +18,13 @@ import {
 } from '@components/table'
 import { TableCsvExportButton } from '@components/buttons'
 import { SampleBrowser } from '@components/browse'
-import {
-  ClearFiltersButton,
-} from '@components/filter'
+import { ClearFiltersButton } from '@components/filter'
 
 //
 
 export const TableView = () => {
-  const { pfasData, podmTable } = useData()
+  const { table, columnFilters } = usePfas()
   const [filtersVisibility, setFiltersVisibility] = useState(false)
-  const { table, columnFilters } = podmTable
 
   const handleToggleFiltersVisibility = () => setFiltersVisibility(!filtersVisibility)
 
@@ -51,18 +46,6 @@ export const TableView = () => {
       { table.getPrePaginationRowModel().rows.length } samples
     </Typography>
   ), [table.getPrePaginationRowModel().rows.length])
-
-  if (pfasData.isLoading) {
-    return (
-      <Stack
-        justifyContent="center"
-        alignItems="center"
-        sx={{ mt: 'calc(100px + 5rem)' }}
-      >
-        <CircularProgress size="lg" />
-      </Stack>
-    )
-  }
 
   return (
     <Fragment>      
@@ -95,7 +78,7 @@ export const TableView = () => {
 }
 
 const TableBrowser = () => {
-  const { podmTable: { table } } = useData()
+  const { table } = usePfas()
   const [open, setOpen] = useState(false)
 
   return (

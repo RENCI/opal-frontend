@@ -3,12 +3,12 @@ import { Button, FormControl, FormLabel, Option, Select, Stack } from '@mui/joy'
 import {
   Close as ClearIcon,
 } from '@mui/icons-material'
-import { useData } from '@context'
-import { useCompare } from '@views/dashboard/compare'
+import { useCompare } from '@views/pfas/compare'
 import { Latex } from '@components/latex'
+import { abbreviate } from '@util'
+import { analytes } from '@data'
 
 export const AnalyteSelect = () => {
-  const { analytes, abbreviate } = useData()
   const { clearAnalytes, selectedAnalytes, setSelectedAnalytes } = useCompare()
 
   const handleChangeAnalyte = useCallback(index => (event, newAnalyte) => {

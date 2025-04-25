@@ -25,6 +25,8 @@ const PreferencesInterface = ({ children }) => {
   const toggleColorMode = useCallback(() => setMode(otherColorMode), [mode])
 
   const cache = useToggleLocalStorage('use-cache')
+  const showPolicyAgreementOnStart = useToggleLocalStorage('show-policy-agreement-on-start')
+
   useEffect(() => {
     if (!cache.enabled) { localStorage.removeItem('PFAS_DATA_CACHE') }
   }, [cache.enabled])
@@ -42,6 +44,7 @@ const PreferencesInterface = ({ children }) => {
         light: inLightMode,
         dark: inDarkMode,
       },
+      showPolicyAgreementOnStart,
       cache,
     }}>
       { children }

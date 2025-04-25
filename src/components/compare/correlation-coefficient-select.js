@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { FormControl, FormLabel, Option, Select, Stack } from '@mui/joy'
-import { useCompare } from '@views/dashboard/compare'
+import { useCompare } from '@views/pfas/compare'
 
 export const CorrelationCoefficientSelect = () => {
   const { correlationCoefficient } = useCompare()

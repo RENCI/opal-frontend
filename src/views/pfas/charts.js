@@ -4,7 +4,7 @@ import {
   Typography,
 } from '@mui/joy'
 import { Toolbar } from '@components/layout'
-import { useData } from '@context'
+import { usePfas } from '@views/pfas'
 import {
   ChemicalDetectionPieChart,
   ChemicalsByMediumRadarChart,
@@ -14,7 +14,7 @@ import { ChartCard } from '@components/chart-card'
 //
 
 export const ChartsView = () => {
-  const { podmTable: { table } } = useData()
+  const { table } = usePfas()
 
   return (
     <Stack direction="column">

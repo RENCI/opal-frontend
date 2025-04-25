@@ -1,34 +1,17 @@
-import { Fragment, useMemo } from 'react'
+import { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
 } from '@mui/joy'
 import { ResponsiveSwarmPlot } from '@nivo/swarmplot'
-import { useData } from '@context'
 
-export const Distribution = ({ analyte }) => {
-  const { podmTable: { table } } = useData()
-
-  const chartData = useMemo(() => {
-    return table.getPrePaginationRowModel().rows
-      .reduce((acc, row) => {
-        if (row.original[`${ analyte }_concentration`] > 0) {
-          acc.push({
-            id: row.original.sample_id,
-            group: analyte,
-            concentration: row.original[`${ analyte }_concentration`],
-          })
-        }
-        return acc
-      }, [])
-  }, [analyte, table.getPrePaginationRowModel().rows])
-
+export const Distribution = ({ analyte, data = [] }) => {
   return (
     <Fragment>
       <Typography level="h4">Distribution of { analyte }</Typography>
       <ResponsiveSwarmPlot
         height={ 400 }
-        data={ chartData }
+        data={ data }
         groups={[ analyte ]}
         identity="id"
         value="concentration"
@@ -63,4 +46,5 @@ export const Distribution = ({ analyte }) => {
 
 Distribution.propTypes = {
   analyte: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
 }

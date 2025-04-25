@@ -10,10 +10,11 @@ import {
   Circle as IndicatorIcon,
 } from '@mui/icons-material'
 import { ColumnFilter } from '@components/table'
-import { useData } from '@context'
+import { abbreviate } from '@util'
+import { usePfas } from '@views/pfas'
 
 export const ColumnFilters = () => {
-  const { abbreviate, podmTable: { table } } = useData()
+  const { table } = usePfas()
 
   return (
     <AccordionGroup>

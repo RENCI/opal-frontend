@@ -1,15 +1,16 @@
 import { Fragment, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/joy';
-import { useData, usePreferences } from '@context';
+import { usePreferences } from '@context';
 import { IndicatorBox } from './correlation-indicator-box';
-import { useCompare } from '@views/dashboard/compare';
+import { useCompare } from '@views/pfas/compare';
+import { analytes } from '@data'
+import { abbreviate } from '@util'
 
 //
 
 export const AnalyteCorrelationGrid = ({ data, onClickCell, selectedAnalytes = [null, null] }) => {
   const { correlationCoefficient } = useCompare();
-  const { analytes, abbreviate } = useData();
   const { colorMode } = usePreferences();
   const max = useRef(0);
 

@@ -10,7 +10,7 @@ import {
 } from '@mui/joy'
 import { Close as CloseIcon } from '@mui/icons-material'
 import { Toolbar } from '@components/layout'
-import { useData } from '@context'
+import { usePfas } from '@views/pfas'
 import {
   AnalyteCorrelationGrid,
   AnalyteCorrelationScatterplot,
@@ -20,7 +20,7 @@ import {
   Instructions,
 } from '@components/compare'
 import { Latex } from '@components/latex'
-import { pearsonsR, spearmanRankCorrelation } from '@util'
+import { abbreviate, pearsonsR, spearmanRankCorrelation } from '@util'
 import { CsvExportButton, PngDownloadButton } from '@components/buttons'
 
 //
@@ -30,7 +30,7 @@ export const useCompare = () => useContext(CompareContext)
 
 export const CompareView = () => {
   const containerRef = useRef(null)
-  const { abbreviate, podmTable: { table } } = useData()
+  const { table } = usePfas()
   const [selectedAnalytes, setSelectedAnalytes] = useState([null, null])
   const abbreviations = useMemo(() => [
     abbreviate(selectedAnalytes[0]),
@@ -96,7 +96,10 @@ export const CompareView = () => {
     ), [table.getPrePaginationRowModel().rows])
 
     if (selectedAnalytes[0] === selectedAnalytes[1]) {
-      return <Distribution analyte={ selectedAnalytes[0] } />
+      return <Distribution
+        analyte={ selectedAnalytes[0] }
+        data={ correlationData }
+      />
     }
 
     return (
@@ -184,7 +187,7 @@ export const CompareView = () => {
               flex: 1,
               mt: 1,
               p: 2,
-              backgroundImage: 'linear-gradient(120deg, var(--joy-palette-background-surface) 50%, transparent 100%)',
+              backgroundImage: 'linear-gradient(120deg, var(--joy-palette-primary-solidDisabledBg) 50%, transparent 100%)',
               borderBottomLeftRadius: '6px',
               borderTopLeftRadius: '6px',
             }}>

@@ -10,8 +10,9 @@ import {
   Typography,
 } from '@mui/joy'
 import { Circle as DetectionIcon } from '@mui/icons-material'
-import { useData } from '@context'
+import { abbreviate } from '@util'
 import { KeyValuePair } from './key-value-pair'
+import { analytes } from '@data'
 
 const DetectionIndicator = memo(
   function detectionIndicator({ flag = '' }) {
@@ -46,7 +47,6 @@ DetectionIndicator.propTypes = {
 }
 
 export const SampleCard = ({ sample }) => {
-  const { abbreviate, analytes } = useData()
 
   return (
     <Card

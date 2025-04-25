@@ -15,29 +15,23 @@ import {
   Footer,
 } from '@components/layout'
 import { useToggleState } from '@hooks'
-import { ChartsView } from './charts'
+
+import { HomeView } from './home'
+
+import { PfasView } from './pfas'
+import { TableView } from './pfas/table'
+import { ChartsView } from './pfas/charts'
+import { CompareView } from './pfas/compare'
+
 import { AnalytesView } from './analytes'
-import { CompareView } from './compare'
 import { NonTargetedView } from './non-targeted'
-import { NotFoundView } from '../'
-import { TableView } from './table'
-import { 
-  FiltersDrawer,
-  FiltersDrawerToggle,
-} from '@components/filter'
+import { NotFoundView } from './'
 import { PolicyAgreementDialog } from '@components/policy-agreement'
 
 //
 
 export const DashboardView = () => {
   const filtersDrawer = useToggleState(false)
-
-  const headerStartAction = useMemo(() => (
-    <FiltersDrawerToggle
-      active={ filtersDrawer.enabled }
-      onClick={ filtersDrawer.toggle }
-    />
-  ), [filtersDrawer.enabled])
 
   const headerEndActions = useMemo(() => [
     <DashboardMenu key="dashboard-menu" />,
@@ -48,7 +42,7 @@ export const DashboardView = () => {
     <PreferencesProvider>
       <DataProvider>
         <DashboardHeader
-          startAction={ headerStartAction }
+          startAction={ null }
           endActions={ headerEndActions }
         />
         <Sheet component="main" sx={{
@@ -61,17 +55,20 @@ export const DashboardView = () => {
           pt: 6,
         }}>
           <Routes>
-            <Route index element={ <TableView /> } />
+            <Route index element={ <HomeView /> } />
+            <Route path="pfas" element={ <PfasView /> }>
+              <Route index element={ <TableView /> } />
+              <Route path="table" element={ <TableView /> } />
+              <Route path="charts" element={ <ChartsView /> } />
+              <Route path="compare" element={ <CompareView /> } />
+            </Route>
             <Route path="analytes" element={ <AnalytesView /> } />
-            <Route path="charts" element={ <ChartsView /> } />
-            <Route path="compare" element={ <CompareView /> } />
             <Route path="non-targeted" element={ <NonTargetedView /> } />
             <Route path="*" element={ <NotFoundView /> } />
           </Routes>
-          <FiltersDrawer
-            open={ filtersDrawer.enabled }
-            onClose={ filtersDrawer.unset }
-          />
+{/*
+          <FiltersDrawer open={ filtersDrawer.enabled } onClose={ filtersDrawer.unset } />
+*/}
         </Sheet>
         <Footer />
         <PolicyAgreementDialog />
