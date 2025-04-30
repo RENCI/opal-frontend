@@ -77,13 +77,26 @@ export const HomeView = () => {
       <Divider />
       <br />
 
-      <Stack direction="row" spacing={{ xs: 1, sm: 2, md: 4 }} sx={{
-        width: '100%',
-        '& > .MuiCard-root': { flex: 1 },
-        '.MuiLink-root:hover': {
-          textDecoration: 'none',
-        }
-      }}>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={ 4 }
+        useFlexGap
+        sx={{
+          width: '100%',
+          flexWrap: 'wrap',
+          '& > .MuiCard-root': { flex: 1 },
+          '.MuiLink-root:hover': {
+            textDecoration: 'none',
+          },
+          '.MuiCard-root': {
+            minHeight: '250px',
+            flex: {
+              xs: '1 0 250px',
+              md: '1 0 400px',
+            },
+          }
+        }}
+      >
         <ViewCard
           path="/pfas"
           icon={ <TableIcon /> }
@@ -93,6 +106,15 @@ export const HomeView = () => {
             in tabular and visual formats.
             Filter by location, media type (water, dust, blood), collection date, and collection
             details for specific analytes to uncover patterns in PFAS exposure.
+          ` }
+        />
+
+        <ViewCard
+          path="/pfas2"
+          icon={ <TableIcon /> }
+          title="UCMR5 Data"
+          description={ `
+            UCMR5 Data
           ` }
         />
 

@@ -24,6 +24,7 @@ import { ChartsView } from './pfas/charts'
 import { CompareView } from './pfas/compare'
 
 import { AnalytesView } from './analytes'
+import { Ucmr5View } from './ucmr5'
 import { NonTargetedView } from './non-targeted'
 import { NotFoundView } from './'
 import { PolicyAgreementDialog } from '@components/policy-agreement'
@@ -62,6 +63,7 @@ export const DashboardView = () => {
               <Route path="charts" element={ <ChartsView /> } />
               <Route path="compare" element={ <CompareView /> } />
             </Route>
+            <Route path="pfas2" element={ <Ucmr5View /> } />
             <Route path="analytes" element={ <AnalytesView /> } />
             <Route path="non-targeted" element={ <NonTargetedView /> } />
             <Route path="*" element={ <NotFoundView /> } />

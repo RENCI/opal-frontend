@@ -17,7 +17,7 @@ export const ContentPage = ({ children, maxWidth = 'md', sx }) => {
         mt: '3.5rem',
         mb: '4rem',
         px: 2,
-        minWidth: SIZES[maxWidth],
+        // minWidth: SIZES[maxWidth],
         maxWidth: SIZES[maxWidth],
         mx: 'auto',
         ...sx

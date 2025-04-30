@@ -24,13 +24,13 @@ export const AnalytesView = () => {
   const [isPreparingTable, setIsPreparingTable] = useState(true)  // table preparation state
   const [sorting, setSorting] = useState([]);
 
-  const analytesData = useQuery({
+  const analytesQuery = useQuery({
     queryKey: ['analytes'],
     queryFn: fetchAnalytes,
   })
 
   const analytesTable = useReactTable({
-    data: analytesData.data ?? [],
+    data: analytesQuery.data ?? [],
     columns: analyteColumns,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
@@ -39,6 +39,7 @@ export const AnalytesView = () => {
     state: {
       sorting,
     },
+    debugAll: false,
   })
 
   const AnalyteCount = useCallback(() => (
@@ -49,10 +50,10 @@ export const AnalytesView = () => {
 
   // once data is available and table is initialized, set `isPreparingTable` to false
   useEffect(() => {
-    if (analytesData.isSuccess && analytesTable.getRowModel().rows.length > 0) {
+    if (analytesQuery.isSuccess && analytesTable.getRowModel().rows.length > 0) {
       setIsPreparingTable(false); // data is now processed and table can be rendered
     }
-  }, [analytesData.isSuccess, analytesTable.getRowModel().rows.length])
+  }, [analytesQuery.isSuccess, analytesTable.getRowModel().rows.length])
 
   return (
     <Stack direction="column">
@@ -63,7 +64,7 @@ export const AnalytesView = () => {
 
       {
         // has not started or is still going
-        analytesData.isPending || analytesData.isLoading
+        analytesQuery.isPending || analytesQuery.isLoading
           ? <AppStatus message={ `Loading analytes data :: ${progress.percent}%` } />
           : isPreparingTable
             ? <AppStatus message="Preparing table" />
