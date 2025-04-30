@@ -66,30 +66,48 @@ ViewCard.propTypes = {
   path: PropTypes.string.isRequired,
 }
 
-const views = [
+const viewCards = [
   {
     path: '/pfas',
     icon: <TableIcon />,
     title: 'Targeted Primary Data',
-    description: `**Explore over 45,000 environmental and biological samples collected across 37 U.S. states.** Visualize and filter PFAS measurements by location, media type (e.g., water, dust, blood), collection date, and analyte. Uncover exposure patterns through interactive tables and charts.`,
+    description:
+      `**Explore over 45,000 environmental and biological samples ` +
+      `collected across 37 U.S. states.** Visualize and filter PFAS ` +
+      `measurements by location, media type (e.g., water, dust, blood), ` +
+      `collection date, and analyte. Uncover exposure patterns through ` +
+      `interactive tables and charts.`,
   },
   {
     path: '/pfas2',
     icon: <TableIcon />,
     title: 'Targeted Secondary Data',
-    description: `**View PFAS measurements from the UCMR5 study, covering public water systems across the U.S.** Search and filter this high-profile dataset by location, collection details, and analyte. While similar to primary data, unit differences and standardized sampling make this dataset distinct.`,
+    description:
+      `**View PFAS measurements from the UCMR5 study, covering public ` +
+      `water systems across the U.S.** Search and filter this high-profile ` +
+      `dataset by location, collection details, and analyte. While similar ` +
+      `to primary data, unit differences and standardized sampling make ` +
+      `this dataset distinct.`,
   },
   {
     path: '/non-targeted',
     icon: <TableIcon />,
     title: 'Non-Targeted Data',
-    description: `**Browse compounds detected through non-targeted analysis techniques across multiple studies.** Each record links a compound to a sample, helping to explore novel or unexpected PFAS exposures revealed through detection-first workflows.`,
+    description:
+      `**Browse compounds detected through non-targeted analysis ` +
+      `techniques across multiple studies.** Each record links a compound ` +
+      `to a sample, helping to explore novel or unexpected PFAS exposures ` +
+      `revealed through detection-first workflows.`,
   },
   {
     path: '/analytes',
     icon: <TableIcon />,
     title: 'Analytes Index',
-    description: `**Explore a complete index of PFAS analytes represented in the dataset.** Review identifiers, names, and additional metadata for each compound, with links to detailed profiles in the CompTox Chemical Dashboard.`,
+    description:
+      `**Explore a complete index of PFAS analytes represented ` +
+      `in the dataset.** Review identifiers, names, and additional ` +
+      `metadata for each compound, with links to detailed profiles ` +
+      `in the CompTox Chemical Dashboard.`,
   },
 ]
 
@@ -126,7 +144,7 @@ export const HomeView = () => {
         }}
       >
         {
-          views.map(({ path, icon, title, description }) => (
+          viewCards.map(({ path, icon, title, description }) => (
             <ViewCard
               key={ `card-${ path }` }
               path={ path }
