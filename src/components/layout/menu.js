@@ -19,23 +19,22 @@ import {
   DonutSmall as ChartsIcon,
   CompareArrows as CompareIcon,
   ArrowDropDown as DropdownIcon,
-  AutoAwesome as NewDataIcon,
 } from '@mui/icons-material'
 import { usePreferences } from '@context'
 import { useLocalStorage } from '@hooks'
 import { Link } from '@components/link'
 
 const menuItems = [
-  { id: 'pfas',         path: '/pfas',        label: 'PFAS',         Icon: TableIcon,
+  { id: 'pfas',         path: '/pfas',        label: 'Targeted Primary', Icon: TableIcon,
     subitems: [
-      { id: 'table',      path: '/pfas/table',   label: 'Data Table',     Icon: TableIcon },
-      { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations', Icon: ChartsIcon },
-      { id: 'compare',    path: '/pfas/compare', label: 'Comparison',     Icon: CompareIcon },
+      { id: 'table',      path: '/pfas/table',   label: 'Data',            Icon: TableIcon },
+      { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations',  Icon: ChartsIcon },
+      { id: 'compare',    path: '/pfas/compare', label: 'Comparison',      Icon: CompareIcon },
     ]
   },
-  { id: 'ucmr5',        path: 'pfas2',        label: 'PFAS2',        Icon: NewDataIcon },
-  { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted', Icon: NonTargetedIcon },
-  { id: 'analytes',     path: 'analytes',     label: 'Analytes',     Icon: AnalytesIcon },
+  { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary Data', Icon: TableIcon },
+  { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
+  { id: 'analytes',     path: 'analytes',     label: 'Analytes',                Icon: AnalytesIcon },
 ]
 
 const NavDropdown = function NavDropdown({ label, subitems = [] }) {

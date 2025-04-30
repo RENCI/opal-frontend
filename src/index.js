@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import { AuthProvider } from '@context'
 import './index.css'
-import '@fontsource/inter'
+import '@fontsource/inter/'
+import '@fontsource/inter/600.css'
 
 const container = document.getElementById('root')
 const root = createRoot(container)

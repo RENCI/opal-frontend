@@ -14,7 +14,7 @@ const Paragraph = props => {
       sx={{
         my: 2,
         'strong': {
-          fontWeight: 'bold',
+          fontWeight: '800',
         }
       }}
       { ... props }
@@ -37,7 +37,7 @@ const Blockquote = props => {
 }
 
 const Codeblock = props => {
-  const { preferences } = usePreferences()
+  const preferences = usePreferences()
   return (
     <Box
       component="pre"
