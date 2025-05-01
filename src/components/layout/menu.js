@@ -15,7 +15,7 @@ import {
 import {
   Biotech as AnalytesIcon,
   Science as NonTargetedIcon,
-  TableChart as TableIcon,
+  ViewList as TableIcon,
   DonutSmall as ChartsIcon,
   CompareArrows as CompareIcon,
   ArrowDropDown as DropdownIcon,

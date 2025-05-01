@@ -11,9 +11,54 @@ import {
   Typography,
 } from '@mui/joy'
 import {
-  TableChart as TableIcon,
+  ViewList as TableIcon,
 } from '@mui/icons-material'
 import { Markdown } from '@components/markdown'
+
+const viewCards = [
+  {
+    path: '/pfas',
+    icon: <TableIcon color="default" />,
+    title: 'Targeted Primary Data',
+    description:
+      `**Explore 16 commonly studied PFAS analytes (Wallis et al. 2024), ` +
+      `quantified using targeted chemical analysis methods ` +
+      `across more than 45,000 samples collected in 37 U.S. states.** ` +
+      `Visualize and filter PFAS measurements by location, media type ` +
+      `(e.g., water, dust, blood), collection date, and analyte. ` +
+      `Uncover exposure patterns through interactive tables and charts.`
+  },
+  {
+    path: '/pfas2',
+    icon: <TableIcon color="default" />,
+    title: 'Targeted Secondary Data',
+    description:
+`**Explore additional PFAS analytes, quantified using targeted
+chemical analysis methods, in samples from public water systems
+and tapwater across the U.S.** Search and filter by location,
+collection details, and analyte.`,
+  },
+  {
+    path: '/non-targeted',
+    icon: <TableIcon color="default" />,
+    title: 'Non-Targeted Data',
+    description:
+`**Browse compounds detected through non-targeted analysis
+techniques across multiple studies.** Each record links a compound
+to a sample, helping to explore novel or unexpected PFAS exposures
+revealed through detection-first workflows.`,
+  },
+  {
+    path: '/analytes',
+    icon: <TableIcon color="default" />,
+    title: 'Analytes Index',
+    description:
+`**Explore a complete index of PFAS analytes represented
+in the dataset.** Review identifiers, names, and additional
+metadata for each compound, with links to detailed profiles
+in the CompTox Chemical Dashboard.`,
+  },
+]
 
 const ViewCard = ({ title, description, icon, path }) => {
   return (
@@ -66,51 +111,6 @@ ViewCard.propTypes = {
   path: PropTypes.string.isRequired,
 }
 
-const viewCards = [
-  {
-    path: '/pfas',
-    icon: <TableIcon />,
-    title: 'Targeted Primary Data',
-    description:
-      `**Explore over 45,000 environmental and biological samples ` +
-      `collected across 37 U.S. states.** Visualize and filter PFAS ` +
-      `measurements by location, media type (e.g., water, dust, blood), ` +
-      `collection date, and analyte. Uncover exposure patterns through ` +
-      `interactive tables and charts.`,
-  },
-  {
-    path: '/pfas2',
-    icon: <TableIcon />,
-    title: 'Targeted Secondary Data',
-    description:
-      `**View PFAS measurements from the UCMR5 study, covering public ` +
-      `water systems across the U.S.** Search and filter this high-profile ` +
-      `dataset by location, collection details, and analyte. While similar ` +
-      `to primary data, unit differences and standardized sampling make ` +
-      `this dataset distinct.`,
-  },
-  {
-    path: '/non-targeted',
-    icon: <TableIcon />,
-    title: 'Non-Targeted Data',
-    description:
-      `**Browse compounds detected through non-targeted analysis ` +
-      `techniques across multiple studies.** Each record links a compound ` +
-      `to a sample, helping to explore novel or unexpected PFAS exposures ` +
-      `revealed through detection-first workflows.`,
-  },
-  {
-    path: '/analytes',
-    icon: <TableIcon />,
-    title: 'Analytes Index',
-    description:
-      `**Explore a complete index of PFAS analytes represented ` +
-      `in the dataset.** Review identifiers, names, and additional ` +
-      `metadata for each compound, with links to detailed profiles ` +
-      `in the CompTox Chemical Dashboard.`,
-  },
-]
-
 export const HomeView = () => {
   return (
     <ContentPage maxWidth="lg">
@@ -137,7 +137,7 @@ export const HomeView = () => {
           '.MuiCard-root': {
             minHeight: '250px',
             flex: {
-              xs: '1 0 250px',
+              xs: '1 0 350px',
               md: '1 0 400px',
             },
           }
