@@ -81,7 +81,7 @@ export const Ucmr5View = () => {
       {
         // has not started or is still going
         ucmr5Query.isPending || ucmr5Query.isLoading
-          ? <AppStatus message={ `Loading UCMR5 data :: ${progress.percent}%` } />
+          ? <AppStatus message={ `Loading targeted secondary data :: ${progress.percent}%` } />
           : isPreparingTable
             ? <AppStatus message="Preparing table" />
             : <DataTable table={ ucmr5Table } />

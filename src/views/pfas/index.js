@@ -69,7 +69,7 @@ export const PfasView = () => {
       progress,
     }}>
       {pfasData.isPending || pfasData.isLoading
-      ? <AppStatus message={ `Loading PFAS data :: ${progress.percent}%` } />
+      ? <AppStatus message={ `Loading targeted primary data :: ${progress.percent}%` } />
       : isPreparingTable
         ? <AppStatus message={ `Preparing table` } />
         : <Outlet />}
