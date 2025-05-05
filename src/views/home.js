@@ -1,19 +1,21 @@
 import PropTypes from 'prop-types'
 import { ContentPage } from '@components/layout'
-import { Link } from '@components/link'
 import {
   Box,
+  Button,
   Card,
+  CardActions,
   CardContent,
   Divider,
-  Link as JoyLink,
   Stack,
   Typography,
 } from '@mui/joy'
 import {
   ViewList as TableIcon,
+  ArrowForward as LinkIcon,
 } from '@mui/icons-material'
 import { Markdown } from '@components/markdown'
+import { Link } from '@components/link'
 
 const viewCards = [
   {
@@ -21,7 +23,8 @@ const viewCards = [
     icon: <TableIcon color="default" />,
     title: 'Targeted Primary Data',
     description:
-      `**Explore 16 commonly studied PFAS analytes (Wallis et al. 2024), ` +
+      `**Explore 16 commonly studied PFAS analytes ` +
+      `([Wallis et al. 2024](https://www-sciencedirect-com.libproxy.lib.unc.edu/science/article/pii/S0160412024007438?via%3Dihub)), ` +
       `quantified using targeted chemical analysis methods ` +
       `across more than 45,000 samples collected in 37 U.S. states.** ` +
       `Visualize and filter PFAS measurements by location, media type ` +
@@ -60,46 +63,72 @@ in the CompTox Chemical Dashboard.`,
   },
 ]
 
+const shimmerHoverStyle = {
+  position: 'relative',
+  overflow: 'hidden',
+  zIndex: 1,
+  '&::before': {
+    zIndex: -1,
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 'calc(100% + 1rem)',
+    height: '100%',
+    backgroundColor: 'var(--joy-palette-primary-300)',
+    filter: 'opacity(0.2)',
+    transform: 'translate(calc(100% - 2rem))',
+    clipPath: 'polygon(1rem 0, 100% 0, 100% 100%, 0 100%)',
+    transition: 'transform 500ms, filter 500ms',
+  },
+  '&:hover': {
+    color: 'var(--joy-palette-text-primary)',
+  },
+  '&:hover::before': {
+    filter: 'opacity(0.0)',
+    transform: ' translate(-1rem)',
+    transition: 'transform 500ms, filter 500ms 250ms',
+  }
+};
+
+const animateButtonContentsStyle = {
+  '.text': { transform: 'translate(0)', transition: 'transform 300ms' },
+  '.icon': { transform: 'translate(0)', transition: 'transform 200ms' },
+  '&:hover .icon': { transform: 'translate(6px)', transition: 'transform 500ms ease-out' },
+  '&:hover .text': { transform: 'translate(-2px)', transition: 'transform 250ms ease-out' },
+};
+
 const ViewCard = ({ title, description, icon, path }) => {
   return (
-    <Card variant="outlined" sx={{ padding: 0 }}>
-      <CardContent component={ Stack } direction="column" sx={{
-        position: 'relative',
-        overflow: 'hidden',
-        zIndex: 1,
-        '&::before': {
-          zIndex: -1,
-          content: '""',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: 'calc(100% + 2rem)',
-          height: '100%',
-          backgroundColor: 'var(--joy-palette-primary-200)',
-          filter: 'opacity(0.1)',
-          transform: 'translate(calc(100% - 3rem))',
-          clipPath: 'polygon(2rem 0, 100% 0, 100% 100%, 0 100%)',
-          transition: 'transform 150ms 100ms, filter 250ms',
-        },
-        '&:hover::before': {
-          filter: 'opacity(0.2)',
-          transform: ' translate(-2rem)',
-          transition: 'transform 150ms, filter 350ms',
-        }
-      }}>
+    <Card variant="outlined" sx={{ p: 1 }}>
+      <CardContent component={ Stack } direction="column">
         <Stack sx={{
           padding: '2rem',
           flex: '0 0 40px',
         }}>
           <Typography level="h3" startDecorator={ icon } sx={{ fontWeight: '300' }}>
-            <JoyLink overlay component={ Link } to={ path }>{ title }</JoyLink>
+            { title }
           </Typography>
         </Stack>
         <Divider />
-        <Box sx={{ padding: '1rem', flex: 1 }}>
+        <Box sx={{ padding: '1rem 1rem 0 1rem', flex: 1 }}>
           <Markdown>{ description }</Markdown>
         </Box>
       </CardContent>
+      
+      <CardActions>
+        <Button
+          variant="soft"
+          component={ Link }
+          to={ path }
+          sx={{
+            ...shimmerHoverStyle,
+            ...animateButtonContentsStyle,
+            padding: '1rem 0',
+          }}
+          endDecorator={ <LinkIcon className="icon" /> }
+        ><span className="text">View</span></Button>
+      </CardActions>
     </Card>
   )
 }
