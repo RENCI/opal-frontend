@@ -17,19 +17,19 @@ import {
 import { Markdown } from '@components/markdown'
 import { Link } from '@components/link'
 
-const viewCards = [
+const homeViewCards = [
   {
     path: '/pfas',
     icon: <TableIcon color="default" />,
     title: 'Targeted Primary Data',
     description:
-      `**Explore 16 commonly studied PFAS analytes ` +
-      `([Wallis et al. 2024](https://www-sciencedirect-com.libproxy.lib.unc.edu/science/article/pii/S0160412024007438?via%3Dihub)), ` +
-      `quantified using targeted chemical analysis methods ` +
-      `across more than 45,000 samples collected in 37 U.S. states.** ` +
-      `Visualize and filter PFAS measurements by location, media type ` +
-      `(e.g., water, dust, blood), collection date, and analyte. ` +
-      `Uncover exposure patterns through interactive tables and charts.`
+`**Explore 16 commonly studied PFAS analytes
+([Wallis et al. 2024](https://www.sciencedirect.com/science/article/pii/S0160412024007438)),
+quantified using targeted chemical analysis methods
+across more than 45,000 samples collected in 37 U.S. states.**
+Visualize and filter PFAS measurements by location, media type
+(e.g., water, dust, blood), collection date, and analyte.
+Uncover exposure patterns through interactive tables and charts.`,
   },
   {
     path: '/pfas2',
@@ -79,7 +79,7 @@ const shimmerHoverStyle = {
     filter: 'opacity(0.2)',
     transform: 'translate(calc(100% - 2rem))',
     clipPath: 'polygon(1rem 0, 100% 0, 100% 100%, 0 100%)',
-    transition: 'transform 500ms, filter 500ms',
+    transition: 'transform 300ms, filter 350ms 100ms',
   },
   '&:hover': {
     color: 'var(--joy-palette-text-primary)',
@@ -87,15 +87,16 @@ const shimmerHoverStyle = {
   '&:hover::before': {
     filter: 'opacity(0.0)',
     transform: ' translate(-1rem)',
-    transition: 'transform 500ms, filter 500ms 250ms',
+    transition: 'transform 300ms, filter 350ms 200ms',
   }
 };
 
 const animateButtonContentsStyle = {
-  '.text': { transform: 'translate(0)', transition: 'transform 300ms' },
-  '.icon': { transform: 'translate(0)', transition: 'transform 200ms' },
-  '&:hover .icon': { transform: 'translate(6px)', transition: 'transform 500ms ease-out' },
-  '&:hover .text': { transform: 'translate(-2px)', transition: 'transform 250ms ease-out' },
+  perspective: '100px',
+  '.text': { fontSize: '150%', transform: 'translate3d(0, 0, -10px)', transition: 'transform 300ms' },
+  '.icon': { transform: 'translate3d(0, 0, -10px)', transition: 'transform 200ms' },
+  '&:hover .icon': { transform: 'translate3d(6px, 0, 0)', transition: 'transform 500ms ease-out' },
+  '&:hover .text': { transform: 'translate3d(-2px, 0, 0)', transition: 'transform 250ms ease-out' },
 };
 
 const ViewCard = ({ title, description, icon, path }) => {
@@ -173,7 +174,7 @@ export const HomeView = () => {
         }}
       >
         {
-          viewCards.map(({ path, icon, title, description }) => (
+          homeViewCards.map(({ path, icon, title, description }) => (
             <ViewCard
               key={ `card-${ path }` }
               path={ path }
