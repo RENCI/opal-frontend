@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Box, Divider, Sheet, Stack } from '@mui/joy'
+import { Divider, Sheet, Stack } from '@mui/joy'
 import { Brand } from '@components/brand'
 import { Link } from '@components/link'
 
@@ -32,15 +32,13 @@ export const DashboardHeader = ({ endActions = [], startAction = null }) => {
           alignItems="flex-start"
           justifyContent="center"
           sx={{
-            flex: 1,
+            flex: 2,
             marginLeft: '1rem',
             textDecoration: 'none',
             color: 'var(--joy-palette-text-secondary)',
             textShadow: '0 0 1px var(--joy-palette-neutral-500), 0 0 5px var(--joy-palette-primary-300)',
           }}
         ><Brand /></Stack>
-
-        <Box sx={{ flex: 1}} />
 
         <Stack
           direction="row"

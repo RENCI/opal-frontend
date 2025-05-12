@@ -49,6 +49,7 @@ export const NonTargetedView = () => {
       pagination,
       sorting,
     },
+    debugAll: false,
   })
 
   const RowsCount = () => (

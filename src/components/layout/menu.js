@@ -15,7 +15,7 @@ import {
 import {
   Biotech as AnalytesIcon,
   Science as NonTargetedIcon,
-  TableChart as TableIcon,
+  ViewList as TableIcon,
   DonutSmall as ChartsIcon,
   CompareArrows as CompareIcon,
   ArrowDropDown as DropdownIcon,
@@ -25,13 +25,16 @@ import { useLocalStorage } from '@hooks'
 import { Link } from '@components/link'
 
 const menuItems = [
-  { id: 'pfas',    path: '/pfas',         label: 'PFAS',             Icon: TableIcon, subitems: [
-    { id: 'table',   path: '/pfas/table',   label: 'Data Table',       Icon: TableIcon },
-    { id: 'charts',  path: '/pfas/charts',  label: 'Visualizations',   Icon: ChartsIcon },
-    { id: 'compare', path: '/pfas/compare', label: 'Comparison',       Icon: CompareIcon },
-  ] },
-  { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted', Icon: NonTargetedIcon },
-  { id: 'analytes',     path: 'analytes',     label: 'Analytes',     Icon: AnalytesIcon },
+  { id: 'pfas',         path: '/pfas',        label: 'Targeted Primary', Icon: TableIcon,
+    subitems: [
+      { id: 'table',      path: '/pfas/table',   label: 'Data',            Icon: TableIcon },
+      { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations',  Icon: ChartsIcon },
+      { id: 'compare',    path: '/pfas/compare', label: 'Comparison',      Icon: CompareIcon },
+    ]
+  },
+  { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary Data', Icon: TableIcon },
+  { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
+  { id: 'analytes',     path: 'analytes',     label: 'Analytes',                Icon: AnalytesIcon },
 ]
 
 const NavDropdown = function NavDropdown({ label, subitems = [] }) {

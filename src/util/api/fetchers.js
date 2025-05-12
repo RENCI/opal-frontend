@@ -10,6 +10,14 @@ export const fetchSampleData = (onProgress) => async () =>
     onProgress,
   })
 
+export const fetchUcmr5SampleData = (onProgress) => async () =>
+  await batchFetch({
+    endpoint: '/pfas_sample_data2',
+    perPage: 250,
+    batchSize: 9,
+    onProgress,
+  })
+
 export const fetchNonTargetedSampleData = (onProgress) => async () =>
   await batchFetch({
     endpoint: '/ntar_sample_data',
