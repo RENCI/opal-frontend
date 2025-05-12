@@ -8,7 +8,7 @@ const columnHelper = createColumnHelper()
 
 export const ucmr5Columns = [
   columnHelper.group({
-    id: 'sample',
+    id: 'sample2',
     header: 'Sample',
     footer: 'Sample',
     columns: [

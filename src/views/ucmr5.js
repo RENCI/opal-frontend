@@ -12,6 +12,9 @@ import {
 import { TableCsvExportButton } from '@components/buttons'
 import {
   getCoreRowModel,
+  getFacetedMinMaxValues,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
   getPaginationRowModel,
@@ -48,6 +51,9 @@ export const Ucmr5View = () => {
     onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
     state: {
       columnFilters,
       pagination,
