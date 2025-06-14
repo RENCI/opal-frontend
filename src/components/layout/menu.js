@@ -15,6 +15,7 @@ import {
 import {
   Biotech as AnalytesIcon,
   Science as NonTargetedIcon,
+  Policy as PolicyIcon,
   ViewList as TableIcon,
   DonutSmall as ChartsIcon,
   CompareArrows as CompareIcon,
@@ -35,6 +36,7 @@ const menuItems = [
   { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary Data', Icon: TableIcon },
   { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
   { id: 'analytes',     path: 'analytes',     label: 'Analytes',                Icon: AnalytesIcon },
+  { id: 'policy',       path: '/policy',      label: '',                        Icon: PolicyIcon }
 ]
 
 const NavDropdown = function NavDropdown({ label, subitems = [] }) {

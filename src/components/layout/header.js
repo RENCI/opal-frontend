@@ -15,7 +15,11 @@ export const DashboardHeader = ({ endActions = [], startAction = null }) => {
         top: 0,
         width: '100%',
         zIndex: 999,
-        borderBottom: '1px solid var(--joy-palette-divider)',
+        border: '1px solid var(--joy-palette-divider)',
+        borderTop: 0,
+        borderLeft: 0,
+        borderBottomRightRadius: '1rem',
+        overflow: 'hidden',
       }}
     >
       <Stack

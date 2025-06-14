@@ -16,6 +16,7 @@ import {
 } from '@mui/icons-material'
 import { Markdown } from '@components/markdown'
 import { Link } from '@components/link'
+import { PolicyCard } from '@components/policy-card'
 
 const homeViewCards = [
   {
@@ -76,9 +77,9 @@ const shimmerHoverStyle = {
     width: 'calc(100% + 1rem)',
     height: '100%',
     backgroundColor: 'var(--joy-palette-primary-300)',
-    filter: 'opacity(0.2)',
-    transform: 'translate(calc(100% - 2rem))',
-    clipPath: 'polygon(1rem 0, 100% 0, 100% 100%, 0 100%)',
+    filter: 'opacity(0.15)',
+    transform: 'translate(calc(100% - 3rem))',
+    clipPath: 'polygon(2rem 0, 100% 0, 100% 100%, 0 100%)',
     transition: 'transform 300ms, filter 350ms 100ms',
   },
   '&:hover': {
@@ -101,23 +102,29 @@ const animateButtonContentsStyle = {
 
 const ViewCard = ({ title, description, icon, path }) => {
   return (
-    <Card variant="outlined" sx={{ p: 1 }}>
+    <Card variant="outlined" sx={{
+      padding: 0,
+      borderTopLeftRadius: '2rem',
+      borderBottomRightRadius: '2rem',
+    }}>
       <CardContent component={ Stack } direction="column">
-        <Stack sx={{
-          padding: '2rem',
-          flex: '0 0 40px',
-        }}>
-          <Typography level="h3" startDecorator={ icon } sx={{ fontWeight: '300' }}>
-            { title }
-          </Typography>
+        <Stack sx={{ flex: '0 0 40px' }}>
+          <Typography
+            level="h3"
+            startDecorator={ icon }
+            sx={{
+              fontWeight: '300',
+              padding: '1.75rem 1rem 1.25rem 1rem',
+            }}
+          >{ title }</Typography>
         </Stack>
-        <Divider />
+        <Divider inset="none" />
         <Box sx={{ padding: '1rem 1rem 0 1rem', flex: 1 }}>
           <Markdown>{ description }</Markdown>
         </Box>
       </CardContent>
       
-      <CardActions>
+      <CardActions sx={{ padding: '1rem' }}>
         <Button
           variant="soft"
           component={ Link }
@@ -125,6 +132,7 @@ const ViewCard = ({ title, description, icon, path }) => {
           sx={{
             ...shimmerHoverStyle,
             ...animateButtonContentsStyle,
+            borderBottomRightRadius: '1.1rem',
             padding: '1rem 0',
           }}
           endDecorator={ <LinkIcon className="icon" /> }
@@ -144,13 +152,27 @@ ViewCard.propTypes = {
 export const HomeView = () => {
   return (
     <ContentPage maxWidth="lg">
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography level="h1">OPAL</Typography>
-        <Typography level="h2" sx={{ fontWeight: '200' }}>Observational PFAS Access portaL</Typography>
-      </Box>
-      
-      <br />
-      <Divider />
+
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={ 4 }
+        sx={{
+          borderLeft: '1px solid var(--joy-palette-divider)',
+          borderBottom: '1px solid var(--joy-palette-divider)',
+          borderTopLeftRadius: '2rem',
+        }}
+      >
+        <Box sx={{ flex: 3 }} pl={ 3 }>
+          <Typography level="h1" sx={{ fontSize: '400%' }}>OPAL</Typography>
+          <Typography level="h2" sx={{ fontWeight: '200' }}>Observational PFAS Access portaL</Typography>
+        </Box>
+        <Box sx={{ flex: 2 }}>
+          <PolicyCard />
+        </Box>
+      </Stack>
+
       <br />
 
       <Stack
