@@ -56,7 +56,7 @@ The app should be running at [http://localhost:8000/](http://localhost:8000/).
 Execute `npm ci` to install locked dependencies, and `npm run build` to build a production bundle.
 The bundle will be exported to the `dist` directory and can be served as static files from a webserver.
 
-There are Make targets for the remainder of the deployment actions that involve Docker and interface with the host VMs. Be sure `IMAGE` and `TAG` are defined in `.env` to run the remaining commands.
+There are Make targets for the remainder of the deployment actions that involve Docker and interface with the host VMs. Be sure `IMAGE` and `TAG` are defined in `.env` to run the remaining commands. While these variables are mostly used in the CI workflow, note that `TAG` also gets rendered in the UI.
 
 The first make target to know is `make help`, which shows the following list of all targets.
 ```bash
