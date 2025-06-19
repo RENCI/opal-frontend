@@ -4,14 +4,17 @@ import {
   Route,
 } from 'react-router-dom'
 import { Sheet } from '@mui/joy'
+import { useTheme } from '@mui/joy/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { AuthMenu } from '@components/auth'
 import {
   DataProvider,
   PreferencesProvider,
 } from '@context'
 import {
-  DashboardHeader,
+  CompactDashboardMenu,
   DashboardMenu,
+  DashboardHeader,
   Footer,
 } from '@components/layout'
 import { useToggleState } from '@hooks'
@@ -32,19 +35,25 @@ import { PolicyAgreementDialog } from '@components/policy-agreement'
 
 //
 
+
 export const DashboardView = () => {
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down(1000));
   const filtersDrawer = useToggleState(false)
 
-  const headerEndActions = useMemo(() => [
-    <DashboardMenu key="dashboard-menu" />,
-    <AuthMenu key="auth-action-button" />,
-  ], [])
+  const headerEndActions = useMemo(() => {
+    let actions = [<AuthMenu key="auth-action-button" />];
+    if (!smallScreen) {
+      actions.unshift(<DashboardMenu key="dashboard-menu" />);
+    }
+    return actions;
+  }, [smallScreen]);
 
   return (
     <PreferencesProvider>
       <DataProvider>
         <DashboardHeader
-          startAction={ null }
+          startAction={ smallScreen ? <CompactDashboardMenu /> : null }
           endActions={ headerEndActions }
         />
         <Sheet component="main" sx={{
