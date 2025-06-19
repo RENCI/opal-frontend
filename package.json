@@ -4,9 +4,6 @@
   "scripts": {
     "start": "SERVE=true webpack serve",
     "watch": "webpack --watch",
-    "build": "NODE_ENV=production webpack",
-    "build-dev": "webpack",
-    "build-image": "docker build --build-arg APP_VERSION=$(git describe --tags --always) -t mvvatson/opal:$(git describe --tags --always) .",
     "lint": "eslint ./src/index.js ./src/components/**/*.js",
     "lint:fix": "eslint --fix ./src/index.js ./src/components/**/*.js",
     "clean": "rm -rf dist",
