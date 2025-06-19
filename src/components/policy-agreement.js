@@ -10,7 +10,10 @@ import {
   ModalDialog,
 } from '@mui/joy';
 import { usePreferences } from '@context';
-import { Policy } from '@views/policy';
+import Markdown from 'react-markdown';
+import policy from '@content/policy.md';
+
+const Policy = () => <Markdown components={{ ol: props => <ol { ...props } type="a" /> }}>{ policy }</Markdown>
 
 export const PolicyAgreementDialog = () => {
   const [checked, setChecked] = useState(false);

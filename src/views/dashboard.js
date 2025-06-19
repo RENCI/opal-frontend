@@ -20,6 +20,7 @@ import {
 import { useToggleState } from '@hooks'
 
 import { HomeView } from './home'
+import { AboutView } from './about'
 
 import { PfasView } from './pfas'
 import { TableView } from './pfas/table'
@@ -27,7 +28,6 @@ import { ChartsView } from './pfas/charts'
 import { CompareView } from './pfas/compare'
 
 import { AnalytesView } from './analytes'
-import { PolicyView } from './policy'
 import { Ucmr5View } from './ucmr5'
 import { NonTargetedView } from './non-targeted'
 import { NotFoundView } from './'
@@ -67,6 +67,7 @@ export const DashboardView = () => {
         }}>
           <Routes>
             <Route index element={ <HomeView /> } />
+            <Route path="about" element={ <AboutView /> } />
             <Route path="pfas" element={ <PfasView /> }>
               <Route index element={ <TableView /> } />
               <Route path="table" element={ <TableView /> } />
@@ -76,7 +77,6 @@ export const DashboardView = () => {
             <Route path="pfas2" element={ <Ucmr5View /> } />
             <Route path="analytes" element={ <AnalytesView /> } />
             <Route path="non-targeted" element={ <NonTargetedView /> } />
-            <Route path="policy" element={ <PolicyView /> } />
             <Route path="*" element={ <NotFoundView /> } />
           </Routes>
 {/*

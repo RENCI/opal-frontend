@@ -13,9 +13,9 @@ import {
   Typography,
 } from '@mui/joy'
 import {
+  Info as AboutIcon,
   Biotech as AnalytesIcon,
   Science as NonTargetedIcon,
-  Policy as PolicyIcon,
   ViewList as TableIcon,
   DonutSmall as ChartsIcon,
   CompareArrows as CompareIcon,
@@ -29,17 +29,17 @@ import { Link } from '@components/link'
 import { Brand } from '@components/brand'
 
 const menuItems = [
-  { id: 'pfas',         path: '/pfas',        label: 'Targeted Primary', Icon: TableIcon,
+  { id: 'about',        path: '/about',       label: 'About',                   Icon: AboutIcon },
+  { id: 'pfas',         path: '/pfas',        label: 'Targeted Primary',        Icon: TableIcon,
     subitems: [
-      { id: 'table',      path: '/pfas/table',   label: 'Data',            Icon: TableIcon },
-      { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations',  Icon: ChartsIcon },
-      { id: 'compare',    path: '/pfas/compare', label: 'Comparison',      Icon: CompareIcon },
+      { id: 'table',      path: '/pfas/table',   label: 'Data',             Icon: TableIcon },
+      { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations',   Icon: ChartsIcon },
+      { id: 'compare',    path: '/pfas/compare', label: 'Comparison',       Icon: CompareIcon },
     ]
   },
   { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary Data', Icon: TableIcon },
   { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
   { id: 'analytes',     path: 'analytes',     label: 'Analytes',                Icon: AnalytesIcon },
-  { id: 'policy',       path: '/policy',      label: '',                        Icon: PolicyIcon }
 ]
 
 const NavDropdown = function NavDropdown({ label, subitems = [] }) {

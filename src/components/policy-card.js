@@ -40,7 +40,7 @@ export const PolicyCard = () => {
           color="primary"
           startDecorator={ <PolicyIcon /> }
           component={ NavLink }
-          to="/policy"
+          to="/about#policy"
         >Review our Data Sharing and Use Policy</Button>
       </CardActions>
     </Card>

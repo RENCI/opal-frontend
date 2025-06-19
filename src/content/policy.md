@@ -1,10 +1,3 @@
-import { Typography } from '@mui/joy'
-import { ContentPage } from '@components/layout'
-import Markdown from 'react-markdown';
-
-export const Policy = () => <Markdown components={{
-  ol: props => <ol { ...props } type="a" />,
-}}>{`
 Individuals who use data in any communication (including but not limited to 
 abstracts, presentations, grant proposals and journal articles) from the OPAL will:
 
@@ -41,23 +34,3 @@ information.
 1. Principal Investigators US EPA measurement data (NCS and AHHS targeted
 and nontargeted):  James P McCord, Elaine A Cohen Hubal, Jason D 
 Boettger, Lisa Melnyk
-`}</Markdown>
-
-export const PolicyView = () => {
-  return (
-    <ContentPage
-      maxWidth="sm"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        gap: 2,
-        width: '100%',
-        pt: 3,
-      }}
-    >
-      <Typography level="h1">OPAL Data Sharing and Use Policy</Typography>
-      <Policy />
-    </ContentPage>
-  )
-}
