@@ -136,9 +136,9 @@ The `deploy` target runs `deploy.sh` on the host over SSH, but it's worth noting
 
 Alternatively, one could do things more manually still on the host VM. In its entirety, the deployment steps are as follows.
 
-- On the host, view a list of running containers: |docker ps|. There should only be one.
-- Pull in the latest application image: |docker pull mvvatson/opal:1.0.4|
-- Bring the currently running container down: |docker stop opal-ui|.
+- On the host, view a list of running containers: `docker ps`. There should only be one.
+- Pull in the latest application image: `docker pull mvvatson/opal:1.0.4`
+- Bring the currently running container down: `docker stop opal-ui`.
 - Finally, bring up the next version, with ports open and the certs mounted. This entire command looks like:
 
 ```bash
