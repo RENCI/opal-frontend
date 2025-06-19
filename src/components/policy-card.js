@@ -17,6 +17,7 @@ export const PolicyCard = () => {
       variant="soft"
       sx={{
         borderTopRightRadius: '2rem',
+        border: '1px solid var(--joy-palette-divider)',
         borderBottom: 0,
       }}
     >
@@ -25,6 +26,8 @@ export const PolicyCard = () => {
           color="neutral"
           level="h4"
           sx={{ fontWeight: 'bold' }}
+          mb={ 1 }
+          align="center"
         >Planning to publish?</Typography>
         <Typography>
           Please contact the investigators who generated the data.
@@ -34,7 +37,7 @@ export const PolicyCard = () => {
       <CardActions>
         <Button
           variant="outlined"
-          color="neutral"
+          color="primary"
           startDecorator={ <PolicyIcon /> }
           component={ NavLink }
           to="/policy"
