@@ -1,10 +1,18 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Outlet } from 'react-router-dom';
-import { AppStatus } from '@components/app-status'
-import { podmColumns } from '@data'
-import { useProgress } from '@hooks'
-import { fetchSampleData } from '@util'
-import { useQuery } from '@tanstack/react-query'
+import { AppStatus } from '@components/app-status';
+import { FiltersDrawer } from '@components/filter';
+import { podmColumns } from '@data';
+import { useProgress, useToggleState } from '@hooks';
+import { fetchSampleData } from '@util';
+import { useQuery } from '@tanstack/react-query';
 import {
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -15,6 +23,71 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import {
+  Divider,
+  IconButton,
+  Stack,
+  Tooltip,
+} from '@mui/joy';
+import {
+  Tune as FiltersIcon,
+} from '@mui/icons-material';
+import {
+  SecondaryToolbar,
+  TargetedPrimaryMenu,
+} from '@components/layout';
+
+const TargetedPrimaryLayout = () => {
+  const filtersDrawerVisibility = useToggleState();
+  const { table } = usePfas();
+
+  const SampleCount = useCallback(() => (
+    <div style={{
+      display: 'grid',
+      alignItems: 'center',
+      whiteSpace: 'nowrap',
+      padding: 'var(--joy-spacing)',
+    }}>{ table.getPrePaginationRowModel().rows.length } samples</div>
+  ), [table.getPrePaginationRowModel().rows.length])
+
+  const margin = useMemo(
+    () => filtersDrawerVisibility.enabled ? '360px' : 0,
+    [filtersDrawerVisibility.enabled]
+  );
+
+  const handleClickFiltersButton = useCallback(() => {
+    if (filtersDrawerVisibility.enabled) {
+      setTimeout(() => filtersDrawerVisibility.unset(), 3000);
+    } else {
+      filtersDrawerVisibility.set();
+    }
+  }, [filtersDrawerVisibility.enabled]);
+
+  const MemoizedFiltersButton = useCallback(() => (
+    <Tooltip title="Open filters drawer">
+      <IconButton onClick={ filtersDrawerVisibility.toggle }>
+        <FiltersIcon color={ filtersDrawerVisibility.enabled ? 'primary' : 'neutral' }/>
+      </IconButton>
+    </Tooltip>
+  ), [filtersDrawerVisibility.enabled]);
+
+  return (
+    <Stack direction="column" sx={{ marginLeft: margin }}>
+      <SecondaryToolbar>
+        <MemoizedFiltersButton />
+        <Divider orientation="vertical" />
+        <SampleCount />
+        <div style={{ flex: 1 }} />
+        <TargetedPrimaryMenu />
+      </SecondaryToolbar>
+      <Outlet />
+      <FiltersDrawer
+        open={ filtersDrawerVisibility.enabled }
+        onClose={ handleClickFiltersButton }
+      />
+    </Stack>
+  );
+};
 
 const PfasContext = createContext({ })
 export const usePfas = () => useContext(PfasContext)
@@ -61,18 +134,22 @@ export const PfasView = () => {
     }
   }, [pfasData.isSuccess, table.getRowModel().rows.length])
 
+  // const filterCount = table.getAllLeafColumns().filter(col => col.getIsFiltered()).length 
+
   return (
     <PfasContext.Provider value={{
       table,
-      columnFilters, setColumnFilters,
+      columnFilters, setColumnFilters, /*filterCount,*/
       sorting, setSorting,
       progress,
     }}>
-      {pfasData.isPending || pfasData.isLoading
-      ? <AppStatus message={ `Loading targeted primary data :: ${progress.percent}%` } />
-      : isPreparingTable
-        ? <AppStatus message={ `Preparing table` } />
-        : <Outlet />}
+      {
+        pfasData.isPending || pfasData.isLoading
+          ? <AppStatus message={ `Loading targeted primary data :: ${progress.percent}%` } />
+          : isPreparingTable
+            ? <AppStatus message={ `Preparing data` } />
+            : <TargetedPrimaryLayout />
+      }
     </PfasContext.Provider>
   )
 }

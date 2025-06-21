@@ -10,7 +10,7 @@ const container = document.getElementById('root')
 const root = createRoot(container)
 
 const ProvisionedApp = () => (
-  <BrowserRouter>
+  <BrowserRouter basename="/" forceRefresh={false}>
     <AuthProvider>
       <App />
     </AuthProvider>

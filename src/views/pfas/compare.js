@@ -163,9 +163,6 @@ export const CompareView = () => {
         sx={{ flex: 1 }}
       >
         <Toolbar>
-          <Typography level="body-md" sx={{ whiteSpace: 'nowrap' }}>
-            { table.getPrePaginationRowModel().rows.length } samples
-          </Typography>
           <CorrelationCoefficientSelect />
           <AnalyteSelect />
         </Toolbar>

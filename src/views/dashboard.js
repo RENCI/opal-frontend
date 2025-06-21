@@ -17,7 +17,6 @@ import {
   DashboardHeader,
   Footer,
 } from '@components/layout'
-import { useToggleState } from '@hooks'
 
 import { HomeView } from './home'
 import { AboutView } from './about'
@@ -35,11 +34,9 @@ import { PolicyAgreementDialog } from '@components/policy-agreement'
 
 //
 
-
 export const DashboardView = () => {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down(1000));
-  const filtersDrawer = useToggleState(false)
 
   const headerEndActions = useMemo(() => {
     let actions = [<AuthMenu key="auth-action-button" />];
@@ -49,16 +46,23 @@ export const DashboardView = () => {
     return actions;
   }, [smallScreen]);
 
+  const headerStartActions = useMemo(() => {
+    let actions = [];
+    if (smallScreen) {
+      actions.push(<CompactDashboardMenu key="dashboard-menu-button" />);
+    }
+    return actions;
+  }, [smallScreen]);
+
   return (
     <PreferencesProvider>
       <DataProvider>
         <DashboardHeader
-          startAction={ smallScreen ? <CompactDashboardMenu /> : null }
+          startAction={ headerStartActions }
           endActions={ headerEndActions }
         />
         <Sheet component="main" sx={{
-          width: filtersDrawer.enabled ? 'calc(100vw - 360px)' : '100vw',
-          marginLeft: filtersDrawer.enabled ? '360px' : '0',
+          width: '100vw',
           transition: 'margin-left 250ms ease-out, min-width 250ms ease-out',
           overflow: 'auto',
           position: 'relative',
@@ -79,9 +83,6 @@ export const DashboardView = () => {
             <Route path="non-targeted" element={ <NonTargetedView /> } />
             <Route path="*" element={ <NotFoundView /> } />
           </Routes>
-{/*
-          <FiltersDrawer open={ filtersDrawer.enabled } onClose={ filtersDrawer.unset } />
-*/}
         </Sheet>
         <Footer />
         <PolicyAgreementDialog />

@@ -1,7 +1,6 @@
 import {
   Grid,
   Stack,
-  Typography,
 } from '@mui/joy'
 import { Toolbar } from '@components/layout'
 import { usePfas } from '@views/pfas'
@@ -18,11 +17,7 @@ export const ChartsView = () => {
 
   return (
     <Stack direction="column">
-      <Toolbar>
-        <Typography level="body-md" sx={{ whiteSpace: 'nowrap' }}>
-          { table.getPrePaginationRowModel().rows.length } samples
-        </Typography>
-      </Toolbar>
+      <Toolbar>{''}</Toolbar>
 
       <Grid container sx={{ mb: 2, gridGap: 24 }}>
         <Grid xs={ 12 } sm={ 11 } md={ 11 } lg={ 5.5 } xl={ 5.5 }>

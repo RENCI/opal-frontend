@@ -16,6 +16,10 @@ import { usePfas } from '@views/pfas'
 export const ColumnFilters = () => {
   const { table } = usePfas()
 
+  if (!table) {
+    return '...'
+  }
+
   return (
     <AccordionGroup>
       {

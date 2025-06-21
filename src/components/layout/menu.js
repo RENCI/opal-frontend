@@ -14,11 +14,9 @@ import {
 } from '@mui/joy'
 import {
   Info as AboutIcon,
-  Biotech as AnalytesIcon,
-  Science as NonTargetedIcon,
-  ViewList as TableIcon,
-  DonutSmall as ChartsIcon,
-  CompareArrows as CompareIcon,
+  Science as AnalytesIcon,
+  RadioButtonUnchecked as NonTargetedIcon,
+  RadioButtonChecked as TableIcon,
   ArrowDropDown as DropdownIcon,
 } from '@mui/icons-material'
 import { useLocalStorage } from '@hooks'
@@ -30,14 +28,8 @@ import { Brand } from '@components/brand'
 
 const menuItems = [
   { id: 'about',        path: '/about',       label: 'About',                   Icon: AboutIcon },
-  { id: 'pfas',         path: '/pfas',        label: 'Targeted Primary',        Icon: TableIcon,
-    subitems: [
-      { id: 'table',      path: '/pfas/table',   label: 'Data',             Icon: TableIcon },
-      { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations',   Icon: ChartsIcon },
-      { id: 'compare',    path: '/pfas/compare', label: 'Comparison',       Icon: CompareIcon },
-    ]
-  },
-  { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary Data', Icon: TableIcon },
+  { id: 'pfas',         path: '/pfas/table',  label: 'Targeted Primary',        Icon: TableIcon },
+  { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary',      Icon: TableIcon },
   { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
   { id: 'analytes',     path: 'analytes',     label: 'Analytes',                Icon: AnalytesIcon },
 ]
