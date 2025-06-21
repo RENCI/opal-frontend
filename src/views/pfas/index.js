@@ -47,13 +47,8 @@ const TargetedPrimaryLayout = () => {
       alignItems: 'center',
       whiteSpace: 'nowrap',
       padding: 'var(--joy-spacing)',
-    }}>{ table.getPrePaginationRowModel().rows.length } samples</div>
+    }}>{ table.getPrePaginationRowModel().rows.length.toLocaleString() } samples</div>
   ), [table.getPrePaginationRowModel().rows.length])
-
-  const margin = useMemo(
-    () => filtersDrawerVisibility.enabled ? '360px' : 0,
-    [filtersDrawerVisibility.enabled]
-  );
 
   const handleClickFiltersButton = useCallback(() => {
     if (filtersDrawerVisibility.enabled) {
@@ -63,13 +58,29 @@ const TargetedPrimaryLayout = () => {
     }
   }, [filtersDrawerVisibility.enabled]);
 
-  const MemoizedFiltersButton = useCallback(() => (
-    <Tooltip title="Open filters drawer">
-      <IconButton onClick={ filtersDrawerVisibility.toggle }>
-        <FiltersIcon color={ filtersDrawerVisibility.enabled ? 'primary' : 'neutral' }/>
-      </IconButton>
-    </Tooltip>
-  ), [filtersDrawerVisibility.enabled]);
+  const margin = useMemo(
+    () => filtersDrawerVisibility.enabled ? '360px' : 0,
+    [filtersDrawerVisibility.enabled]
+  );
+
+  const MemoizedFiltersButton = useCallback(() => {
+    if (filtersDrawerVisibility.enabled) {
+      return (
+        <Tooltip title="Close Filters Drawer">
+          <IconButton onClick={ filtersDrawerVisibility.unset }>
+            <FiltersIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+      )
+    }
+    return (
+      <Tooltip title="Open Filters Drawer">
+        <IconButton onClick={ filtersDrawerVisibility.set }>
+          <FiltersIcon color="neutral" />
+        </IconButton>
+      </Tooltip>
+    )
+  }, [filtersDrawerVisibility.enabled]);
 
   return (
     <Stack direction="column" sx={{ marginLeft: margin }}>
