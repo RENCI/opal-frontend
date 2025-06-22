@@ -25,6 +25,7 @@ import { PfasView } from './pfas'
 import { TableView } from './pfas/table'
 import { ChartsView } from './pfas/charts'
 import { CompareView } from './pfas/compare'
+import { MapView } from './pfas/map'
 
 import { AnalytesView } from './analytes'
 import { Ucmr5View } from './ucmr5'
@@ -77,6 +78,7 @@ export const DashboardView = () => {
               <Route path="table" element={ <TableView /> } />
               <Route path="charts" element={ <ChartsView /> } />
               <Route path="compare" element={ <CompareView /> } />
+              <Route path="map" element={ <MapView /> } />
             </Route>
             <Route path="pfas2" element={ <Ucmr5View /> } />
             <Route path="analytes" element={ <AnalytesView /> } />

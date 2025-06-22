@@ -9,6 +9,8 @@ export const SecondaryToolbar = ({ children }) => {
       align="center"
       spacing={ 2 }
       sx={{
+        zIndex: 1,
+        backgroundColor: 'var(--variant-softBg, var(--joy-palette-neutral-softBg, var(--joy-palette-neutral-100, #F0F4F8)))',
         borderBottomLeftRadius: 'var(--joy-spacing)',
         borderBottomRightRadius: 'var(--joy-spacing)',
         display: 'flex',
@@ -16,7 +18,6 @@ export const SecondaryToolbar = ({ children }) => {
         justifyContent: 'space-between',
         border: '1px solid var(--joy-palette-neutral-outlinedBorder)',
         borderTop: 0,
-        marginRight: 'calc(2 * var(--joy-spacing))',
         overflow: 'hidden',
       }}
     >{ children }</Sheet>

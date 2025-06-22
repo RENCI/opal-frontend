@@ -83,7 +83,7 @@ const TargetedPrimaryLayout = () => {
   }, [filtersDrawerVisibility.enabled]);
 
   return (
-    <Stack direction="column" sx={{ marginLeft: margin }}>
+    <Stack direction="column" sx={{ marginLeft: margin, flex: 1 }}>
       <SecondaryToolbar>
         <MemoizedFiltersButton />
         <Divider orientation="vertical" />
