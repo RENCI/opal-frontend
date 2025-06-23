@@ -11,7 +11,7 @@ import { AppStatus } from '@components/app-status';
 import { FiltersDrawer } from '@components/filter';
 import { podmColumns } from '@data';
 import { useLocalStorage, useProgress, useToggleState } from '@hooks';
-import { fetchSampleData } from '@util';
+import { fetchSampleData, fetchSuperfundSites } from '@util';
 import { useQuery } from '@tanstack/react-query';
 import {
   getCoreRowModel,
@@ -125,6 +125,11 @@ export const PfasView = () => {
     queryFn: fetchSampleData(progress.onProgress),
   })
 
+  const superfundSites = useQuery({
+    queryKey: ['superfund_sites'],
+    queryFn: fetchSuperfundSites(),
+  })
+
   // table for displaying PFAS data
   const table = useReactTable({
     data: pfasData.data ?? [],
@@ -165,6 +170,7 @@ export const PfasView = () => {
       columnFilters, setColumnFilters, /*filterCount,*/
       sorting, setSorting,
       progress,
+      superfundSites: superfundSites?.data ?? [],
     }}>
       {
         pfasData.isPending || pfasData.isLoading

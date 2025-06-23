@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Map from 'react-map-gl/mapbox';
+import { Layer, Source } from 'react-map-gl/mapbox';
 import { Box } from '@mui/joy';
-// import { Layer, Source } from 'react-map-gl/mapbox';
 import { usePreferences } from '@context';
 import { useLocalStorage } from '@hooks';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { usePfas } from '@views/pfas';
 
 //
 
@@ -59,8 +60,26 @@ ViewStatePanel.propTypes = {
 
 export const MapView = () => {
   const preferences = usePreferences()
+  const { superfundSites } = usePfas();
   const [viewState, setViewState] = useLocalStorage('view-state', centerFitUS)
   const mapStyle = useMemo(() => `mapbox://styles/mapbox/${ preferences.colorMode.current }-v11`, [preferences.colorMode.current]);
+
+  const superfundSitesGeoJson = useMemo(() => {
+    return {
+      type: 'FeatureCollection',
+      features: superfundSites.map(site => ({
+        type: 'Feature',
+        properties: {
+          id: site.id,
+          name: site.name,
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [site.longitude, site.latitude],
+        }
+      })),
+    };
+  }, [superfundSites]);
 
   return (
     <Box sx={{
@@ -79,6 +98,22 @@ export const MapView = () => {
         attributionControl={ false }
         onMove={ event => setViewState(event.viewState) }
       >
+        {
+          superfundSitesGeoJson && (
+            <Source id="superfund-sites" type="geojson" data={ superfundSitesGeoJson }>
+              <Layer
+                id="superfund-site-points"
+                type="circle"
+                paint={{
+                  'circle-radius': 6,
+                  'circle-color': 'crimson',
+                  'circle-stroke-width': 1,
+                  'circle-stroke-color': '#fff',
+                }}
+              />
+            </Source>
+          )
+        }
       </Map>
       <ViewStatePanel viewState={ viewState } />
     </Box>
