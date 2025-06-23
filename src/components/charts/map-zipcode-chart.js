@@ -61,7 +61,7 @@ export const MapZipCodeChart = ({ data }) => {
       >
         {/* clusters */}
         <Layer
-          id="clusters"
+          id="zip-clusters"
           type="circle"
           filter={['has', 'point_count']}
           paint={{
@@ -87,7 +87,7 @@ export const MapZipCodeChart = ({ data }) => {
         />
         {/* cluster labels */}
         <Layer
-          id="cluster-count"
+          id="zip-cluster-count"
           type="symbol"
           filter={['has', 'point_count']}
           layout={{

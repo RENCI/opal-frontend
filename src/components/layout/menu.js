@@ -27,11 +27,11 @@ import { Link } from '@components/link'
 import { Brand } from '@components/brand'
 
 const menuItems = [
-  { id: 'about',        path: '/about',       label: 'About',                   Icon: AboutIcon },
-  { id: 'pfas',         path: '/pfas/table',  label: 'Targeted Primary',        Icon: TableIcon },
-  { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary',      Icon: TableIcon },
-  { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
-  { id: 'analytes',     path: 'analytes',     label: 'Analytes',                Icon: AnalytesIcon },
+  { id: 'about',        path: '/about',        label: 'About',                   Icon: AboutIcon },
+  { id: 'pfas',         path: '/pfas',         label: 'Targeted Primary',        Icon: TableIcon },
+  { id: 'ucmr5',        path: '/pfas2',        label: 'Targeted Secondary',      Icon: TableIcon },
+  { id: 'non-targeted', path: '/non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
+  { id: 'analytes',     path: '/analytes',     label: 'Analytes',                Icon: AnalytesIcon },
 ]
 
 const NavDropdown = function NavDropdown({ label, subitems = [] }) {
