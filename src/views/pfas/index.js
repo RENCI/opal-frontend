@@ -126,7 +126,7 @@ export const PfasView = () => {
   })
 
   const superfundSites = useQuery({
-    queryKey: ['superfund_sites'],
+    queryKey: ['superfund_sites_'],
     queryFn: fetchSuperfundSites(),
   })
 
