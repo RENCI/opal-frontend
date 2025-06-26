@@ -5,7 +5,7 @@ import { Box } from '@mui/joy'
 import { usePreferences } from '@context';
 import { useLocalStorage, useToggleState } from '@hooks';
 import { MapDrawer, ViewStatePanel } from '@components/map';
-import { SuperfundSitesLayer } from '@components/map/layers';
+import { SampleSitesLayer, SuperfundSitesLayer } from '@components/map/layers';
 import { usePfas } from '@views/pfas';
 import { flyTo } from '@util';
 
@@ -26,10 +26,14 @@ export const MapView = () => {
   const mapStyle = useMemo(() => `mapbox://styles/mapbox/${ preferences.colorMode.current }-v11`, [preferences.colorMode.current]);
   const [selectedSite, setSelectedSite] = useState(null);
 
-  const { superfundSites } = usePfas();
-  const interactiveLayerIds = ['superfund-sites'];
+  const { superfundSites, table } = usePfas();
+  const interactiveLayerIds = ['superfund-sites', 'clusters', 'unclustered-point'];
 
   const flyToSuperfundSite = useCallback(({ latitude, longitude }) => {
+    if (!latitude || !longitude) {
+      console.warn('Missing lat/lon:', latitude, longitude);
+      return;
+    }
     flyTo(mapRef, { longitude, latitude, zoom: 11, duration: 2000 })
   }, [])
 
@@ -41,7 +45,7 @@ export const MapView = () => {
     if (!site) {
       setSelectedSite(null);
     }
-    flyToSuperfundSite({ ...site });
+    flyToSuperfundSite(site);
     setSelectedSite(site);
   }, []);
 
@@ -73,6 +77,10 @@ export const MapView = () => {
           sites={ superfundSites }
           selectedSite={ selectedSite }
           onClick={ handleClickSuperfundSite }
+        />
+        <SampleSitesLayer
+          data={ table.getPrePaginationRowModel().rows }
+          mapRef={ mapRef }
         />
       </Map>
       <MapDrawer visible={ !isDragging.enabled }>
