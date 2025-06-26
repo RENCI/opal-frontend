@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import {
-  Box, Stack, Typography,
+  Box, Button, Stack, Typography,
 } from '@mui/joy'
+import { RestartAlt as ResetIcon } from '@mui/icons-material';
 import { DrawerPanel } from '../panel';
 
-export const ViewStatePanel = ({ viewState }) => {
+export const ViewStatePanel = ({ viewState, onReset }) => {
   return (
     <DrawerPanel title="View State" defaultExpanded>
       <Box sx={{
@@ -41,6 +42,13 @@ export const ViewStatePanel = ({ viewState }) => {
           </Typography>
         </Stack>
       </Box>
+      <Button
+        variant="plain"
+        color="primary"
+        size="sm"
+        onClick={ onReset }
+        startDecorator={ <ResetIcon /> }
+      >Reset</Button>
     </DrawerPanel>
   )
 }
@@ -51,5 +59,6 @@ ViewStatePanel.propTypes = {
     longitude: PropTypes.number.isRequired,
     zoom: PropTypes.number.isRequired,
   }),
+  onReset: PropTypes.func.isRequired,
 };
 

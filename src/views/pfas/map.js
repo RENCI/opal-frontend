@@ -13,9 +13,9 @@ import { flyTo } from '@util';
 
 const token = process.env.MAPBOX_TOKEN;
 const centerFitUS = {
-  longitude: -98.583,
-  latitude: 39.883,
-  zoom: 4.75,
+  longitude: -97.555,
+  latitude: 38.490,
+  zoom: 4.000,
 };
 
 export const MapView = () => {
@@ -119,7 +119,10 @@ export const MapView = () => {
         }
       </Map>
       <MapDrawer visible={ !isDragging.enabled }>
-        <ViewStatePanel viewState={ viewState } />
+        <ViewStatePanel
+          viewState={ viewState }
+          onReset={ () => flyTo(mapRef, { ...centerFitUS, duration: 2000 }) }
+        />
       </MapDrawer>
     </Box>
   )
