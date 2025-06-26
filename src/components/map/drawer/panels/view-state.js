@@ -11,7 +11,7 @@ export const ViewStatePanel = ({ viewState, onReset }) => {
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '4px',
+        gap: 'var(--joy-spacing)',
         padding: 0,
         '& .key': {
           flex: 1,
@@ -41,14 +41,14 @@ export const ViewStatePanel = ({ viewState, onReset }) => {
             { viewState.zoom.toFixed(3) }
           </Typography>
         </Stack>
+        <Button
+          variant="plain"
+          color="primary"
+          size="sm"
+          onClick={ onReset }
+          startDecorator={ <ResetIcon /> }
+        >Reset</Button>
       </Box>
-      <Button
-        variant="plain"
-        color="primary"
-        size="sm"
-        onClick={ onReset }
-        startDecorator={ <ResetIcon /> }
-      >Reset</Button>
     </DrawerPanel>
   )
 }
