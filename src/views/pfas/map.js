@@ -67,6 +67,7 @@ export const MapView = () => {
         mapStyle={ mapStyle }
         attributionControl={ false }
         onClick={ handleClickMap }
+        maxZoom={ 13 }
         onMove={ event => setViewState(event.viewState) }
         onMouseLeave={ event => event.target.getCanvas().style.cursor = 'default' }
         interactiveLayerIds={ interactiveLayerIds }
@@ -86,7 +87,10 @@ export const MapView = () => {
       <MapDrawer visible={ !isDragging.enabled }>
         <ViewStatePanel
           viewState={ viewState }
-          onReset={ () => flyTo(mapRef, { ...centerFitUS, duration: 2000 }) }
+          onReset={ () => {
+            flyTo(mapRef, { ...centerFitUS, duration: 2000 });
+            setSelectedSite(null);
+          } }
         />
       </MapDrawer>
     </Box>

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo } from 'react';
 import { Layer, Source } from 'react-map-gl/mapbox';
-import { jitterCoordinates } from '@util';
 
 export const SampleSitesLayer = ({ data = [], mapRef }) => {
   const locations = data.reduce((acc, d) => {
@@ -15,7 +14,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
   const geojsonData = useMemo(() => ({
     type: 'FeatureCollection',
     features: locations.map(location => {
-      const coords = jitterCoordinates([location.longitude, location.latitude]);
+      const coords = [location.longitude, location.latitude];
       return {
         type: 'Feature',
         geometry: {
