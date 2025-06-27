@@ -3,17 +3,9 @@ import { useEffect, useMemo } from 'react';
 import { Layer, Source } from 'react-map-gl/mapbox';
 
 export const SampleSitesLayer = ({ data = [], mapRef }) => {
-  const locations = data.reduce((acc, d) => {
-    const { latitude, longitude, sample_id } = d.original;
-    if (latitude && longitude) {
-      acc.push({ sample_id, latitude, longitude });
-    }
-    return acc;
-  }, []);
-
   const geojsonData = useMemo(() => ({
     type: 'FeatureCollection',
-    features: locations.map(location => {
+    features: data.map(location => {
       const coords = [location.longitude, location.latitude];
       return {
         type: 'Feature',
@@ -26,14 +18,14 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
         }
       };
     }),
-  }), [locations]);
+  }), [data]);
 
-  // Cluster click handler
+  // cluster click handler
   useEffect(() => {
     const map = mapRef?.current;
     if (!map) return;
 
-    const handleClick = (event) => {
+    const handleClick = event => {
       const feature = event.features?.[0];
       if (!feature) return;
 
@@ -49,7 +41,6 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
               console.error('Expansion zoom error:', err);
               return;
             }
-
             map.flyTo({
               center: geometry.coordinates,
               zoom,

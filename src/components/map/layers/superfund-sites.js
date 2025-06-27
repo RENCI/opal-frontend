@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Layer, Marker, Popup, Source } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
 import { Pin } from './pin';
-
-const ring = (center, radius) => turf.circle(center, radius, { units: 'miles', steps: 64 });
+import { usePreferences } from '@context';
+import './superfund-sites.css';
 
 export const SuperfundSitesLayer = ({
   sites = [],
@@ -13,36 +13,43 @@ export const SuperfundSitesLayer = ({
   onClick,
 }) => {
   if (!sites) { return null; }
+  const preferences = usePreferences();
 
   const createClickHandler = useCallback(site => event => {
     event.originalEvent.stopPropagation();
     onClick(site);
   }, []);
 
-  const ringStats = useMemo(() => {
-    if (!selectedSite || !sampleSites.length) return null;
+  const centerAndRings = useMemo(() => {
+    if (!selectedSite) return null;
 
     const center = turf.point([selectedSite.longitude, selectedSite.latitude]);
-
-    const ring1 = turf.circle(center, 1, { units: 'miles' });
-    const ring3 = turf.circle(center, 3, { units: 'miles' });
-    const ring5 = turf.circle(center, 5, { units: 'miles' });
-
-    const sitePoints = sampleSites.filter(s => s.latitude && s.longitude).map(site =>
-      turf.point([site.longitude, site.latitude], site)
+    const rings = [1, 3, 5].map(miles =>
+      turf.circle(center, miles, { units: 'miles', steps: 64 })
     );
 
-    const countIn = (polygon) =>
-      sitePoints.filter(pt => turf.booleanPointInPolygon(pt, polygon)).length;
+    return { center, rings };
+  }, [selectedSite]);
+
+  const ringStats = useMemo(() => {
+    if (!centerAndRings || !sampleSites.length) return null;
+
+    const { rings } = centerAndRings;
+
+    const sitePoints = turf.featureCollection(
+      sampleSites.map(site => turf.point([site.longitude, site.latitude], site))
+    );
+
+    const countWithin = polygon => turf.pointsWithinPolygon(sitePoints, polygon).features.length;
 
     return {
-      '1mi': countIn(ring1),
-      '3mi': countIn(ring3),
-      '5mi': countIn(ring5),
+      '1mi': countWithin(rings[0]),
+      '3mi': countWithin(rings[1]),
+      '5mi': countWithin(rings[2]),
     };
-  }, [selectedSite, sampleSites]);
+  }, [centerAndRings, sampleSites]);
 
-  const pins = useMemo(() => sites.map((site, i) => (
+  const Pins = useCallback(() => sites.map((site, i) => (
     <Marker
       key={ `site-marker-${ i }` }
       longitude={ site.longitude }
@@ -53,16 +60,12 @@ export const SuperfundSitesLayer = ({
   )), []);
 
   const selectionRingsGeoJson = useMemo(() => {
-    if (!selectedSite) return null;
+    if (!centerAndRings) return null;
 
-    const center = turf.point([selectedSite.longitude, selectedSite.latitude]);
-    const circle1 = ring(center, 1);
-    const circle3 = ring(center, 3);
-    const circle5 = ring(center, 5);
+    const { center, rings } = centerAndRings;
 
     const makeLabel = (miles) => {
-      const bearing = 0; // due north
-      const labelPoint = turf.destination(center, miles, bearing, { units: 'miles' });
+      const labelPoint = turf.destination(center, miles, 0, { units: 'miles' });
       return {
         type: 'Feature',
         geometry: labelPoint.geometry,
@@ -72,18 +75,19 @@ export const SuperfundSitesLayer = ({
       };
     };
 
-    const label1 = makeLabel(1);
-    const label3 = makeLabel(3);
-    const label5 = makeLabel(5);
+    const labels = [1, 3, 5].map(makeLabel);
 
     return {
       type: 'FeatureCollection',
-      features: [
-        circle1, circle3, circle5,
-        label1, label3, label5,
-      ],
+      features: [...rings, ...labels],
     };
-  }, [selectedSite]);
+  }, [centerAndRings]);
+
+  const ringsPaint = useMemo(() => ({
+    'text-color': 'salmon',
+    'text-halo-color': preferences.colorMode.light ? 'white' : 'black',
+    'text-halo-width': 1,
+  }), [preferences.colorMode.light]);
 
   return (
     <>
@@ -105,30 +109,26 @@ export const SuperfundSitesLayer = ({
                 'text-offset': [0, 0],
                 'text-anchor': 'bottom',
               }}
-              paint={{
-                'text-color': 'crimson',
-                'text-halo-color': 'white',
-                'text-halo-width': 1
-              }}
+              paint={ ringsPaint }
             />
           </Source>
         )
       }
-      { pins }
+      <Pins />
       {
         selectedSite && ringStats && (
           <Popup
-            anchor="top"
+            anchor="top-left"
             longitude={ selectedSite.longitude }
             latitude={ selectedSite.latitude }
             closeButton={ false }
             closeOnClick={ false }
           >
             <div>
-              <strong>{selectedSite.name}</strong><br />
-              <div>Within 1 mi: {ringStats['1mi']}</div>
-              <div>Within 3 mi: {ringStats['3mi']}</div>
-              <div>Within 5 mi: {ringStats['5mi']}</div>
+              <strong>{ selectedSite.name }</strong><br />
+              <div>Within 1 mi: { ringStats['1mi'] }</div>
+              <div>Within 3 mi: { ringStats['3mi'] }</div>
+              <div>Within 5 mi: { ringStats['5mi'] }</div>
             </div>
           </Popup>
         )

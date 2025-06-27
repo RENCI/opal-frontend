@@ -53,6 +53,12 @@ export const MapView = () => {
   const handleDragStart = useCallback(() => isDragging.set(), []);
   const handleDragEnd = useCallback(() => isDragging.unset(), []);
 
+  const sampleSitesWithLatLong = useMemo(() =>
+    table.getPrePaginationRowModel().rows
+      .map(r => r.original)
+      .filter(s => s.latitude && s.longitude),
+  [table.getPrePaginationRowModel().rows.length]);
+
   return (
     <Box sx={{
       flex: 1,
@@ -76,12 +82,12 @@ export const MapView = () => {
       >
         <SuperfundSitesLayer
           sites={ superfundSites }
-          sampleSites={ table.getPrePaginationRowModel().rows.map(r => r.original) }
+          sampleSites={ sampleSitesWithLatLong }
           selectedSite={ selectedSite }
           onClick={ handleClickSuperfundSite }
         />
         <SampleSitesLayer
-          data={ table.getPrePaginationRowModel().rows }
+          data={ sampleSitesWithLatLong }
           mapRef={ mapRef }
         />
       </Map>
