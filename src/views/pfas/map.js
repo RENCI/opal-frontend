@@ -76,6 +76,7 @@ export const MapView = () => {
       >
         <SuperfundSitesLayer
           sites={ superfundSites }
+          sampleSites={ table.getPrePaginationRowModel().rows.map(r => r.original) }
           selectedSite={ selectedSite }
           onClick={ handleClickSuperfundSite }
         />

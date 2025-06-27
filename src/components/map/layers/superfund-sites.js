@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Layer, Marker, Source } from 'react-map-gl/mapbox';
+import { Layer, Marker, Popup, Source } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
 import { Pin } from './pin';
 
@@ -8,6 +8,7 @@ const ring = (center, radius) => turf.circle(center, radius, { units: 'miles', s
 
 export const SuperfundSitesLayer = ({
   sites = [],
+  sampleSites = [],
   selectedSite = {},
   onClick,
 }) => {
@@ -17,6 +18,29 @@ export const SuperfundSitesLayer = ({
     event.originalEvent.stopPropagation();
     onClick(site);
   }, []);
+
+  const ringStats = useMemo(() => {
+    if (!selectedSite || !sampleSites.length) return null;
+
+    const center = turf.point([selectedSite.longitude, selectedSite.latitude]);
+
+    const ring1 = turf.circle(center, 1, { units: 'miles' });
+    const ring3 = turf.circle(center, 3, { units: 'miles' });
+    const ring5 = turf.circle(center, 5, { units: 'miles' });
+
+    const sitePoints = sampleSites.filter(s => s.latitude && s.longitude).map(site =>
+      turf.point([site.longitude, site.latitude], site)
+    );
+
+    const countIn = (polygon) =>
+      sitePoints.filter(pt => turf.booleanPointInPolygon(pt, polygon)).length;
+
+    return {
+      '1mi': countIn(ring1),
+      '3mi': countIn(ring3),
+      '5mi': countIn(ring5),
+    };
+  }, [selectedSite, sampleSites]);
 
   const pins = useMemo(() => sites.map((site, i) => (
     <Marker
@@ -91,12 +115,31 @@ export const SuperfundSitesLayer = ({
         )
       }
       { pins }
+      {
+        selectedSite && ringStats && (
+          <Popup
+            anchor="top"
+            longitude={ selectedSite.longitude }
+            latitude={ selectedSite.latitude }
+            closeButton={ false }
+            closeOnClick={ false }
+          >
+            <div>
+              <strong>{selectedSite.name}</strong><br />
+              <div>Within 1 mi: {ringStats['1mi']}</div>
+              <div>Within 3 mi: {ringStats['3mi']}</div>
+              <div>Within 5 mi: {ringStats['5mi']}</div>
+            </div>
+          </Popup>
+        )
+      }
     </>
   );
 };
 
 SuperfundSitesLayer.propTypes = {
   sites: PropTypes.array.isRequired,
+  sampleSites: PropTypes.array.isRequired,
   selectedSite: PropTypes.object,
   onClick: PropTypes.func.isRequired,
 };
