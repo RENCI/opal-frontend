@@ -15,7 +15,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
         },
         properties: {
           name: location.sample_id,
-        }
+        },
       };
     }),
   }), [data]);

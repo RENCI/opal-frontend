@@ -2,12 +2,19 @@ import PropTypes from 'prop-types';
 import {
   Box, Button, Stack, Typography,
 } from '@mui/joy'
-import { RestartAlt as ResetIcon } from '@mui/icons-material';
+import {
+  RestartAlt as ResetIcon,
+  WebAsset as PanelIcon,
+} from '@mui/icons-material';
 import { DrawerPanel } from '../panel';
 
 export const ViewStatePanel = ({ viewState, onReset }) => {
   return (
-    <DrawerPanel title="View State" defaultExpanded>
+    <DrawerPanel
+      title="View State"
+      icon={ <PanelIcon /> }
+      defaultExpanded
+    >
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',

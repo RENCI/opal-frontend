@@ -7,12 +7,12 @@ import { usePreferences } from '@context';
 import './superfund-sites.css';
 
 export const SuperfundSitesLayer = ({
-  sites = [],
+  superfundSites = [],
   sampleSites = [],
-  selectedSite = {},
+  selectedSuperfundSite = {},
   onClick,
 }) => {
-  if (!sites) { return null; }
+  if (!superfundSites) { return null; }
   const preferences = usePreferences();
 
   const createClickHandler = useCallback(site => event => {
@@ -21,15 +21,15 @@ export const SuperfundSitesLayer = ({
   }, []);
 
   const centerAndRings = useMemo(() => {
-    if (!selectedSite) return null;
+    if (!selectedSuperfundSite) return null;
 
-    const center = turf.point([selectedSite.longitude, selectedSite.latitude]);
+    const center = turf.point([selectedSuperfundSite.longitude, selectedSuperfundSite.latitude]);
     const rings = [1, 3, 5].map(miles =>
       turf.circle(center, miles, { units: 'miles', steps: 64 })
     );
 
     return { center, rings };
-  }, [selectedSite]);
+  }, [selectedSuperfundSite]);
 
   const ringStats = useMemo(() => {
     if (!centerAndRings || !sampleSites.length) return null;
@@ -49,7 +49,7 @@ export const SuperfundSitesLayer = ({
     };
   }, [centerAndRings, sampleSites]);
 
-  const Pins = useCallback(() => sites.map((site, i) => (
+  const Pins = useCallback(() => superfundSites.map((site, i) => (
     <Marker
       key={ `site-marker-${ i }` }
       longitude={ site.longitude }
@@ -116,16 +116,16 @@ export const SuperfundSitesLayer = ({
       }
       <Pins />
       {
-        selectedSite && ringStats && (
+        selectedSuperfundSite && ringStats && (
           <Popup
             anchor="top-left"
-            longitude={ selectedSite.longitude }
-            latitude={ selectedSite.latitude }
+            longitude={ selectedSuperfundSite.longitude }
+            latitude={ selectedSuperfundSite.latitude }
             closeButton={ false }
             closeOnClick={ false }
           >
             <div>
-              <strong>{ selectedSite.name }</strong><br />
+              <strong>{ selectedSuperfundSite.name }</strong><br />
               <div>Within 1 mi: { ringStats['1mi'] }</div>
               <div>Within 3 mi: { ringStats['3mi'] }</div>
               <div>Within 5 mi: { ringStats['5mi'] }</div>
@@ -138,8 +138,8 @@ export const SuperfundSitesLayer = ({
 };
 
 SuperfundSitesLayer.propTypes = {
-  sites: PropTypes.array.isRequired,
+  superfundSites: PropTypes.array.isRequired,
   sampleSites: PropTypes.array.isRequired,
-  selectedSite: PropTypes.object,
+  selectedSuperfundSite: PropTypes.object,
   onClick: PropTypes.func.isRequired,
 };
