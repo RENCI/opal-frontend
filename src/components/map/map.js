@@ -6,6 +6,7 @@ import { useLocalStorage, useToggleState } from '@hooks';
 import {
   MapDrawer,
   LayersPanel,
+  SelectionRadiusPanel,
   ViewStatePanel,
 } from '@components/map';
 import { SampleSitesLayer, SuperfundSitesLayer } from '@components/map/layers';
@@ -20,8 +21,12 @@ const centerFitUS = {
   zoom: 4.000,
 };
 
-export const flyTo = (mapRef, { latitude, longitude, zoom, duration }) => {
+export const flyTo = (mapRef, { latitude, longitude, zoom, duration = 2000 }) => {
   if (!mapRef.current) {
+    return;
+  }
+  if (!latitude || !longitude) {
+    console.warn('Missing lat/lon:', latitude, longitude);
     return;
   }
   mapRef.current.flyTo({ center: [longitude, latitude], zoom, duration });
@@ -32,22 +37,14 @@ export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
   const mapboxStyle = useMemo(() => `mapbox://styles/mapbox/${ mapStyle }-v11`, [mapStyle]);
 
   const [viewState, setViewState] = useLocalStorage('view-state', centerFitUS)
-  const [selectedSuperfundSite, setSelectedSuperfundSite] = useState(null);
-
-  const { superfundSites } = usePfas();
   const interactiveLayerIds = ['superfund-sites', 'clusters', 'unclustered-point'];
 
-  const flyToSuperfundSite = useCallback(({ latitude, longitude }) => {
-    if (!latitude || !longitude) {
-      console.warn('Missing lat/lon:', latitude, longitude);
-      return;
-    }
-    flyTo(mapRef, { longitude, latitude, zoom: 11, duration: 2000 })
-  }, [])
+  const { superfundSites } = usePfas();
+  const [selectedSuperfundSite, setSelectedSuperfundSite] = useState(null);
 
-  const handleClickMap = useCallback(() => {
-    setSelectedSuperfundSite(null);
-  }, []);
+  const flyToSuperfundSite = useCallback(({ latitude, longitude }) => {
+    flyTo(mapRef, { longitude, latitude, zoom: 11 })
+  }, [])
 
   const handleClickSuperfundSite = useCallback(site => {
     if (!site) {
@@ -56,6 +53,17 @@ export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
     flyToSuperfundSite(site);
     setSelectedSuperfundSite(site);
   }, []);
+
+  const [selectionRadius, setSelectionRadius] = useLocalStorage('selection-radius', 5);
+
+  const handleClickMap = useCallback(() => {
+    setSelectedSuperfundSite(null);
+  }, []);
+
+  const resetMap = useCallback(() => {
+    flyTo(mapRef, centerFitUS);
+    setSelectedSuperfundSite(null);
+  }, [mapRef]);
 
   const isDragging = useToggleState(false);
   const handleDragStart = useCallback(() => isDragging.set(), []);
@@ -82,21 +90,17 @@ export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
           sampleSites={ samples }
           selectedSuperfundSite={ selectedSuperfundSite }
           onClick={ handleClickSuperfundSite }
+          selectionRadius={ selectionRadius }
         />
-        <SampleSitesLayer
-          data={ samples }
-          mapRef={ mapRef }
-        />
+        <SampleSitesLayer mapRef={ mapRef } data={ samples } />
       </Map>
       <MapDrawer visible={ !isDragging.enabled }>
         <ViewStatePanel
           viewState={ viewState }
-          onReset={ () => {
-            flyTo(mapRef, { ...centerFitUS, duration: 2000 });
-            setSelectedSuperfundSite(null);
-          } }
+          onReset={ resetMap }
         />
         <LayersPanel />
+        <SelectionRadiusPanel value={ selectionRadius } onChange={ setSelectionRadius } />
       </MapDrawer>
     </>
   );

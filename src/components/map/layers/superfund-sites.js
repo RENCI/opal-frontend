@@ -11,6 +11,7 @@ export const SuperfundSitesLayer = ({
   sampleSites = [],
   selectedSuperfundSite = {},
   onClick,
+  selectionRadius,
 }) => {
   if (!superfundSites) { return null; }
   const preferences = usePreferences();
@@ -24,17 +25,15 @@ export const SuperfundSitesLayer = ({
     if (!selectedSuperfundSite) return null;
 
     const center = turf.point([selectedSuperfundSite.longitude, selectedSuperfundSite.latitude]);
-    const rings = [1, 3, 5].map(miles =>
-      turf.circle(center, miles, { units: 'miles', steps: 64 })
-    );
+    const ring = turf.circle(center, selectionRadius, { units: 'miles', steps: 64 });
 
-    return { center, rings };
-  }, [selectedSuperfundSite]);
+    return { center, ring };
+  }, [selectedSuperfundSite, selectionRadius]);
 
   const ringStats = useMemo(() => {
     if (!centerAndRings || !sampleSites.length) return null;
 
-    const { rings } = centerAndRings;
+    const { ring } = centerAndRings;
 
     const sitePoints = turf.featureCollection(
       sampleSites.map(site => turf.point([site.longitude, site.latitude], site))
@@ -42,11 +41,7 @@ export const SuperfundSitesLayer = ({
 
     const countWithin = polygon => turf.pointsWithinPolygon(sitePoints, polygon).features.length;
 
-    return {
-      '1mi': countWithin(rings[0]),
-      '3mi': countWithin(rings[1]),
-      '5mi': countWithin(rings[2]),
-    };
+    return countWithin(ring);
   }, [centerAndRings, sampleSites]);
 
   const Pins = useCallback(() => superfundSites.map((site, i) => (
@@ -59,31 +54,31 @@ export const SuperfundSitesLayer = ({
     ><Pin /></Marker>
   )), []);
 
-  const selectionRingsGeoJson = useMemo(() => {
+  const selectionRingGeojson = useMemo(() => {
     if (!centerAndRings) return null;
 
-    const { center, rings } = centerAndRings;
+    const { center, ring } = centerAndRings;
 
-    const makeLabel = (miles) => {
+    const makeLabel = miles => {
       const labelPoint = turf.destination(center, miles, 0, { units: 'miles' });
       return {
         type: 'Feature',
         geometry: labelPoint.geometry,
         properties: {
-          label: `${miles} mi`
-        }
+          label: `${miles} mi`,
+        },
       };
     };
 
-    const labels = [1, 3, 5].map(makeLabel);
+    const label = makeLabel(selectionRadius);
 
     return {
       type: 'FeatureCollection',
-      features: [...rings, ...labels],
+      features: [ring, label],
     };
   }, [centerAndRings]);
 
-  const ringsPaint = useMemo(() => ({
+  const ringPaint = useMemo(() => ({
     'text-color': 'salmon',
     'text-halo-color': preferences.colorMode.light ? 'white' : 'black',
     'text-halo-width': 1,
@@ -92,8 +87,8 @@ export const SuperfundSitesLayer = ({
   return (
     <>
       {
-        selectionRingsGeoJson && (
-          <Source id="superfund-radius" type="geojson" data={selectionRingsGeoJson}>
+        selectionRingGeojson && (
+          <Source id="superfund-radius" type="geojson" data={ selectionRingGeojson }>
             <Layer
               id="selected-superfund-site-ring"
               type="fill"
@@ -109,7 +104,7 @@ export const SuperfundSitesLayer = ({
                 'text-offset': [0, 0],
                 'text-anchor': 'bottom',
               }}
-              paint={ ringsPaint }
+              paint={ ringPaint }
             />
           </Source>
         )
@@ -126,9 +121,7 @@ export const SuperfundSitesLayer = ({
           >
             <div>
               <strong>{ selectedSuperfundSite.name }</strong><br />
-              <div>Within 1 mi: { ringStats['1mi'] }</div>
-              <div>Within 3 mi: { ringStats['3mi'] }</div>
-              <div>Within 5 mi: { ringStats['5mi'] }</div>
+              <div>Within { selectionRadius } miles: { ringStats }</div>
             </div>
           </Popup>
         )
@@ -138,8 +131,9 @@ export const SuperfundSitesLayer = ({
 };
 
 SuperfundSitesLayer.propTypes = {
+  onClick: PropTypes.func.isRequired,
   superfundSites: PropTypes.array.isRequired,
   sampleSites: PropTypes.array.isRequired,
   selectedSuperfundSite: PropTypes.object,
-  onClick: PropTypes.func.isRequired,
+  selectionRadius: PropTypes.number.isRequired,
 };
