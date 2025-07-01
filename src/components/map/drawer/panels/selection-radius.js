@@ -3,7 +3,7 @@ import {
   Slider, Stack, Typography,
 } from '@mui/joy';
 import {
-  WebAsset as PanelIcon,
+  FilterTiltShift as PanelIcon,
 } from '@mui/icons-material';
 import { DrawerPanel } from '../panel';
 
@@ -26,11 +26,15 @@ export const SelectionRadiusPanel = ({ value, onChange }) => {
           marks
           size="sm"
         />
-        <Typography variant="soft" sx={{
-          minWidth: '5rem',
-          fontFamily: 'monospace',
-          textAlign: 'right',
-        }}>{ value } mi</Typography>
+        <Typography
+          variant="soft"
+          level="body-sm"
+          sx={{
+            minWidth: '4rem',
+            fontFamily: 'monospace',
+            textAlign: 'right',
+          }}
+        >{ value } mi</Typography>
       </Stack>
     </DrawerPanel>
   )
