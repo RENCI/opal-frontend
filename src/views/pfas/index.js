@@ -10,7 +10,7 @@ import { Outlet } from 'react-router-dom';
 import { AppStatus } from '@components/app-status';
 import { FiltersDrawer } from '@components/filter';
 import { podmColumns } from '@data';
-import { useProgress, useToggleState } from '@hooks';
+import { useLocalStorage, useProgress, useToggleState } from '@hooks';
 import { fetchSampleData } from '@util';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -103,8 +103,18 @@ const TargetedPrimaryLayout = () => {
 const PfasContext = createContext({ })
 export const usePfas = () => useContext(PfasContext)
 
+const defaultHiddenColumns = Object.fromEntries(
+  podmColumns.flatMap(group => group.columns)
+    .filter(c => c.id || c.accessorKey)
+    .map(c => {
+      const colId = c.id ?? c.accessorKey;
+      return [colId, !(colId.endsWith('_mrl') || colId.endsWith('_flags'))];
+    })
+);
+
 export const PfasView = () => {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
+  const [columnVisibility, setColumnVisibility] = useLocalStorage('column-visibility', { ...defaultHiddenColumns });
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
   const [isPreparingTable, setIsPreparingTable] = useState(true)
@@ -125,6 +135,7 @@ export const PfasView = () => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
     getFacetedRowModel: getFacetedRowModel(),
@@ -132,6 +143,7 @@ export const PfasView = () => {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     state: {
       columnFilters,
+      columnVisibility,
       pagination,
       sorting,
     },
