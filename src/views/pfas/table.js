@@ -50,16 +50,24 @@ export const TableView = () => {
         <TableBrowser />
       </Toolbar>
 
-      <DataTable
-        table={ table }
-        sx={{
-          '.filter': {
-            maxHeight: filtersVisibility ? '48px' : 0,
-            overflow: 'hidden',
-            transition: 'max-height 250ms',
-          },
-        }}
-      />
+      <div style={{
+        maxWidth: 'calc(100vw - 2rem)',
+        position: 'relative',
+        overflowX: 'scroll',
+        borderRight: '1px solid #333',
+      }}>
+        <DataTable
+          table={ table }
+          sx={{
+            '.filter': {
+              maxHeight: filtersVisibility ? '48px' : 0,
+              overflow: 'hidden',
+              transition: 'max-height 250ms',
+            },
+          }}
+        />
+        
+      </div>
 
       <Toolbar>
         <Pagination table={ table } />

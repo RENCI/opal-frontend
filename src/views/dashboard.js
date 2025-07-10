@@ -65,7 +65,6 @@ export const DashboardView = () => {
         <Sheet component="main" sx={{
           width: '100vw',
           transition: 'margin-left 250ms ease-out, min-width 250ms ease-out',
-          overflow: 'auto',
           position: 'relative',
           px: 2,
           pt: 6,
