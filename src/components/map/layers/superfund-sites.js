@@ -1,139 +1,124 @@
-import { useCallback, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Layer, Marker, Popup, Source } from 'react-map-gl/mapbox';
+import { Layer, Source, useMap } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
-import { Pin } from './pin';
-import { usePreferences } from '@context';
+import pin from '@images/pin.png';
+console.log(pin)
 import './superfund-sites.css';
+
+const loadMapImage = (map, id, url) => {
+  return new Promise((resolve, reject) => {
+    if (map.hasImage(id)) {
+      resolve();
+      return;
+    }
+
+    map.loadImage(url, (error, image) => {
+      if (error) {
+        reject(error);
+      } else if (!map.hasImage(id)) {
+        map.addImage(id, image);
+      }
+      resolve();
+    });
+  });
+};
 
 export const SuperfundSitesLayer = ({
   superfundSites = [],
-  sampleSites = [],
-  selectedSuperfundSite = {},
-  onClick,
   selectionRadius,
 }) => {
   if (!superfundSites) { return null; }
-  const preferences = usePreferences();
 
-  const createClickHandler = useCallback(site => event => {
-    event.originalEvent.stopPropagation();
-    onClick(site);
-  }, []);
+  const { current: map } = useMap();
 
-  const centerAndRings = useMemo(() => {
-    if (!selectedSuperfundSite) return null;
+  useEffect(() => {
+    if (!map?.getSource('superfund-rings')) return;
 
-    const center = turf.point([selectedSuperfundSite.longitude, selectedSuperfundSite.latitude]);
-    const ring = turf.circle(center, selectionRadius, { units: 'miles', steps: 64 });
+    map.getSource('superfund-rings').setData(ringsGeoJson);
+  }, [ringsGeoJson, map]);
 
-    return { center, ring };
-  }, [selectedSuperfundSite, selectionRadius]);
+  useEffect(() => {
+    if (!map) return;
 
-  const ringStats = useMemo(() => {
-    if (!centerAndRings || !sampleSites.length) return null;
+    loadMapImage(map, 'custom-pin', pin)
+      .then(() => console.log('Image loaded and added to map'))
+      .catch(error => console.error('Failed to load image', error));
+  }, [map]);
 
-    const { ring } = centerAndRings;
+  const siteFeatures = useMemo(() => superfundSites?.features ?? [], [superfundSites]);
 
-    const sitePoints = turf.featureCollection(
-      sampleSites.map(site => turf.point([site.longitude, site.latitude], site))
-    );
-
-    const countWithin = polygon => turf.pointsWithinPolygon(sitePoints, polygon).features.length;
-
-    return countWithin(ring);
-  }, [centerAndRings, sampleSites]);
-
-  const Pins = useCallback(() => superfundSites.map((site, i) => (
-    <Marker
-      key={ `site-marker-${ i }` }
-      longitude={ site.longitude }
-      latitude={ site.latitude }
-      anchor="bottom"
-      onClick={ createClickHandler(site) }
-    ><Pin /></Marker>
-  )), []);
-
-  const selectionRingGeojson = useMemo(() => {
-    if (!centerAndRings) return null;
-
-    const { center, ring } = centerAndRings;
-
-    const makeLabel = miles => {
-      const labelPoint = turf.destination(center, miles, 0, { units: 'miles' });
-      return {
-        type: 'Feature',
-        geometry: labelPoint.geometry,
-        properties: {
-          label: `${miles} mi`,
-        },
+  const ringsGeoJson = useMemo(() => {
+    console.log('Recalculating GeoJSON with radius', selectionRadius);
+    const features = siteFeatures.map(feature => {
+      const [longitude, latitude] = feature.geometry.coordinates;
+      const center = turf.point([longitude, latitude]);
+      const ring = turf.circle(center, selectionRadius, { units: 'miles', steps: 64 });
+      // add site metadata
+      ring.properties = {
+        ...feature.properties,
       };
-    };
 
-    const label = makeLabel(selectionRadius);
+      return ring;
+    });
 
     return {
       type: 'FeatureCollection',
-      features: [ring, label],
+      features,
     };
-  }, [centerAndRings]);
-
-  const ringPaint = useMemo(() => ({
-    'text-color': 'salmon',
-    'text-halo-color': preferences.colorMode.light ? 'white' : 'black',
-    'text-halo-width': 1,
-  }), [preferences.colorMode.light]);
+  }, [selectionRadius, siteFeatures]);
 
   return (
     <>
-      {
-        selectionRingGeojson && (
-          <Source id="superfund-radius" type="geojson" data={ selectionRingGeojson }>
-            <Layer
-              id="selected-superfund-site-ring"
-              type="fill"
-              paint={{ 'fill-outline-color': 'salmon', 'fill-color': 'rgba(255, 140, 105, 0.1)' }}
-            />
-            <Layer
-              id="radius-labels"
-              type="symbol"
-              filter={['has', 'label']}
-              layout={{
-                'text-field': ['get', 'label'],
-                'text-size': 12,
-                'text-offset': [0, 0],
-                'text-anchor': 'bottom',
-              }}
-              paint={ ringPaint }
-            />
-          </Source>
-        )
-      }
-      <Pins />
-      {
-        selectedSuperfundSite && ringStats && (
-          <Popup
-            anchor="top-left"
-            longitude={ selectedSuperfundSite.longitude }
-            latitude={ selectedSuperfundSite.latitude }
-            closeButton={ false }
-            closeOnClick={ false }
-          >
-            <div>
-              <strong>{ selectedSuperfundSite.name }</strong><br />
-              <div>Within { selectionRadius } miles: { ringStats }</div>
-            </div>
-          </Popup>
-        )
-      }
+      <Source
+        id="superfund-rings"
+        type="geojson"
+        data={ ringsGeoJson }
+      >
+        <Layer
+          id="superfund-site-rings"
+          type="fill"
+          paint={{ 'fill-color': 'salmon', 'fill-opacity': 0.3 }}
+        />
+        <Layer
+          id="superfund-site-rings-outline"
+          type="line"
+          paint={{ 'line-color': 'salmon', 'line-width': 1 }}
+        />
+      </Source>
+      <Source id="site-pins" type="geojson" data={ superfundSites }>
+        <Layer
+          id="site-pin-layer"
+          type="symbol"
+          layout={{
+            'icon-image': 'custom-pin',
+            'icon-size': 0.5,
+            'icon-anchor': 'bottom',
+            'icon-allow-overlap': true,
+          }}
+        />
+      </Source>
     </>
   );
 };
 
+const GeoJSONGeometryProp = PropTypes.shape({
+  type: PropTypes.oneOf(['Point', 'LineString', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon']).isRequired,
+  coordinates: PropTypes.any.isRequired, // consider deeper check
+});
+
+const GeoJSONFeatureProp = PropTypes.shape({
+  type: PropTypes.oneOf(['Feature']).isRequired,
+  geometry: GeoJSONGeometryProp.isRequired,
+  properties: PropTypes.object, // could be more specific?
+});
+
+const GeoJSONFeatureCollectionProp = PropTypes.shape({
+  type: PropTypes.oneOf(['FeatureCollection']).isRequired,
+  features: PropTypes.arrayOf(GeoJSONFeatureProp).isRequired,
+});
+
 SuperfundSitesLayer.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  superfundSites: PropTypes.array.isRequired,
-  sampleSites: PropTypes.array.isRequired,
-  selectedSuperfundSite: PropTypes.object,
+  superfundSites: GeoJSONFeatureCollectionProp,
   selectionRadius: PropTypes.number.isRequired,
 };

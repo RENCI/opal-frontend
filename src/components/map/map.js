@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Map from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -6,7 +6,6 @@ import { useLocalStorage, useToggleState } from '@hooks';
 import {
   MapDrawer,
   LayersPanel,
-  SelectionRadiusPanel,
   ViewStatePanel,
 } from '@components/map';
 import { SampleSitesLayer, SuperfundSitesLayer } from '@components/map/layers';
@@ -32,7 +31,7 @@ export const flyTo = (mapRef, { latitude, longitude, zoom, duration = 2000 }) =>
   mapRef.current.flyTo({ center: [longitude, latitude], zoom, duration });
 };
 
-export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
+export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'light' }) => {
   const mapRef = useRef(null)
   const mapboxStyle = useMemo(() => `mapbox://styles/mapbox/${ mapStyle }-v11`, [mapStyle]);
 
@@ -40,34 +39,19 @@ export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
   const interactiveLayerIds = ['superfund-sites', 'clusters', 'unclustered-point'];
 
   const { superfundSites } = usePfas();
-  const [selectedSuperfundSite, setSelectedSuperfundSite] = useState(null);
-
-  const flyToSuperfundSite = useCallback(({ latitude, longitude }) => {
-    flyTo(mapRef, { longitude, latitude, zoom: 11 })
-  }, [])
-
-  const handleClickSuperfundSite = useCallback(site => {
-    if (!site) {
-      setSelectedSuperfundSite(null);
-    }
-    flyToSuperfundSite(site);
-    setSelectedSuperfundSite(site);
-  }, []);
-
-  const [selectionRadius, setSelectionRadius] = useLocalStorage('selection-radius', 5);
 
   const handleClickMap = useCallback(() => {
-    setSelectedSuperfundSite(null);
+    console.log('click');
   }, []);
 
   const resetMap = useCallback(() => {
     flyTo(mapRef, centerFitUS);
-    setSelectedSuperfundSite(null);
   }, [mapRef]);
 
   const isDragging = useToggleState(false);
   const handleDragStart = useCallback(() => isDragging.set(), []);
   const handleDragEnd = useCallback(() => isDragging.unset(), []);
+  // console.log(samples)
 
   return (
     <>
@@ -88,8 +72,6 @@ export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
         <SuperfundSitesLayer
           superfundSites={ superfundSites }
           sampleSites={ samples }
-          selectedSuperfundSite={ selectedSuperfundSite }
-          onClick={ handleClickSuperfundSite }
           selectionRadius={ selectionRadius }
         />
         <SampleSitesLayer mapRef={ mapRef } data={ samples } />
@@ -100,7 +82,6 @@ export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
           onReset={ resetMap }
         />
         <LayersPanel />
-        <SelectionRadiusPanel value={ selectionRadius } onChange={ setSelectionRadius } />
       </MapDrawer>
     </>
   );
@@ -109,4 +90,5 @@ export const SamplesMap = ({ samples = [], mapStyle = 'light' }) => {
 SamplesMap.propTypes = {
   mapStyle: PropTypes.oneOf(['light', 'dark']),
   samples: PropTypes.array,
+  selectionRadius: PropTypes.number.isRequired,
 };
