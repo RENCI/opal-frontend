@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Layer, Source, useMap } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
 import pin from '@images/pin.png';
-console.log(pin)
 import './superfund-sites.css';
 
 const loadMapImage = (map, id, url) => {
@@ -32,33 +31,15 @@ export const SuperfundSitesLayer = ({
 
   const { current: map } = useMap();
 
-  useEffect(() => {
-    if (!map?.getSource('superfund-rings')) return;
-
-    map.getSource('superfund-rings').setData(ringsGeoJson);
-  }, [ringsGeoJson, map]);
-
-  useEffect(() => {
-    if (!map) return;
-
-    loadMapImage(map, 'custom-pin', pin)
-      .then(() => console.log('Image loaded and added to map'))
-      .catch(error => console.error('Failed to load image', error));
-  }, [map]);
-
   const siteFeatures = useMemo(() => superfundSites?.features ?? [], [superfundSites]);
 
-  const ringsGeoJson = useMemo(() => {
+  const ringFeatures = useMemo(() => {
     console.log('Recalculating GeoJSON with radius', selectionRadius);
     const features = siteFeatures.map(feature => {
       const [longitude, latitude] = feature.geometry.coordinates;
       const center = turf.point([longitude, latitude]);
       const ring = turf.circle(center, selectionRadius, { units: 'miles', steps: 64 });
-      // add site metadata
-      ring.properties = {
-        ...feature.properties,
-      };
-
+      ring.properties = { ...feature.properties }; // include site metadata
       return ring;
     });
 
@@ -68,22 +49,30 @@ export const SuperfundSitesLayer = ({
     };
   }, [selectionRadius, siteFeatures]);
 
+  useEffect(() => {
+    if (!map) return;
+
+    loadMapImage(map, 'custom-pin', pin)
+      .then(() => console.log('Pin image loaded and added to map'))
+      .catch(error => console.error('Failed to load pin image.', error));
+  }, [map]);
+
   return (
     <>
       <Source
         id="superfund-rings"
         type="geojson"
-        data={ ringsGeoJson }
+        data={ ringFeatures }
       >
         <Layer
           id="superfund-site-rings"
           type="fill"
-          paint={{ 'fill-color': 'salmon', 'fill-opacity': 0.3 }}
+          paint={{ 'fill-color': 'salmon', 'fill-opacity': 0.05 }}
         />
         <Layer
           id="superfund-site-rings-outline"
           type="line"
-          paint={{ 'line-color': 'salmon', 'line-width': 1 }}
+          paint={{ 'line-color': 'salmon', 'line-width': 1, 'line-opacity': 0.25 }}
         />
       </Source>
       <Source id="site-pins" type="geojson" data={ superfundSites }>

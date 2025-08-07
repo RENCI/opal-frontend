@@ -44,7 +44,6 @@ export const FiltersDrawer = ({ open, onClose }) => {
         <SuperfundProximityFilter />
       </AccordionGroup>
       
-      <Divider />
     </Sheet>
   )
 }

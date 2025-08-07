@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import {
   Accordion,
   AccordionDetails,
-  AccordionGroup,
   AccordionSummary,
   Checkbox,
   ListItemContent,
@@ -27,33 +26,31 @@ export const SuperfundProximityFilter = () => {
   }
 
   return (
-    <AccordionGroup>
-      <Accordion>
-        <AccordionSummary>
-          <IndicatorIcon
-            color="primary"
-            sx={{
-              transform: 'scale(0.75)',
-              filter: 'opacity(0.1)',
-            }}
+    <Accordion>
+      <AccordionSummary>
+        <IndicatorIcon
+          color="primary"
+          sx={{
+            transform: 'scale(0.75)',
+            filter: 'opacity(0.1)',
+          }}
+        />
+        <ListItemContent>Superfund Site Proximity</ListItemContent>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack p={ 1 } spacing={ 1 }>
+          <SuperfundProximityToggle
+            checked={ filterActivity.enabled }
+            onChange={ filterActivity.toggle }
           />
-          <ListItemContent>Superfund Site Proximity</ListItemContent>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack p={ 1 } spacing={ 1 }>
-            <SuperfundProximityToggle
-              checked={ filterActivity.enabled }
-              onChange={ filterActivity.toggle }
-            />
-            <SuperfundRadiusSlider
-              disabled={ !filterActivity.enabled }
-              value={ selectionRadius }
-              onChange={ newValue => setSelectionRadius(newValue) }
-            />
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-    </AccordionGroup>
+          <SuperfundRadiusSlider
+            disabled={ !filterActivity.enabled }
+            value={ selectionRadius }
+            onChange={ newValue => setSelectionRadius(newValue) }
+          />
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
   )
 }
 

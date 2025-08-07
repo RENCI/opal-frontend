@@ -71,6 +71,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
         filter={['has', 'point_count']}
         paint={{
           'circle-color': '#51bbd6',
+          'circle-opacity': 0.75,
           'circle-radius': [
             'step',
             ['get', 'point_count'],

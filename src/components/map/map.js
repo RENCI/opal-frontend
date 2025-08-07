@@ -20,28 +20,28 @@ const centerFitUS = {
   zoom: 4.000,
 };
 
-export const flyTo = (mapRef, { latitude, longitude, zoom, duration = 2000 }) => {
-  if (!mapRef.current) {
-    return;
-  }
-  if (!latitude || !longitude) {
+export const flyTo = (mapRef, { latitude, longitude, zoom, pitch = 0, bearing = 0, duration = 2000 }) => {
+  if (!mapRef.current) return;
+  if (latitude == null || longitude == null) {
     console.warn('Missing lat/lon:', latitude, longitude);
     return;
   }
-  mapRef.current.flyTo({ center: [longitude, latitude], zoom, duration });
+  mapRef.current.flyTo({ center: [longitude, latitude], zoom, pitch, bearing, duration });
 };
 
 export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'light' }) => {
   const mapRef = useRef(null)
   const mapboxStyle = useMemo(() => `mapbox://styles/mapbox/${ mapStyle }-v11`, [mapStyle]);
 
-  const [viewState, setViewState] = useLocalStorage('view-state', centerFitUS)
+  const [viewState, setViewState] = useLocalStorage('view-state', centerFitUS) ?? centerFitUS;
+
   const interactiveLayerIds = ['superfund-sites', 'clusters', 'unclustered-point'];
 
   const { superfundSites } = usePfas();
 
-  const handleClickMap = useCallback(() => {
-    console.log('click');
+  const handleClickMap = useCallback((event) => {
+    const { lngLat } = event;
+    console.log('Clicked at', lngLat);
   }, []);
 
   const resetMap = useCallback(() => {
@@ -69,12 +69,12 @@ export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'ligh
         onDragStart={ handleDragStart }
         onDragEnd={ handleDragEnd }
       >
+        <SampleSitesLayer mapRef={ mapRef } data={ samples } />
         <SuperfundSitesLayer
           superfundSites={ superfundSites }
           sampleSites={ samples }
           selectionRadius={ selectionRadius }
         />
-        <SampleSitesLayer mapRef={ mapRef } data={ samples } />
       </Map>
       <MapDrawer visible={ !isDragging.enabled }>
         <ViewStatePanel
@@ -89,6 +89,9 @@ export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'ligh
 
 SamplesMap.propTypes = {
   mapStyle: PropTypes.oneOf(['light', 'dark']),
-  samples: PropTypes.array,
+  samples: PropTypes.arrayOf(PropTypes.shape({
+    latitude: PropTypes.number,
+    longitude: PropTypes.number,
+  })),
   selectionRadius: PropTypes.number.isRequired,
 };
