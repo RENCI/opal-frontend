@@ -118,6 +118,8 @@ export const PfasView = () => {
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
   const [isPreparingTable, setIsPreparingTable] = useState(true)
+  const superfundSiteFilterActivity = useToggleState(false);
+  const [superfundSiteSelectionRadius, setSuperfundSiteSelectionRadius] = useState(5);
 
   const progress = useProgress()
   const pfasData = useQuery({
@@ -164,14 +166,30 @@ export const PfasView = () => {
 
   // const filterCount = table.getAllLeafColumns().filter(col => col.getIsFiltered()).length 
 
+  const contextValue = useMemo(() => ({
+    table,
+    columnFilters, setColumnFilters,
+    sorting, setSorting,
+    progress,
+    superfundSites: {
+      data: superfundSites?.data ?? [],
+      filtering: superfundSiteFilterActivity,
+      selectionRadius: {
+        current: superfundSiteSelectionRadius,
+        set: setSuperfundSiteSelectionRadius,
+      },
+    },
+  }), [
+    table,
+    columnFilters, sorting,
+    progress,
+    superfundSites?.data,
+    superfundSiteFilterActivity.enabled,
+    superfundSiteSelectionRadius
+  ]);
+
   return (
-    <PfasContext.Provider value={{
-      table,
-      columnFilters, setColumnFilters, /*filterCount,*/
-      sorting, setSorting,
-      progress,
-      superfundSites: superfundSites?.data ?? [],
-    }}>
+    <PfasContext.Provider value={ contextValue }>
       {
         pfasData.isPending || pfasData.isLoading
           ? <AppStatus message={ `Loading targeted primary data :: ${progress.percent}%` } />

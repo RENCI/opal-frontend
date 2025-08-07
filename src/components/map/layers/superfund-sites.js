@@ -26,6 +26,7 @@ const loadMapImage = (map, id, url) => {
 export const SuperfundSitesLayer = ({
   superfundSites = [],
   selectionRadius,
+  showRings,
 }) => {
   if (!superfundSites) { return null; }
 
@@ -59,22 +60,22 @@ export const SuperfundSitesLayer = ({
 
   return (
     <>
-      <Source
-        id="superfund-rings"
-        type="geojson"
-        data={ ringFeatures }
-      >
-        <Layer
-          id="superfund-site-rings"
-          type="fill"
-          paint={{ 'fill-color': 'salmon', 'fill-opacity': 0.05 }}
-        />
-        <Layer
-          id="superfund-site-rings-outline"
-          type="line"
-          paint={{ 'line-color': 'salmon', 'line-width': 1, 'line-opacity': 0.25 }}
-        />
-      </Source>
+      {
+        showRings && (
+          <Source id="superfund-rings" type="geojson" data={ ringFeatures }>
+            <Layer
+              id="superfund-site-rings"
+              type="fill"
+              paint={{ 'fill-color': 'salmon', 'fill-opacity': 0.05 }}
+            />
+            <Layer
+              id="superfund-site-rings-outline"
+              type="line"
+              paint={{ 'line-color': 'salmon', 'line-width': 1, 'line-opacity': 0.25 }}
+            />
+          </Source>
+        )
+      }
       <Source id="site-pins" type="geojson" data={ superfundSites }>
         <Layer
           id="site-pin-layer"
@@ -110,4 +111,5 @@ const GeoJSONFeatureCollectionProp = PropTypes.shape({
 SuperfundSitesLayer.propTypes = {
   superfundSites: GeoJSONFeatureCollectionProp,
   selectionRadius: PropTypes.number.isRequired,
+  showRings: PropTypes.bool.isRequired,
 };

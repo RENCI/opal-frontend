@@ -14,15 +14,12 @@ import {
   Close as UnselectedIcon,
 } from '@mui/icons-material';
 import { usePfas } from '@views/pfas';
-import { useLocalStorage, useToggleState } from '@hooks';
 
 export const SuperfundProximityFilter = () => {
-  const { table } = usePfas()
-  const filterActivity = useToggleState(false);
-  const [selectionRadius, setSelectionRadius] = useLocalStorage('selection-radius', 5);
+  const { table, superfundSites: { filtering, selectionRadius } } = usePfas();
 
   if (!table) {
-    return '...'
+    return '...';
   }
 
   return (
@@ -40,19 +37,19 @@ export const SuperfundProximityFilter = () => {
       <AccordionDetails>
         <Stack p={ 1 } spacing={ 1 }>
           <SuperfundProximityToggle
-            checked={ filterActivity.enabled }
-            onChange={ filterActivity.toggle }
+            checked={ filtering.enabled }
+            onChange={ filtering.toggle }
           />
           <SuperfundRadiusSlider
-            disabled={ !filterActivity.enabled }
-            value={ selectionRadius }
-            onChange={ newValue => setSelectionRadius(newValue) }
+            disabled={ filtering.disabled }
+            value={ selectionRadius.current }
+            onChange={ newValue => selectionRadius.set(newValue) }
           />
         </Stack>
       </AccordionDetails>
     </Accordion>
-  )
-}
+  );
+};
 
 const SuperfundProximityToggle = ({ checked = false, onChange }) => {
   return (
@@ -80,7 +77,7 @@ const SuperfundRadiusSlider = ({ value, onChange, disabled = false }) => {
         valueLabelDisplay="off"
         disabled={ disabled }
         step={ 1 }
-        max={ 20 }
+        max={ 50 }
         min={ 1 }
         size="sm"
         marks
@@ -95,12 +92,11 @@ const SuperfundRadiusSlider = ({ value, onChange, disabled = false }) => {
         }}
       >{ value } mi</Typography>
     </Stack>
-  )
-}
+  );
+};
 
 SuperfundRadiusSlider.propTypes = {
   disabled: PropTypes.bool,
   value: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
 };
-

@@ -3,14 +3,12 @@ import { Box } from '@mui/joy'
 import { SamplesMap } from '@components/map';
 import { usePfas } from '@views/pfas';
 import { usePreferences } from '@context';
-import { useLocalStorage } from '@hooks';
 
 //
 
 export const MapView = () => {
-  const { table } = usePfas();
+  const { table, superfundSites } = usePfas();
   const { colorMode } = usePreferences()
-  const [selectionRadius, ] = useLocalStorage('selection-radius', 5);
 
   const sampleSitesWithLatLong = useMemo(() => {
     return table.getPrePaginationRowModel().rows
@@ -29,7 +27,7 @@ export const MapView = () => {
       <SamplesMap
         mapStyle={ colorMode.current }
         samples={ sampleSitesWithLatLong }
-        selectionRadius={ selectionRadius }
+        selectionRadius={ superfundSites.selectionRadius.current }
       />
     </Box>
   )

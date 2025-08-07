@@ -18,9 +18,11 @@ const centerFitUS = {
   longitude: -97.555,
   latitude: 38.490,
   zoom: 4.000,
+  pitch: 0,
+  bearing: 0,
 };
 
-export const flyTo = (mapRef, { latitude, longitude, zoom, pitch = 0, bearing = 0, duration = 2000 }) => {
+export const flyTo = (mapRef, { latitude, longitude, zoom, pitch, bearing, duration = 2000 }) => {
   if (!mapRef.current) return;
   if (latitude == null || longitude == null) {
     console.warn('Missing lat/lon:', latitude, longitude);
@@ -69,11 +71,15 @@ export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'ligh
         onDragStart={ handleDragStart }
         onDragEnd={ handleDragEnd }
       >
-        <SampleSitesLayer mapRef={ mapRef } data={ samples } />
+        <SampleSitesLayer
+          mapRef={ mapRef }
+          data={ samples }
+        />
         <SuperfundSitesLayer
-          superfundSites={ superfundSites }
+          superfundSites={ superfundSites.data }
           sampleSites={ samples }
           selectionRadius={ selectionRadius }
+          showRings={ superfundSites.filtering.enabled }
         />
       </Map>
       <MapDrawer visible={ !isDragging.enabled }>

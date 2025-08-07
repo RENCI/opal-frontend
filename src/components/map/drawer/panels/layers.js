@@ -8,7 +8,7 @@ import {
   Close as UnselectedIcon,
 } from '@mui/icons-material';
 import { DrawerPanel } from '../panel';
-import { Pin as SuperfundSitesIcon } from '../../layers/pin';
+import pin from '@images/pin.png';
 
 import { useCallback, useMemo, useState } from 'react';
 
@@ -69,7 +69,7 @@ export const LayersPanel = () => {
         <ListItem>
           <ListItemButton onClick={ () => layers.toggle('superfund-sites') }>
             <Checkbox label="Superfund Sites" uncheckedIcon={ <UnselectedIcon /> } />
-            <SuperfundSitesIcon />
+            <img src={ pin } width="18" />
           </ListItemButton>
         </ListItem>
       </List>
