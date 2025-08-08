@@ -27,7 +27,9 @@ export const MapView = () => {
       <SamplesMap
         mapStyle={ colorMode.current }
         samples={ sampleSitesWithLatLong }
+        superfundSites={ superfundSites?.data ?? [] }
         selectionRadius={ superfundSites.selectionRadius.current }
+        showSuperfundSiteRings={ superfundSites.filtering.enabled }
       />
     </Box>
   )

@@ -31,7 +31,13 @@ export const flyTo = (mapRef, { latitude, longitude, zoom, pitch, bearing, durat
   mapRef.current.flyTo({ center: [longitude, latitude], zoom, pitch, bearing, duration });
 };
 
-export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'light' }) => {
+export const SamplesMap = ({
+  samples = [],
+  selectionRadius = 5,
+  mapStyle = 'light',
+  superfundSites,
+  showSuperfundSiteRings,
+}) => {
   const mapRef = useRef(null)
   const mapboxStyle = useMemo(() => `mapbox://styles/mapbox/${ mapStyle }-v11`, [mapStyle]);
 
@@ -39,16 +45,14 @@ export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'ligh
 
   const interactiveLayerIds = ['superfund-sites', 'clusters', 'unclustered-point'];
 
-  const { superfundSites } = usePfas();
+  const resetMap = useCallback(() => {
+    flyTo(mapRef, centerFitUS);
+  }, [mapRef]);
 
   const handleClickMap = useCallback((event) => {
     const { lngLat } = event;
     console.log('Clicked at', lngLat);
   }, []);
-
-  const resetMap = useCallback(() => {
-    flyTo(mapRef, centerFitUS);
-  }, [mapRef]);
 
   const isDragging = useToggleState(false);
   const handleDragStart = useCallback(() => isDragging.set(), []);
@@ -76,10 +80,10 @@ export const SamplesMap = ({ samples = [], selectionRadius = 5, mapStyle = 'ligh
           data={ samples }
         />
         <SuperfundSitesLayer
-          superfundSites={ superfundSites.data }
+          superfundSites={ superfundSites  }
           sampleSites={ samples }
           selectionRadius={ selectionRadius }
-          showRings={ superfundSites.filtering.enabled }
+          showSuperfundSiteRings={ showSuperfundSiteRings }
         />
       </Map>
       <MapDrawer visible={ !isDragging.enabled }>
@@ -100,4 +104,6 @@ SamplesMap.propTypes = {
     longitude: PropTypes.number,
   })),
   selectionRadius: PropTypes.number.isRequired,
+  superfundSites: PropTypes.any,
+  showSuperfundSiteRings: PropTypes.bool.isRequired,
 };

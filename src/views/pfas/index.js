@@ -192,7 +192,7 @@ export const PfasView = () => {
     <PfasContext.Provider value={ contextValue }>
       {
         pfasData.isPending || pfasData.isLoading
-          ? <AppStatus message={ `Loading targeted primary data :: ${progress.percent}%` } />
+          ? <AppStatus message={ `Loading targeted primary data :: ${ progress.percent}%` } />
           : isPreparingTable
             ? <AppStatus message={ `Preparing data` } />
             : <TargetedPrimaryLayout />

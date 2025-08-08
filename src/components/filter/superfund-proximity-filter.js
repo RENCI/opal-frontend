@@ -54,7 +54,7 @@ export const SuperfundProximityFilter = () => {
 const SuperfundProximityToggle = ({ checked = false, onChange }) => {
   return (
     <Checkbox
-      label="Activate"
+      label={ checked ? 'Activated' : 'Deactivated' }
       checked={ checked }
       onChange={ () => onChange() }
       uncheckedIcon={ <UnselectedIcon /> }

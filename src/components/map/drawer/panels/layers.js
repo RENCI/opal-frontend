@@ -13,12 +13,10 @@ import pin from '@images/pin.png';
 import { useCallback, useMemo, useState } from 'react';
 
 const useLayers = () => {
-  const [layerMap, setLayerMap] = useState(() =>
-    new Map([
-      ['sample-sites', true],
-      ['superfund-sites', true],
-    ])
-  );
+  const [layerMap, setLayerMap] = useState(() => new Map([
+    ['sample-sites', true],
+    ['superfund-sites', true],
+  ]));
 
   const toggleLayer = useCallback(layerId => {
     setLayerMap(prev => {

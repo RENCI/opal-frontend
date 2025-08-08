@@ -24,9 +24,9 @@ const loadMapImage = (map, id, url) => {
 };
 
 export const SuperfundSitesLayer = ({
-  superfundSites = [],
+  superfundSites,
   selectionRadius,
-  showRings,
+  showSuperfundSiteRings,
 }) => {
   if (!superfundSites) { return null; }
 
@@ -36,7 +36,10 @@ export const SuperfundSitesLayer = ({
 
   const ringFeatures = useMemo(() => {
     console.log('Recalculating GeoJSON with radius', selectionRadius);
-    const features = siteFeatures.map(feature => {
+
+    if (!siteFeatures.length) return { type: 'FeatureCollection', features: [] };
+
+    const circles = siteFeatures.map(feature => {
       const [longitude, latitude] = feature.geometry.coordinates;
       const center = turf.point([longitude, latitude]);
       const ring = turf.circle(center, selectionRadius, { units: 'miles', steps: 64 });
@@ -46,14 +49,14 @@ export const SuperfundSitesLayer = ({
 
     return {
       type: 'FeatureCollection',
-      features,
+      features: circles,
     };
   }, [selectionRadius, siteFeatures]);
 
   useEffect(() => {
     if (!map) return;
 
-    loadMapImage(map, 'custom-pin', pin)
+    loadMapImage(map, 'site-pin', pin)
       .then(() => console.log('Pin image loaded and added to map'))
       .catch(error => console.error('Failed to load pin image.', error));
   }, [map]);
@@ -61,7 +64,7 @@ export const SuperfundSitesLayer = ({
   return (
     <>
       {
-        showRings && (
+        showSuperfundSiteRings && (
           <Source id="superfund-rings" type="geojson" data={ ringFeatures }>
             <Layer
               id="superfund-site-rings"
@@ -81,7 +84,7 @@ export const SuperfundSitesLayer = ({
           id="site-pin-layer"
           type="symbol"
           layout={{
-            'icon-image': 'custom-pin',
+            'icon-image': 'site-pin',
             'icon-size': 0.5,
             'icon-anchor': 'bottom',
             'icon-allow-overlap': true,
@@ -111,5 +114,5 @@ const GeoJSONFeatureCollectionProp = PropTypes.shape({
 SuperfundSitesLayer.propTypes = {
   superfundSites: GeoJSONFeatureCollectionProp,
   selectionRadius: PropTypes.number.isRequired,
-  showRings: PropTypes.bool.isRequired,
+  showSuperfundSiteRings: PropTypes.bool.isRequired,
 };
