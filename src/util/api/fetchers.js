@@ -1,7 +1,6 @@
 import api from './';
 import { batchFetch } from './batch-fetch';
 import { chemicalFormulaLaTeX } from '@util';
-import nplSitesGeojson from '@data/npl-sites.geojson';
 
 export const fetchSampleData = (onProgress) => async () =>
   await batchFetch({
@@ -44,12 +43,13 @@ export const fetchAnalytes = async () => await api.get(
     return [];
   })
 
-export const fetchSuperfundSites = () => async () => {
-  // simulate delay in API call
-  await new Promise(resolve => setTimeout(resolve, 500));
-  // return hard-coded data
-  return nplSitesGeojson;
-};
+export const fetchSuperfundSites = (onProgress) => async () =>
+  await batchFetch({
+    endpoint: '/superfund_npl',
+    perPage: 25,
+    batchSize: 5,
+    onProgress,
+  });
 
 export const fetchSamplesNearSuperfundSites = ({
   miles,

@@ -9,7 +9,6 @@ import {
   ViewStatePanel,
 } from '@components/map';
 import { SampleSitesLayer, SuperfundSitesLayer } from '@components/map/layers';
-import { usePfas } from '@views/pfas';
 
 //
 

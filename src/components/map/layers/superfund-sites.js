@@ -33,7 +33,7 @@ export const SuperfundSitesLayer = ({
   const { current: map } = useMap();
 
   const siteFeatures = useMemo(() => superfundSites?.features ?? [], [superfundSites]);
-
+  
   const ringFeatures = useMemo(() => {
     console.log('Recalculating GeoJSON with radius', selectionRadius);
 
@@ -79,7 +79,10 @@ export const SuperfundSitesLayer = ({
           </Source>
         )
       }
-      <Source id="site-pins" type="geojson" data={ superfundSites }>
+      <Source id="site-pins" type="geojson" data={{
+        type: "FeatureCollection",
+        features: siteFeatures
+      }}>
         <Layer
           id="site-pin-layer"
           type="symbol"

@@ -121,17 +121,18 @@ export const PfasView = () => {
   const superfundSiteFilterActivity = useToggleState(false);
   const [superfundSiteSelectionRadius, setSuperfundSiteSelectionRadius] = useState(5);
 
-  const progress = useProgress()
+  const pfasProgress = useProgress()
   const pfasData = useQuery({
     queryKey: ['pfas_sample_data'],
-    queryFn: fetchSampleData(progress.onProgress),
+    queryFn: fetchSampleData(pfasProgress.onProgress),
   })
 
+  const superfundSitesProgress = useProgress()
   const superfundSites = useQuery({
     queryKey: ['superfund_sites_'],
-    queryFn: fetchSuperfundSites(),
+    queryFn: fetchSuperfundSites(superfundSitesProgress.onProgress),
   })
-
+  
   // table for displaying PFAS data
   const table = useReactTable({
     data: pfasData.data ?? [],
@@ -170,7 +171,7 @@ export const PfasView = () => {
     table,
     columnFilters, setColumnFilters,
     sorting, setSorting,
-    progress,
+    progress: pfasProgress,
     superfundSites: {
       data: superfundSites?.data ?? [],
       filtering: superfundSiteFilterActivity,
@@ -182,7 +183,7 @@ export const PfasView = () => {
   }), [
     table,
     columnFilters, sorting,
-    progress,
+    pfasProgress,
     superfundSites?.data,
     superfundSiteFilterActivity.enabled,
     superfundSiteSelectionRadius
@@ -192,7 +193,7 @@ export const PfasView = () => {
     <PfasContext.Provider value={ contextValue }>
       {
         pfasData.isPending || pfasData.isLoading
-          ? <AppStatus message={ `Loading targeted primary data :: ${ progress.percent}%` } />
+          ? <AppStatus message={ `Loading targeted primary data :: ${ pfasProgress.percent}%` } />
           : isPreparingTable
             ? <AppStatus message={ `Preparing data` } />
             : <TargetedPrimaryLayout />
