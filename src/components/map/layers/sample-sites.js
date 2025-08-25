@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
-import { Layer, Popup, Source } from 'react-map-gl/mapbox';
+import { Layer, Source } from 'react-map-gl/mapbox';
+import './layers.css';
+import { SamplePointPopup, SampleClusterPopup } from './popup';
 
 export const SampleSitesLayer = ({ data = [], mapRef }) => {
   const [popupInfo, setPopupInfo] = useState(null);
@@ -23,12 +25,14 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
     }),
   }), [data]);
 
-  // cluster click handler
+  // create click handlers
   useEffect(() => {
     const map = mapRef?.current;
     if (!map) return;
 
     const handleClusterClick = event => {
+      // prevent click from reaching map
+      event.originalEvent.stopPropagation();
       const feature = event.features?.[0];
       if (!feature) return;
     
@@ -43,10 +47,10 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
               return;
             }
     
-            // Extract sample metadata from leaves
+            // extract sample metadata from leaves
             const samples = leaves.map(f => f.properties.metadata);
     
-            // Aggregate however you want:
+            // aggregate
             const analytes = [...new Set(samples.map(s => s.analyte))];
             const concentrationRange = [
               Math.min(...samples.map(s => s.concentration)),
@@ -69,6 +73,8 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
     };
 
     const handlePointClick = event => {
+      // prevent click from reaching map
+      event.originalEvent.stopPropagation();
       const feature = event.features?.[0];
       if (!feature) return;
 
@@ -76,7 +82,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
         setPopupInfo({
           type: 'sample',
           coordinates: feature.geometry.coordinates,
-          properties: feature.properties.metadata,
+          properties: JSON.parse(feature.properties.metadata),
         });
       }
     };
@@ -88,6 +94,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
     map.on('dragstart', clearPopup);
     map.on('zoomstart', clearPopup);
     map.on('movestart', clearPopup);
+    // map.on('click', clearPopup);
 
     return () => {
       map.off('click', 'clusters', handleClusterClick);
@@ -95,6 +102,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
       map.off('dragstart', clearPopup);
       map.off('zoomstart', clearPopup);
       map.off('movestart', clearPopup);
+      map.off('click', clearPopup);
     };
   }, [mapRef]);
 
@@ -142,42 +150,23 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
         filter={['!', ['has', 'point_count']]}
         paint={{
           'circle-color': '#11b4da',
-          'circle-radius': 8,
+          'circle-radius': 6,
           'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff',
+          'circle-stroke-color': '#51bbd6',
         }}
       />
-      {popupInfo && (
-        <Popup
-          longitude={popupInfo.coordinates[0]}
-          latitude={popupInfo.coordinates[1]}
-          anchor="top"
-          closeOnClick={false}
-          onClose={() => setPopupInfo(null)}
-        >
-          <div className="text-sm">
-            {popupInfo.type === 'cluster' && (
-              <>
-                <strong>{popupInfo.properties.count} samples</strong>
-                <br />
-                Analytes: {popupInfo.properties.analytes.join(', ')}
-                <br />
-                Concentration range: {popupInfo.properties.concentrationRange[0]} – {popupInfo.properties.concentrationRange[1]}
-              </>
-            )}
-
-            {popupInfo.type === 'sample' && (
-              <>
-                <strong>Sample {popupInfo.properties.sample_id}</strong>
-                <br />
-                Analyte: {popupInfo.properties.analyte}
-                <br />
-                Concentration: {popupInfo.properties.concentration}
-              </>
-            )}
-          </div>
-        </Popup>
-      )}
+      {
+        popupInfo?.type === 'cluster' && <SampleClusterPopup
+          info={ popupInfo }
+          onClose= { () => setPopupInfo(null) }
+        />
+      }
+      {
+        popupInfo?.type === 'sample' && <SamplePointPopup
+          info={ popupInfo }
+          onClose= { () => setPopupInfo(null) }
+        />
+      }
     </Source>
   );
 };

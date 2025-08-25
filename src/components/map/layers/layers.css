@@ -1,0 +1,25 @@
+.mapboxgl-popup {
+  &.mapboxgl-popup-anchor-right {
+    .mapboxgl-popup-tip {
+      border-left-color: var(--joy-palette-background-surface);
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+    }
+  }
+  &.mapboxgl-popup-anchor-top {
+    .mapboxgl-popup-tip {
+      border-bottom-color: var(--joy-palette-background-surface);
+      border-right-color: transparent;
+    }
+  }
+
+  .mapboxgl-popup-content {
+    padding: 1.5rem 1rem;
+    background-color: var(--joy-palette-background-surface);
+  }
+
+  .mapboxgl-popup-close-button {
+    color: var(--joy-palette-info-contrastText);
+    font-size: 200%;
+  }
+}

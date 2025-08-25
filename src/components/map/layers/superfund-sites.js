@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Layer, Source, useMap } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
 import pin from '@images/pin.png';
-import './superfund-sites.css';
 
 const loadMapImage = (map, id, url) => {
   return new Promise((resolve, reject) => {
@@ -88,7 +87,7 @@ export const SuperfundSitesLayer = ({
           type="symbol"
           layout={{
             'icon-image': 'site-pin',
-            'icon-size': 0.5,
+            'icon-size': 0.75,
             'icon-anchor': 'bottom',
             'icon-allow-overlap': true,
           }}
