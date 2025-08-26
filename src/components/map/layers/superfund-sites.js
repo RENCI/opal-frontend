@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layer, Source, useMap } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
-import pin from '@images/pin.png';
+import redPin from '@images/pin-red.png';
+import bluePin from '@images/pin-blue.png';
+import greyPin from '@images/pin-grey.png';
 import { SuperfundPopup } from '../popups/superfund-popup';
 
 const loadMapImage = (map, id, url) => {
@@ -34,6 +36,8 @@ export const SuperfundSitesLayer = ({
   const { current: map } = useMap();
 
   const siteFeatures = useMemo(() => superfundSites?.features ?? [], [superfundSites]);
+
+  console.log(siteFeatures)
   
   const ringFeatures = useMemo(() => {
     if (!siteFeatures.length) return { type: 'FeatureCollection', features: [] };
@@ -55,9 +59,17 @@ export const SuperfundSitesLayer = ({
   useEffect(() => {
     if (!map) return;
 
-    loadMapImage(map, 'site-pin', pin)
-      .then(() => console.log('Pin image loaded and added to map'))
-      .catch(error => console.error('Failed to load pin image.', error));
+    loadMapImage(map, 'site-pin-red', redPin)
+      .then(() => console.log('Red pin image loaded and added to map'))
+      .catch(error => console.error('Failed to load red pin image.', error));
+
+    loadMapImage(map, 'site-pin-blue', bluePin)
+      .then(() => console.log('Blue pin image loaded and added to map'))
+      .catch(error => console.error('Failed to load blue pin image.', error));
+
+    loadMapImage(map, 'site-pin-grey', greyPin)
+      .then(() => console.log('Grey pin image loaded and added to map'))
+      .catch(error => console.error('Failed to load grey pin image.', error));
   }, [map]);
 
   useEffect(() => {
@@ -115,7 +127,7 @@ export const SuperfundSitesLayer = ({
           id="site-pin-layer"
           type="symbol"
           layout={{
-            'icon-image': 'site-pin',
+            'icon-image': ['get', 'pinIcon'],
             'icon-size': 0.75,
             'icon-anchor': 'bottom',
             'icon-allow-overlap': true,

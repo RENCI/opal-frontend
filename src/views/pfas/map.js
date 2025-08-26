@@ -8,14 +8,14 @@ export const MapView = () => {
   const { table, superfundSites } = usePfas();
   const { colorMode } = usePreferences();
 
-  // ✅ Convert sample rows to plain array of {lat, lon}
+  // convert sample rows to plain array of {lat, lon}
   const sampleSitesWithLatLong = useMemo(() => {
     return table.getPrePaginationRowModel().rows
       .map(r => r.original)
       .filter(s => s.latitude && s.longitude);
   }, [table.getPrePaginationRowModel().rows.length]);
 
-  // ✅ Convert Superfund response into GeoJSON FeatureCollection
+  // convert Superfund response into GeoJSON FeatureCollection
   const superfundGeoJSON = useMemo(() => {
     if (!superfundSites?.data) return null;
 
@@ -23,15 +23,28 @@ export const MapView = () => {
       type: "FeatureCollection",
       features: superfundSites.data
         .filter(site => site.longitude && site.latitude)
-        .map(site => ({
-          type: "Feature",
-          id: site.sems_id ?? site.ogc_fid,
-          geometry: {
-            type: "Point",
-            coordinates: [site.longitude, site.latitude],
-          },
-          properties: { ...site },
-        }))
+        .map(site => {
+          let pinIcon = "site-pin-grey"; // default / fallback
+          if (site.pfas === true) {
+            pinIcon = "site-pin-red";
+          } else if (site.pfas === false) {
+            pinIcon = "site-pin-blue";
+          }
+
+          return {
+            type: "Feature",
+            id: site.sems_id ?? site.ogc_fid,
+            geometry: {
+              type: "Point",
+              coordinates: [site.longitude, site.latitude],
+            },
+            properties: {
+              ...site,
+              pfasDetected: site.pfas,
+              pinIcon, // 👈 custom property just for Mapbox
+            },
+          };
+        })
     };
   }, [superfundSites?.data]);
 

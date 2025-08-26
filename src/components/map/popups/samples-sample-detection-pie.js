@@ -9,7 +9,11 @@ export const SamplesDetectionPie = ({ data = [] }) => {
     <div style={{ height: '350px', aspectRatio: '1 / 1' }}>
       {
         data.length === 0 ? (
-          <Typography textAlign="center" height={ 350 } sx={{ placeContent: 'center' }}>No PFAS detected.</Typography>
+          <Typography
+            sx={{ placeContent: 'center' }}
+            textAlign="center"
+            height={ 350 }
+          >No PFAS detected</Typography>
         ) : (
           <ResponsivePie
             data={ data }
