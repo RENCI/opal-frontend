@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { Layer, Source } from 'react-map-gl/mapbox';
-import './layers.css';
-import { SamplePointPopup, SampleClusterPopup } from './popup';
+import { SamplesPopup } from '../popups/samples-popup';
 
 export const SampleSitesLayer = ({ data = [], mapRef }) => {
   const [popupInfo, setPopupInfo] = useState(null);
@@ -80,7 +79,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
 
       if (feature.layer.id === 'unclustered-point') {
         setPopupInfo({
-          type: 'sample',
+          type: 'point',
           coordinates: feature.geometry.coordinates,
           properties: JSON.parse(feature.properties.metadata),
         });
@@ -91,17 +90,17 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
 
     map.on('click', 'clusters', handleClusterClick);
     map.on('click', 'unclustered-point', handlePointClick);
-    map.on('dragstart', clearPopup);
+    // map.on('dragstart', clearPopup);
     map.on('zoomstart', clearPopup);
-    map.on('movestart', clearPopup);
+    // map.on('movestart', clearPopup);
     // map.on('click', clearPopup);
 
     return () => {
       map.off('click', 'clusters', handleClusterClick);
       map.off('click', 'unclustered-point', handlePointClick);
-      map.off('dragstart', clearPopup);
+      // map.off('dragstart', clearPopup);
       map.off('zoomstart', clearPopup);
-      map.off('movestart', clearPopup);
+      // map.off('movestart', clearPopup);
       map.off('click', clearPopup);
     };
   }, [mapRef]);
@@ -155,18 +154,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
           'circle-stroke-color': '#51bbd6',
         }}
       />
-      {
-        popupInfo?.type === 'cluster' && <SampleClusterPopup
-          info={ popupInfo }
-          onClose= { () => setPopupInfo(null) }
-        />
-      }
-      {
-        popupInfo?.type === 'sample' && <SamplePointPopup
-          info={ popupInfo }
-          onClose= { () => setPopupInfo(null) }
-        />
-      }
+      { popupInfo && <SamplesPopup onClose={ () => setPopupInfo(null) } { ...popupInfo } /> }
     </Source>
   );
 };

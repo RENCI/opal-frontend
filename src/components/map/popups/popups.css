@@ -14,12 +14,14 @@
   }
 
   .mapboxgl-popup-content {
-    padding: 1.5rem 1rem;
+    min-width: 375px;
+    padding: 0;
     background-color: var(--joy-palette-background-surface);
   }
 
   .mapboxgl-popup-close-button {
     color: var(--joy-palette-info-contrastText);
     font-size: 200%;
+    z-index: 99;
   }
 }
