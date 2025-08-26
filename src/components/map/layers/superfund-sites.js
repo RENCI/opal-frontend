@@ -1,8 +1,9 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layer, Source, useMap } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
 import pin from '@images/pin.png';
+import { SuperfundPopup } from '../popups/superfund-popup';
 
 const loadMapImage = (map, id, url) => {
   return new Promise((resolve, reject) => {
@@ -27,6 +28,7 @@ export const SuperfundSitesLayer = ({
   selectionRadius,
   showSuperfundSiteRings,
 }) => {
+  const [popupInfo, setPopupInfo] = useState(null);
   if (!superfundSites) { return null; }
 
   const { current: map } = useMap();
@@ -34,8 +36,6 @@ export const SuperfundSitesLayer = ({
   const siteFeatures = useMemo(() => superfundSites?.features ?? [], [superfundSites]);
   
   const ringFeatures = useMemo(() => {
-    console.log('Recalculating GeoJSON with radius', selectionRadius);
-
     if (!siteFeatures.length) return { type: 'FeatureCollection', features: [] };
 
     const circles = siteFeatures.map(feature => {
@@ -58,6 +58,35 @@ export const SuperfundSitesLayer = ({
     loadMapImage(map, 'site-pin', pin)
       .then(() => console.log('Pin image loaded and added to map'))
       .catch(error => console.error('Failed to load pin image.', error));
+  }, [map]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    const handlePinClick = event => {
+      // prevent click from reaching map
+      event.originalEvent.stopPropagation();
+      const feature = event.features?.[0];
+      if (!feature) return;
+
+      if (feature.layer.id === 'site-pin-layer') {
+        console.log(feature)
+        setPopupInfo({
+          coordinates: feature.geometry.coordinates,
+          properties: feature.properties,
+        });
+      }
+    };
+
+    const clearPopup = () => setPopupInfo(null);
+
+    map.on('click', 'site-pin-layer', handlePinClick);
+    map.on('zoomstart', clearPopup);
+
+    return () => {
+      map.off('click', 'site-pin-layer', handlePinClick);
+      map.off('zoomstart', clearPopup);
+    };
   }, [map]);
 
   return (
@@ -93,6 +122,14 @@ export const SuperfundSitesLayer = ({
           }}
         />
       </Source>
+      {
+        popupInfo && (
+          <SuperfundPopup
+            onClose={ () => setPopupInfo(null) }
+            { ...popupInfo }
+          />
+        )
+      }
     </>
   );
 };

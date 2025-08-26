@@ -12,6 +12,11 @@
       border-right-color: transparent;
     }
   }
+  &.mapboxgl-popup-anchor-bottom {
+    .mapboxgl-popup-tip {
+      border-top-color: var(--joy-palette-background-surface);
+    }
+  }
 
   .mapboxgl-popup-content {
     min-width: 375px;
