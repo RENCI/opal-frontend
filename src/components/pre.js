@@ -13,6 +13,7 @@ export const Pre = ({ children, sx = {} }) => {
       sx={{
         scrollbarColor: 'var(--joy-palette-background-surface) var(--joy-palette-primary-softBg)',
         scrollbarWidth: 'thin',
+        overflow: 'auto',
         ...sx,
       }}
     >{ children }</Typography>

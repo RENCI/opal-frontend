@@ -6,6 +6,7 @@ import {
   ChevronRight as NextSampleIcon,
 } from '@mui/icons-material';
 import { PointBrowserTabs } from './samples-point-browser';
+import { MediumIcon } from './medium-icon';
 
 export const ClusterBrowser = ({ samples = [] }) => {
   const [index, setIndex] = useState(0);
@@ -18,12 +19,13 @@ export const ClusterBrowser = ({ samples = [] }) => {
     <>
       <Stack direction="row" align="stretch" gap={ 1 } sx={{ width: '100%', margin: 'var(--joy-spacing) 0' }}>
         <IconButton onClick={ handeClickPrev } color="primary" size="sm" variant="soft"><PreviousSampleIcon /></IconButton>
-        <Typography level="body-xs" variant="soft" color="primary" sx={{ whiteSpace: 'nowrap', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          Sample { index + 1 } of { samplesCount }<br />
-          <Typography level="title-sm">
-            ID: { samples[index].sample_id }
-          </Typography>
-        </Typography>
+        <Stack direction="row" gap={ 1 } sx={{ flex: 1 }} bgcolor="primary.softBg">
+          <MediumIcon medium={ samples[index].medium } sx={{ fontSize: '2rem', alignSelf: 'center' }} />
+          <Stack sx={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <Typography level="title-xs" p={ 0 }>Sample { index + 1 } of { samplesCount }</Typography>
+            <Typography level="title-sm" p={ 0 }>ID: { samples[index].sample_id }</Typography>
+          </Stack>
+        </Stack>
         <IconButton onClick={ handeClickNext } color="primary" size="sm" variant="soft"><NextSampleIcon /></IconButton>
       </Stack>
 

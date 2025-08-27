@@ -12,12 +12,16 @@ import { sampleDetectionSummary } from './samples-sample-detection-list';
 import { SamplesDetectionPie } from './samples-sample-detection-pie';
 import { Pre } from '@components/pre';
 import { NearestSuperfundSite } from '../layers/nearest-superfund-site';
+import { MediumIcon } from './medium-icon';
 
 export const PointBrowserTabs = ({ properties }) => {
   return (
     <Tabs aria-label="Sample tabs" defaultValue={ 0 }>
       <TabPanel value={ 0 }>
-        <Typography size="title-sm" textAlign="center">PFAS Concentrations</Typography>
+        <Typography
+          level="title-sm"
+          textAlign="center"
+        >PFAS Concentrations</Typography>
         { sampleDetectionSummary(properties) }
       </TabPanel>
       <TabPanel value={ 1 }>
@@ -39,10 +43,13 @@ export const PointBrowserTabs = ({ properties }) => {
         <NearestSuperfundSite coordinates={ [properties.longitude, properties.latitude] } />
         <Divider />
 
-        <Typography size="title-sm" startDecorator={ <RawDetailsIcon /> }>Sample Site Raw Details</Typography>
+        <Typography
+          level="title-sm"
+          startDecorator={ <RawDetailsIcon fontSize="md" /> }
+        >Sample Site Raw Details</Typography>
         <Divider />
         
-        <Pre sx={{ maxHeight: '200px', overflow: 'auto' }}>
+        <Pre sx={{ maxHeight: '200px' }}>
           { JSON.stringify(properties, null, 2) }
         </Pre>
       </TabPanel>
@@ -83,6 +90,7 @@ export const PointBrowser = ({ properties }) => {
           lineHeight: 3,
           margin: 'var(--joy-spacing) 0',
         }}
+        startDecorator={ <MediumIcon medium={ properties.medium } sx={{ fontSize: '24px' }} /> }
       >ID: { properties.sample_id }</Typography>
 
       <Divider/>
