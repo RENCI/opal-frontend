@@ -167,6 +167,39 @@ export const PfasView = () => {
 
   // const filterCount = table.getAllLeafColumns().filter(col => col.getIsFiltered()).length 
 
+  // convert Superfund response into GeoJSON FeatureCollection
+  const superfundGeoJSON = useMemo(() => {
+    if (!superfundSites?.data) return null;
+
+    return {
+      type: "FeatureCollection",
+      features: superfundSites.data
+        .filter(site => site.longitude && site.latitude)
+        .map(site => {
+          let pinIcon = "site-pin-grey"; // default / fallback
+          if (site.pfas === true) {
+            pinIcon = "site-pin-red";
+          } else if (site.pfas === false) {
+            pinIcon = "site-pin-blue";
+          }
+
+          return {
+            type: "Feature",
+            id: site.sems_id ?? site.ogc_fid,
+            geometry: {
+              type: "Point",
+              coordinates: [site.longitude, site.latitude],
+            },
+            properties: {
+              ...site,
+              pfasDetected: site.pfas,
+              pinIcon, // 👈 custom property just for Mapbox
+            },
+          };
+        })
+    };
+  }, [superfundSites?.data]);
+
   const contextValue = useMemo(() => ({
     table,
     columnFilters, setColumnFilters,
@@ -174,6 +207,7 @@ export const PfasView = () => {
     progress: pfasProgress,
     superfundSites: {
       data: superfundSites?.data ?? [],
+      geojson: superfundGeoJSON,
       filtering: superfundSiteFilterActivity,
       selectionRadius: {
         current: superfundSiteSelectionRadius,
