@@ -11,7 +11,7 @@ import { AppStatus } from '@components/app-status';
 import { FiltersDrawer } from '@components/filter';
 import { podmColumns } from '@data';
 import { useLocalStorage, useProgress, useToggleState } from '@hooks';
-import { fetchSampleData } from '@util';
+import { fetchSampleData, fetchSuperfundSites } from '@util';
 import { useQuery } from '@tanstack/react-query';
 import {
   getCoreRowModel,
@@ -118,13 +118,21 @@ export const PfasView = () => {
   const [sorting, setSorting] = useState([])
   const [columnFilters, setColumnFilters] = useState([])
   const [isPreparingTable, setIsPreparingTable] = useState(true)
+  const superfundSiteFilterActivity = useToggleState(false);
+  const [superfundSiteSelectionRadius, setSuperfundSiteSelectionRadius] = useState(5);
 
-  const progress = useProgress()
+  const pfasProgress = useProgress()
   const pfasData = useQuery({
     queryKey: ['pfas_sample_data'],
-    queryFn: fetchSampleData(progress.onProgress),
+    queryFn: fetchSampleData(pfasProgress.onProgress),
   })
 
+  const superfundSitesProgress = useProgress()
+  const superfundSites = useQuery({
+    queryKey: ['superfund_sites_'],
+    queryFn: fetchSuperfundSites(superfundSitesProgress.onProgress),
+  })
+  
   // table for displaying PFAS data
   const table = useReactTable({
     data: pfasData.data ?? [],
@@ -159,16 +167,67 @@ export const PfasView = () => {
 
   // const filterCount = table.getAllLeafColumns().filter(col => col.getIsFiltered()).length 
 
+  // convert Superfund response into GeoJSON FeatureCollection
+  const superfundGeoJSON = useMemo(() => {
+    if (!superfundSites?.data) return null;
+
+    return {
+      type: "FeatureCollection",
+      features: superfundSites.data
+        .filter(site => site.longitude && site.latitude)
+        .map(site => {
+          let pinIcon = "site-pin-grey"; // default / fallback
+          if (site.pfas === true) {
+            pinIcon = "site-pin-red";
+          } else if (site.pfas === false) {
+            pinIcon = "site-pin-blue";
+          }
+
+          return {
+            type: "Feature",
+            id: site.sems_id ?? site.ogc_fid,
+            geometry: {
+              type: "Point",
+              coordinates: [site.longitude, site.latitude],
+            },
+            properties: {
+              ...site,
+              pfasDetected: site.pfas,
+              pinIcon, // 👈 custom property just for Mapbox
+            },
+          };
+        })
+    };
+  }, [superfundSites?.data]);
+
+  const contextValue = useMemo(() => ({
+    table,
+    columnFilters, setColumnFilters,
+    sorting, setSorting,
+    progress: pfasProgress,
+    superfundSites: {
+      data: superfundSites?.data ?? [],
+      geojson: superfundGeoJSON,
+      filtering: superfundSiteFilterActivity,
+      selectionRadius: {
+        current: superfundSiteSelectionRadius,
+        set: setSuperfundSiteSelectionRadius,
+      },
+    },
+  }), [
+    table,
+    columnFilters, sorting,
+    pfasProgress,
+    superfundSites?.data,
+    superfundSiteFilterActivity.enabled,
+    superfundSiteSelectionRadius
+  ]);
+
   return (
-    <PfasContext.Provider value={{
-      table,
-      columnFilters, setColumnFilters, /*filterCount,*/
-      sorting, setSorting,
-      progress,
-    }}>
+    <PfasContext.Provider value={ contextValue }>
       {
         pfasData.isPending || pfasData.isLoading
-          ? <AppStatus message={ `Loading targeted primary data :: ${progress.percent}%` } />
+          ? <AppStatus message={ `Loading targeted primary data :: ${ pfasProgress.percent}%` } />
           : isPreparingTable
             ? <AppStatus message={ `Preparing data` } />
             : <TargetedPrimaryLayout />
