@@ -8,7 +8,8 @@ import {
   Close as UnselectedIcon,
 } from '@mui/icons-material';
 import { DrawerPanel } from '../panel';
-import redPin from '@images/pin-red.png';
+import pfasMarker from '@images/pin-red.png';
+import noPfasMarker from '@images/pin-blue.png';
 import { useLayers } from '../../layers';
 
 export const LayersPanel = () => {
@@ -37,7 +38,8 @@ export const LayersPanel = () => {
         <ListItem>
           <ListItemButton onClick={ () => layers.toggle('superfund-sites') }>
             <Checkbox label="Superfund Sites" uncheckedIcon={ <UnselectedIcon /> } checked={ true } />
-            <img src={ redPin } width="18" />
+            <img src={ noPfasMarker } width="18" style={{ transform: 'translate(0, -2px)' }} />
+            <img src={ pfasMarker } width="18" style={{ transform: 'translate(-16px, 2px)' }} />
           </ListItemButton>
         </ListItem>
       </List>

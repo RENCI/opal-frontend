@@ -79,7 +79,7 @@ export const SamplesMap = ({
           data={ samples }
         />
         <SuperfundSitesLayer
-          superfundSites={ superfundSites  }
+          superfundSites={ superfundSites }
           sampleSites={ samples }
           selectionRadius={ selectionRadius }
           showSuperfundSiteRings={ showSuperfundSiteRings }

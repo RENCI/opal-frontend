@@ -19,6 +19,7 @@ export const SuperfundPopup = ({ onClose, coordinates, properties = {} }) => {
       closeOnClick={ false }
       onClose={ onClose }
       offset={ [0, -22] }
+      className={ pfas ? 'pfas-detected' : 'no-pfas-detected' }
     >
       <br />
       <Typography level="title-md" p={ 1 }>{ site_name }</Typography>

@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layer, Source, useMap } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
-import redPin from '@images/pin-red.png';
-import bluePin from '@images/pin-blue.png';
-import greyPin from '@images/pin-grey.png';
+import pfasMarker from '@images/pin-red.png';
+import noPfasMarker from '@images/pin-blue.png';
+import unknownPfasMarker from '@images/pin-grey.png';
 import { SuperfundPopup } from '../popups/superfund-popup';
 
 const loadMapImage = (map, id, url) => {
@@ -37,8 +37,6 @@ export const SuperfundSitesLayer = ({
 
   const siteFeatures = useMemo(() => superfundSites?.features ?? [], [superfundSites]);
 
-  console.log(siteFeatures)
-  
   const ringFeatures = useMemo(() => {
     if (!siteFeatures.length) return { type: 'FeatureCollection', features: [] };
 
@@ -59,15 +57,15 @@ export const SuperfundSitesLayer = ({
   useEffect(() => {
     if (!map) return;
 
-    loadMapImage(map, 'site-pin-red', redPin)
+    loadMapImage(map, 'site-pin-red', pfasMarker)
       .then(() => console.log('Red pin image loaded and added to map'))
       .catch(error => console.error('Failed to load red pin image.', error));
 
-    loadMapImage(map, 'site-pin-blue', bluePin)
+    loadMapImage(map, 'site-pin-blue', noPfasMarker)
       .then(() => console.log('Blue pin image loaded and added to map'))
       .catch(error => console.error('Failed to load blue pin image.', error));
 
-    loadMapImage(map, 'site-pin-grey', greyPin)
+    loadMapImage(map, 'site-pin-grey', unknownPfasMarker)
       .then(() => console.log('Grey pin image loaded and added to map'))
       .catch(error => console.error('Failed to load grey pin image.', error));
   }, [map]);

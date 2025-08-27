@@ -9,7 +9,7 @@ export const MapDrawer = ({ children, visible = true }) => {
       className={ visible ? 'visible' : 'hidden' }
       sx={{
         borderRadius: 'var(--joy-spacing)',
-        width: '225px',
+        width: '240px',
         position: 'absolute',
         backgroundColor: 'color-mix(in hsl, var(--joy-palette-background-surface), transparent 50%)',
         backdropFilter: 'blur(4px)',
