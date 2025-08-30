@@ -2,28 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layer, Source, useMap } from 'react-map-gl/mapbox';
 import * as turf from '@turf/turf';
+import { loadMapImage, recenterOn } from '@util/map';
 import pfasMarker from '@images/pin-red.png';
 import noPfasMarker from '@images/pin-blue.png';
 import unknownPfasMarker from '@images/pin-grey.png';
 import { SuperfundPopup } from '../popups/superfund-sites';
-
-const loadMapImage = (map, id, url) => {
-  return new Promise((resolve, reject) => {
-    if (map.hasImage(id)) {
-      resolve();
-      return;
-    }
-
-    map.loadImage(url, (error, image) => {
-      if (error) {
-        reject(error);
-      } else if (!map.hasImage(id)) {
-        map.addImage(id, image);
-      }
-      resolve();
-    });
-  });
-};
 
 export const SuperfundSitesLayer = ({
   superfundSites,
@@ -80,6 +63,8 @@ export const SuperfundSitesLayer = ({
       if (!feature) return;
 
       if (feature.layer.id === 'site-pin-layer') {
+        recenterOn(map, feature.geometry.coordinates);
+
         setPopupInfo({
           coordinates: feature.geometry.coordinates,
           properties: feature.properties,

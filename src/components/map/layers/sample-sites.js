@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { Layer, Source } from 'react-map-gl/mapbox';
 import { SamplesPopup } from '../popups/samples';
+import { recenterOn } from '@util/map';
 
 export const SampleSitesLayer = ({ data = [], mapRef }) => {
   const [popupInfo, setPopupInfo] = useState(null);
@@ -56,6 +57,8 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
               Math.max(...samples.map(s => s.concentration)),
             ];
     
+            recenterOn(map, feature.geometry.coordinates);
+
             setPopupInfo({
               type: 'cluster',
               coordinates: feature.geometry.coordinates,
@@ -78,6 +81,7 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
       if (!feature) return;
 
       if (feature.layer.id === 'unclustered-point') {
+        recenterOn(map, feature.geometry.coordinates);
         setPopupInfo({
           type: 'point',
           coordinates: feature.geometry.coordinates,
