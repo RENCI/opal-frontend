@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Box, Button, ButtonGroup, IconButton, Stack, Typography,
+  Box, Button, ButtonGroup, IconButton, Stack, Tooltip, Typography,
 } from '@mui/joy'
 import {
   RestartAlt as ResetIcon,
@@ -50,14 +50,16 @@ const MyLocationButton = ({ mapRef = {} }) => {
   }, [mapRef]);
 
   return (
-    <IconButton
-      onClick={ handleClick }
-      loading={ busy }
-      color="primary"
-      variant="soft"
-    >
-      <CrosshairsIcon />
-    </IconButton>
+    <Tooltip title="My location" placement="bottom-end">
+      <IconButton
+        onClick={ handleClick }
+        loading={ busy }
+        color="primary"
+        variant="soft"
+      >
+        <CrosshairsIcon />
+      </IconButton>
+    </Tooltip>
   );
 };
 
