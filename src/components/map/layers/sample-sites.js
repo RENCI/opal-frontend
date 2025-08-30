@@ -50,13 +50,6 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
             // extract sample metadata from leaves
             const samples = leaves.map(f => f.properties.metadata);
     
-            // aggregate
-            const analytes = [...new Set(samples.map(s => s.analyte))];
-            const concentrationRange = [
-              Math.min(...samples.map(s => s.concentration)),
-              Math.max(...samples.map(s => s.concentration)),
-            ];
-    
             recenterOn(map, feature.geometry.coordinates);
 
             setPopupInfo({
@@ -64,8 +57,6 @@ export const SampleSitesLayer = ({ data = [], mapRef }) => {
               coordinates: feature.geometry.coordinates,
               properties: {
                 count: samples.length,
-                analytes,
-                concentrationRange,
                 samples,
               },
             });
