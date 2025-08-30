@@ -1,23 +1,10 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as turf from '@turf/turf';
-import { Divider, Stack, Typography } from '@mui/joy';
+import { Stack, Typography } from '@mui/joy';
 import { usePfas } from '@views/pfas';
-import superfundSiteMarker from '@images/pin-grey.png';
-
-const Detail = ({ label, value = '...' }) => {
-  return (
-    <Typography level="body-sm">
-      { label }: <Typography variant="soft" color="primary">{ value }</Typography>
-    </Typography>  );
-};
-
-Detail.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.oneOfType([
-    PropTypes.node, PropTypes.number, PropTypes.string,
-  ]).isRequired,
-};
+import { Detail } from '@components/detail';
+import FlyToButton from '../fly-to-button';
 
 export const NearestSuperfundSite = ({ coordinates }) => {
   const { superfundSites } = usePfas();
@@ -38,21 +25,17 @@ export const NearestSuperfundSite = ({ coordinates }) => {
 
   return (
     <Stack gap={ 1 } p={ 0 } my={ 2 }>
-      <Typography
-        level="title-sm"
-        startDecorator={ <img src={ superfundSiteMarker } width={ 16 } /> }
-      >Nearest Superfund Site</Typography>
-
-      <Divider />
-
       <Detail
         label="Name"
         value={ nearest?.properties?.site_name ?? 'Unknown' }
       />
-      <Detail
-        label="Distance"
-        value={ distance ? `${ distance } miles` : '...' }
-      />
+      <Detail label="Distance" value={ distance ? `${ distance } miles` : '...' } />
+      <Typography endDecorator={
+        <FlyToButton
+          longitude={ nearest?.properties?.longitude }
+          latitude={ nearest?.properties?.latitude }
+        />
+      }>Fly there</Typography>
     </Stack>
   );
 };

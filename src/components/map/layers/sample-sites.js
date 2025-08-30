@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { Layer, Source } from 'react-map-gl/mapbox';
-import { SamplesPopup } from '../popups/samples-popup';
+import { SamplesPopup } from '../popups/samples';
 
 export const SampleSitesLayer = ({ data = [], mapRef }) => {
   const [popupInfo, setPopupInfo] = useState(null);

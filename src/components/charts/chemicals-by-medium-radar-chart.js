@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { abbreviate } from '@util'
+import { abbreviate, capitalize } from '@util'
 import { usePreferences } from '@context'
 import { ResponsiveRadar } from '@nivo/radar'
 import { chartTheme } from '../../theme'
@@ -34,8 +34,6 @@ GridLabel.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
 }
-
-const capitalize = str => str[0].toUpperCase() + str.slice(1)
 
 export const ChemicalsByMediumRadarChart = ({ data }) => {
   const preferences = usePreferences()

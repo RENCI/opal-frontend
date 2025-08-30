@@ -36,7 +36,7 @@
   }
 
   .mapboxgl-popup-close-button {
-    color: var(--joy-palette-info-contrastText);
+    color: var(--joy-palette-primary-main);
     font-size: 200%;
     z-index: 99;
   }

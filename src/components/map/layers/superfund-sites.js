@@ -5,7 +5,7 @@ import * as turf from '@turf/turf';
 import pfasMarker from '@images/pin-red.png';
 import noPfasMarker from '@images/pin-blue.png';
 import unknownPfasMarker from '@images/pin-grey.png';
-import { SuperfundPopup } from '../popups/superfund-popup';
+import { SuperfundPopup } from '../popups/superfund-sites';
 
 const loadMapImage = (map, id, url) => {
   return new Promise((resolve, reject) => {
@@ -80,7 +80,6 @@ export const SuperfundSitesLayer = ({
       if (!feature) return;
 
       if (feature.layer.id === 'site-pin-layer') {
-        console.log(feature)
         setPopupInfo({
           coordinates: feature.geometry.coordinates,
           properties: feature.properties,

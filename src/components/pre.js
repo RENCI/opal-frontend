@@ -11,7 +11,7 @@ export const Pre = ({ children, sx = {} }) => {
       level="body-xs"
       p={ 1 }
       sx={{
-        scrollbarColor: 'var(--joy-palette-background-surface) var(--joy-palette-primary-softBg)',
+        scrollbarColor: 'var(--joy-palette-primary-softColor) var(--joy-palette-primary-softBg)',
         scrollbarWidth: 'thin',
         overflow: 'auto',
         ...sx,

@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import { Popup } from 'react-map-gl/mapbox';
-import { ClusterBrowser } from './samples-cluster-browser';
-import { PointBrowser } from './samples-point-browser';
-import './popups.css';
+import { ClusterBrowser } from './sample-cluster';
+import { PointBrowser } from './sample-point';
 
 export const SamplesPopup = ({ onClose, coordinates, properties, type }) => {
   return (
@@ -13,7 +12,6 @@ export const SamplesPopup = ({ onClose, coordinates, properties, type }) => {
       closeOnClick={ false }
       onClose={ onClose }
     >
-      <br />
       { type === 'cluster' && <ClusterBrowser samples={ properties.samples } /> }
       { type === 'point' && <PointBrowser properties={ properties } /> }
     </Popup>

@@ -50,7 +50,7 @@ export const SamplesMap = ({
 
   const handleClickMap = useCallback((event) => {
     const { lngLat } = event;
-    console.log('Clicked at', lngLat);
+    console.log('Clicked map at', lngLat);
   }, []);
 
   const isDragging = useToggleState(false);
@@ -89,6 +89,7 @@ export const SamplesMap = ({
         <ViewStatePanel
           viewState={ viewState }
           onReset={ resetMap }
+          mapRef={ mapRef }
         />
         <LayersPanel />
       </MapDrawer>

@@ -1,18 +1,27 @@
 import PropTypes from 'prop-types';
 import { Divider, Typography } from '@mui/joy';
 import { ListItemDecorator, Tab, TabList, TabPanel, Tabs } from '@mui/joy';
-import { analytes } from '@data';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionGroup,
+  AccordionSummary,
+} from '@mui/joy';
 import {
   Info as DetailsIcon,
   FormatListBulleted as ListIcon,
   PieChart as VisualizationIcon,
   DataObject as RawDetailsIcon,
+  Summarize as SampleInfoIcon,
 } from '@mui/icons-material';
-import { sampleDetectionSummary } from './samples-sample-detection-list';
-import { SamplesDetectionPie } from './samples-sample-detection-pie';
 import { Pre } from '@components/pre';
-import { NearestSuperfundSite } from '../layers/nearest-superfund-site';
-import { MediumIcon } from './medium-icon';
+import { analytes } from '@data';
+import superfundSiteMarker from '@images/pin-grey.png';
+import { sampleDetectionSummary } from './sample-detection-list';
+import { SamplesDetectionPie } from './sample-detection-pie';
+import { NearestSuperfundSite } from '../../layers/nearest-superfund-site';
+import { MediumIcon } from '@components/medium-icon';
+import { SampleDetails } from './sample-details';
 
 export const PointBrowserTabs = ({ properties }) => {
   return (
@@ -39,19 +48,38 @@ export const PointBrowserTabs = ({ properties }) => {
           }, [])
         } />
       </TabPanel>
-      <TabPanel value={ 2 }>
-        <NearestSuperfundSite coordinates={ [properties.longitude, properties.latitude] } />
-        <Divider />
-
-        <Typography
-          level="title-sm"
-          startDecorator={ <RawDetailsIcon fontSize="md" /> }
-        >Sample Site Raw Details</Typography>
-        <Divider />
-        
-        <Pre sx={{ maxHeight: '200px' }}>
-          { JSON.stringify(properties, null, 2) }
-        </Pre>
+      <TabPanel value={ 2 } sx={{ padding: 0 }}>
+        <AccordionGroup>
+          <Accordion defaultExpanded>
+            <AccordionSummary>
+              <SampleInfoIcon />
+              Sample Details
+            </AccordionSummary>
+            <AccordionDetails>
+              <SampleDetails properties={ properties } />
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary>
+              <img src={ superfundSiteMarker } width={ 16 } />
+              Nearest Superfund Site
+            </AccordionSummary>
+            <AccordionDetails>
+              <NearestSuperfundSite coordinates={ [properties.longitude, properties.latitude] } />
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary>
+              <RawDetailsIcon />
+              Sample Raw Data
+            </AccordionSummary> 
+            <AccordionDetails>
+              <Pre sx={{ maxHeight: '200px' }}>
+                { JSON.stringify(properties, null, 2) }
+              </Pre>
+            </AccordionDetails>
+          </Accordion>
+        </AccordionGroup>
       </TabPanel>
       
       <Divider />
@@ -78,6 +106,7 @@ PointBrowserTabs.propTypes = {
 export const PointBrowser = ({ properties }) => {
   return (
     <>
+      <br />
       <Typography
         level="title-sm"
         variant="soft"

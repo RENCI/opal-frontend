@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import { Typography } from '@mui/joy';
 import { ResponsivePie } from '@nivo/pie';
-import { chartTheme } from '../../../theme';
-import './popups.css';
+import { chartTheme } from '../../../../theme';
 
 export const SamplesDetectionPie = ({ data = [] }) => {
   return (
