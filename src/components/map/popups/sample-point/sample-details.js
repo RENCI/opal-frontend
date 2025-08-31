@@ -11,7 +11,7 @@ export const SampleDetails = ({ properties }) => {
       <Detail label="PI" value={ properties?.pi ?? '---' } />
       <Detail label="Units" value={ properties?.units ?? '---' } />
       <Detail label="Medium" value={ properties?.medium ?? '---' } />
-      <Detail label="Site Type" value={ properties?.site_type ?? '---' } />
+      <Detail label="Site" value={ `${ properties?.site_id ?? '' } (${ properties?.site_type ?? '---' })` } />
     </Stack>    
   );
 };
@@ -24,5 +24,6 @@ SampleDetails.propTypes = {
     pi: PropTypes.string.isRequired,
     units: PropTypes.string.isRequired,
     medium: PropTypes.string.isRequired,
+    site_id: PropTypes.string.isRequired,
     site_type: PropTypes.string.isRequired,
   }).isRequired,};
