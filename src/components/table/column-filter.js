@@ -5,7 +5,7 @@ import { DebouncedInput } from '@components/debounced-input'
 export const ColumnFilter = ({ column }) => {
   const { filterVariant } = column.columnDef.meta ?? {}
 
-  const columnFilterValue = column.getFilterValue()
+  const columnFilterValue = column.getFilterValue() || '';
   
   const sortedUniqueValues = useMemo(() => filterVariant === 'range'
     ? []
@@ -79,6 +79,16 @@ export const ColumnFilter = ({ column }) => {
         style={{ backgroundColor: 'inherit', color: 'inherit', width: '100%' }}
       />
     </Fragment>
+  ) : filterVariant === 'max' ? (
+    <DebouncedInput
+      type="number"
+      aria-label={ `${ column.id } maximum filter` }
+      min={ 0 }
+      value={ columnFilterValue ?? '' }   // just a number, not an array
+      onChange={ value => column.setFilterValue(value) } 
+      placeholder="Enter maximum"
+      style={{ backgroundColor: 'inherit', color: 'inherit', width: '100%' }}
+    />
   ) : (
     <div className="no-filtering" />
   )

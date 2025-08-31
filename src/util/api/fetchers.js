@@ -4,7 +4,7 @@ import { chemicalFormulaLaTeX } from '@util';
 
 export const fetchSampleData = (onProgress) => async () =>
   await batchFetch({
-    endpoint: '/pfas_sample_data',
+    endpoint: '/pfas_sample_data_npl',
     perPage: 250,
     batchSize: 9,
     onProgress,

@@ -72,7 +72,7 @@ export const ColumnFilters = () => {
                     flex={ 1 }
                     sx={{ p: 1 }}
                   >
-                    <div className="column-name">{ column.id.replace(`${ columnGroup.id }_`, ``) }</div>
+                    <div className="column-name">{ column.columnDef.header }</div>
                     <div className="column-filter">
                       <ColumnFilter column={ column } />
                     </div>

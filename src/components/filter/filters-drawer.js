@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { AccordionGroup, Box, Sheet, DialogTitle, Divider } from '@mui/joy'
-import { ColumnFilters, ClearFiltersButton, SuperfundProximityFilter } from '@components/filter'
+import { ColumnFilters, ClearFiltersButton } from '@components/filter'
 
 export const FiltersDrawer = ({ open, onClose }) => {
   return (
@@ -41,7 +41,6 @@ export const FiltersDrawer = ({ open, onClose }) => {
 
       <AccordionGroup>
         <ColumnFilters />
-        <SuperfundProximityFilter />
       </AccordionGroup>
       
     </Sheet>

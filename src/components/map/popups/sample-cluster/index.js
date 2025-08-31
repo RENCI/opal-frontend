@@ -12,9 +12,10 @@ import {
   ChevronLeft as PreviousSampleIcon,
   ChevronRight as NextSampleIcon,
 } from '@mui/icons-material';
+import * as turf from '@turf/turf';
+import { useToggleState } from '@hooks';
 import { MediumIcon } from '@components/medium-icon';
 import { Detail } from '@components/detail';
-import { useToggleState } from '@hooks';
 import { PointBrowserTabs } from '../sample-point';
 
 const countByProperty = (array = [], key) =>
@@ -43,6 +44,30 @@ Collection.propTypes = {
   arr: PropTypes.arrayOf(PropTypes.object).isRequired,
   property: PropTypes.string.isRequired,
 };
+
+export const getSuperfundSitesNearSampleCluster = (cluster, locations, units = 'miles') => {
+  console.log({ cluster, locations, units })
+  if (!cluster?.length || !locations?.length) {
+    return turf.featureCollection([]);
+  }
+
+  // find cluster centroid
+  const centroid = turf.center(turf.polygon(cluster.map(({ latitude, longitude }) => turf.point([longitude, latitude]))));
+  console.log({ centroid })
+
+  // find max distance from centroid to any sample in cluster
+  let maxDist = 0;
+  for (const pt of cluster.features) {
+    const dist = turf.distance(centroid, pt, { units });
+    if (dist > maxDist) maxDist = dist;
+  }
+
+  // reach out around centroid with radius of maxDist * 2
+  const buffer = turf.buffer(centroid, 2 * maxDist, { units });
+
+  // return all Superfund sites within that buffer
+  return turf.pointsWithinPolygon(locations, buffer);
+}
 
 export const ClusterBrowser = ({ samples = [] }) => {
   const combinedView = useToggleState(false);

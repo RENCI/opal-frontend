@@ -26,8 +26,8 @@ export const MapView = () => {
         mapStyle={ colorMode.current }
         samples={ sampleSitesWithLatLong }
         superfundSites={ superfundSites.geojson }
-        selectionRadius={ superfundSites?.selectionRadius?.current ?? 5 }
-        showSuperfundSiteRings={ superfundSites?.filtering?.enabled ?? false }
+        selectionRadius={ Number(table.getColumn('distance_to_npl')?.getFilterValue() ?? 5) }
+        showSuperfundSiteRings={ table?.getColumn('distance_to_npl')?.getIsFiltered() ?? false }
       />
     </Box>
   );

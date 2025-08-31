@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
 import { Layer, Source } from 'react-map-gl/mapbox';
 import { SamplesPopup } from '../popups/samples';
-import { recenterOn } from '@util/map';
+import { recenterOn } from '@util';
 
 export const SampleSitesLayer = ({ data = [], mapRef }) => {
   const [popupInfo, setPopupInfo] = useState(null);

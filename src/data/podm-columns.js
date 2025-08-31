@@ -29,13 +29,26 @@ export const podmColumns = [
     header: 'Location',
     footer: 'Location',
     columns: [
-      columnHelper.accessor('city', {                    header: 'City',          footer: 'City',             meta: { filterVariant: 'text' } }),
-      columnHelper.accessor('state', {                   header: 'State',         footer: 'State',            meta: { filterVariant: 'text' } }),
-      columnHelper.accessor('zipcode', {                 header: 'ZIP',           footer: 'ZIP',              meta: { filterVariant: 'text' } }),
-      columnHelper.accessor('site_id', {                 header: 'Site ID',       footer: 'Site ID',          meta: { filterVariant: 'text' } }),
-      columnHelper.accessor('site_type', {               header: 'Site Type',     footer: 'Site Type',        meta: { filterVariant: 'select' } }),
-      columnHelper.accessor(row => row.latitude ?? 0, {  header: 'Latitude',      footer: 'Latitude',         meta: { filterVariant: 'text' } }),
-      columnHelper.accessor(row => row.longitude ?? 0, { header: 'Longitude',     footer: 'Longitude',        meta: { filterVariant: 'text' } }),
+      columnHelper.accessor('city', {                                          header: 'City',             footer: 'City',             meta: { filterVariant: 'text' } }),
+      columnHelper.accessor('state', {                                         header: 'State',            footer: 'State',            meta: { filterVariant: 'text' } }),
+      columnHelper.accessor('zipcode', {                                       header: 'ZIP',              footer: 'ZIP',              meta: { filterVariant: 'text' } }),
+      columnHelper.accessor('site_id', {                                       header: 'Site ID',          footer: 'Site ID',          meta: { filterVariant: 'text' } }),
+      columnHelper.accessor('site_type', {                                     header: 'Site Type',        footer: 'Site Type',        meta: { filterVariant: 'select' } }),
+      columnHelper.accessor(row => row.latitude ?? 0, {                        header: 'Latitude',         footer: 'Latitude',         meta: { filterVariant: 'text' } }),
+      columnHelper.accessor(row => row.longitude ?? 0, {                       header: 'Longitude',        footer: 'Longitude',        meta: { filterVariant: 'text' } }),
+      columnHelper.accessor(
+        row => row.miles_to_closest_superfund_site ?? 0,
+        {
+          id: 'distance_to_npl',
+          header: 'NPL Site Distance',
+          footer: 'NPL Site Distance',
+          filterFn: (row, columnId, filterValue) => {
+            if (!filterValue) return true;
+            const rowValue = row.getValue(columnId);
+            return rowValue <= filterValue;
+          },
+          meta: { filterVariant: 'max' },
+        }),
     ],
   }),
   columnHelper.group({
