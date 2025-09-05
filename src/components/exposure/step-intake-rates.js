@@ -9,7 +9,7 @@ import { capitalize } from '@util';
 
 const mediumIntakeRates = {
   water: 'L/day',
-  dust: 'mg/day',
+  dust: 'g/day',
   blood: 'mL/day', // could also be mL/kg/day?
 };
 
