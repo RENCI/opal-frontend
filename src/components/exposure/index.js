@@ -31,6 +31,8 @@ import { CalculationMethodStep } from './step-calculation-method';
 import { ResultsStep } from './step-summary-and-result';
 import { RscValueStep } from './step-rsc-value';
 
+const DEBUG_MODE = false;
+
 const steps = [
   { id: 'analyte-select',       label: 'Analyte Selection',             content: <AnalyteSelectStep /> },
   { id: 'rfd',                  label: 'Reference Dose',                content: <ReferenceDoseStep /> },
@@ -179,9 +181,13 @@ export const ExposureForm = ({ data = [] }) => {
             <PaginationButtons />
           </CardActions>
         </Card>
-        <Card variant="soft" sx={{ flex: 1 }}>
-          <ExposureFormDebugger />
-        </Card>
+        {
+          DEBUG_MODE && (
+            <Card variant="soft" sx={{ flex: 1 }}>
+              <ExposureFormDebugger />
+            </Card>
+          )
+        }
       </Stack>
     </ExposureFormContext.Provider>
   );
