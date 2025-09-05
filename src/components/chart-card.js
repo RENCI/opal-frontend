@@ -12,7 +12,7 @@ export const ChartCard = ({ children, title }) => {
   const containerRef = useRef(null)
   
   return (
-    <Card variant="soft">
+    <Card variant="outlined">
       <Typography
         component="h1"
         level="h3"
@@ -28,7 +28,6 @@ export const ChartCard = ({ children, title }) => {
         sx={{
           position: 'relative',
           minHeight: '500px',
-          aspectRatio: '1 / 1',
           maxWidth: '100%',
           '& > div': {
             position: 'absolute',

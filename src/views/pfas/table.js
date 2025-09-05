@@ -3,7 +3,6 @@ import {
   Button,
   Modal,
   ModalClose,
-  Typography,
 } from '@mui/joy'
 import {
   MenuBook as BrowseIcon,
@@ -41,16 +40,9 @@ export const TableView = () => {
     <ClearFiltersButton key="clear-selections" />,
   ], [columnFilters, filtersVisibility])
 
-  const SampleCount = useCallback(() => (
-    <Typography level="body-md" sx={{ whiteSpace: 'nowrap' }}>
-      { table.getPrePaginationRowModel().rows.length } samples
-    </Typography>
-  ), [table.getPrePaginationRowModel().rows.length])
-
   return (
     <Fragment>      
       <Toolbar>
-        <SampleCount />
         <Pagination table={ table } />
         <ColumnSelect table={ table } />
         <FilterControls />
@@ -58,19 +50,26 @@ export const TableView = () => {
         <TableBrowser />
       </Toolbar>
 
-      <DataTable
-        table={ table }
-        sx={{
-          '.filter': {
-            maxHeight: filtersVisibility ? '48px' : 0,
-            overflow: 'hidden',
-            transition: 'max-height 250ms',
-          },
-        }}
-      />
+      <div style={{
+        maxWidth: 'calc(100vw - 2rem)',
+        position: 'relative',
+        overflowX: 'scroll',
+        borderRight: '1px solid #333',
+      }}>
+        <DataTable
+          table={ table }
+          sx={{
+            '.filter': {
+              maxHeight: filtersVisibility ? '48px' : 0,
+              overflow: 'hidden',
+              transition: 'max-height 250ms',
+            },
+          }}
+        />
+        
+      </div>
 
       <Toolbar>
-        <SampleCount />
         <Pagination table={ table } />
       </Toolbar>
     </Fragment>

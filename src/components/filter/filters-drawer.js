@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Box, Sheet, DialogTitle, Divider } from '@mui/joy'
+import { AccordionGroup, Box, Sheet, DialogTitle, Divider } from '@mui/joy'
 import { ColumnFilters, ClearFiltersButton } from '@components/filter'
 
 export const FiltersDrawer = ({ open, onClose }) => {
@@ -39,7 +39,10 @@ export const FiltersDrawer = ({ open, onClose }) => {
       
       <Divider />
 
-      <ColumnFilters />
+      <AccordionGroup>
+        <ColumnFilters />
+      </AccordionGroup>
+      
     </Sheet>
   )
 }

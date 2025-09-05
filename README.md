@@ -56,7 +56,7 @@ The app should be running at [http://localhost:8000/](http://localhost:8000/).
 Execute `npm ci` to install locked dependencies, and `npm run build` to build a production bundle.
 The bundle will be exported to the `dist` directory and can be served as static files from a webserver.
 
-There are Make targets for the remainder of the deployment actions that involve Docker and interface with the host VMs. Be sure `IMAGE` and `TAG` are defined in `.env` to run the remaining commands.
+There are Make targets for the remainder of the deployment actions that involve Docker and interface with the host VMs. Be sure `IMAGE` and `TAG` are defined in `.env` to run the remaining commands. While these variables are mostly used in the CI workflow, note that `TAG` also gets rendered in the UI.
 
 The first make target to know is `make help`, which shows the following list of all targets.
 ```bash
@@ -136,9 +136,9 @@ The `deploy` target runs `deploy.sh` on the host over SSH, but it's worth noting
 
 Alternatively, one could do things more manually still on the host VM. In its entirety, the deployment steps are as follows.
 
-- On the host, view a list of running containers: |docker ps|. There should only be one.
-- Pull in the latest application image: |docker pull mvvatson/opal:1.0.4|
-- Bring the currently running container down: |docker stop opal-ui|.
+- On the host, view a list of running containers: `docker ps`. There should only be one.
+- Pull in the latest application image: `docker pull mvvatson/opal:1.0.4`
+- Bring the currently running container down: `docker stop opal-ui`.
 - Finally, bring up the next version, with ports open and the certs mounted. This entire command looks like:
 
 ```bash

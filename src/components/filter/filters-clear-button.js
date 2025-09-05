@@ -8,6 +8,10 @@ import { usePfas } from '@views/pfas'
 export const ClearFiltersButton = ({ sx = {}, ...props }) => {
   const { table } = usePfas()
 
+  if (!table) {
+    return '...'
+  }
+
   const noActiveFilters = !table.getAllLeafColumns().some(col => col.getIsFiltered() )
 
   return (

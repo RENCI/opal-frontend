@@ -28,7 +28,8 @@ docker pull $IMAGE:$TAG
 docker stop opal-ui || true
 
 # start new container
-docker run --rm -d \
+docker run -d \
+  --restart unless-stopped \
   -p 80:80 -p 443:443 \
   -v $CERT_KEY_PATH:/ssl.key \
   -v $CERT_CER_PATH:/ssl.cer \

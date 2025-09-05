@@ -28,7 +28,7 @@ export const AnalyteSelect = () => {
           color={ selectedAnalytes[0] ? 'primary' : 'neutral' }
           onChange={ handleChangeAnalyte(0) }
         >
-          <Option key="select-null" value="">Select analyte</Option>
+          <Option key="select-0-null" value="">Select analyte</Option>
           {
             analytes.map(({ id }) => (
               <Option key={ `select-0-${ id }` } value={ id }>{ abbreviate(id) }</Option>
@@ -46,7 +46,7 @@ export const AnalyteSelect = () => {
           color={ selectedAnalytes[1] ? 'primary' : 'neutral' }
           onChange={ handleChangeAnalyte(1) }
         >
-          <Option key="select-null" value="">Select analyte</Option>
+          <Option key="select-1-null" value="">Select analyte</Option>
           {
             analytes.map(({ id }) => (
               <Option key={ `select-1-${ id }` } value={ id }>{ abbreviate(id) }</Option>

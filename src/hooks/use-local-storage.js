@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+window.dispatchEvent(new Event('local-storage'));
+
 export const useLocalStorage = (key, initialValue) => {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
@@ -13,8 +15,8 @@ export const useLocalStorage = (key, initialValue) => {
       // If error also return initialValue
       console.error(error.message)
       return initialValue
-      }
-    })
+    }
+  })
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.

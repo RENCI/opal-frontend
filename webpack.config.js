@@ -80,6 +80,10 @@ module.exports = {
         ],
       },
       {
+        test: /\.ya?ml$/,
+        use: 'yaml-loader'
+      },
+      {
         test: /\.geojson$/,
         type: 'json',
       },
@@ -93,8 +97,8 @@ module.exports = {
     alias: {
       '@components': path.resolve(__dirname, 'src/components/'),
       '@content': path.resolve(__dirname, 'src/content/'),
-      '@data': path.resolve(__dirname, 'src/data/'),
       '@context': path.resolve(__dirname, 'src/context/'),
+      '@data': path.resolve(__dirname, 'src/data/'),
       '@hooks': path.resolve(__dirname, 'src/hooks/'),
       '@images': path.resolve(__dirname, 'src/images/'),
       '@util': path.resolve(__dirname, 'src/util/'),

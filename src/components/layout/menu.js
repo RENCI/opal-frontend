@@ -13,28 +13,25 @@ import {
   Typography,
 } from '@mui/joy'
 import {
-  Biotech as AnalytesIcon,
-  Science as NonTargetedIcon,
-  ViewList as TableIcon,
-  DonutSmall as ChartsIcon,
-  CompareArrows as CompareIcon,
+  Info as AboutIcon,
+  Science as AnalytesIcon,
+  RadioButtonUnchecked as NonTargetedIcon,
+  RadioButtonChecked as TableIcon,
   ArrowDropDown as DropdownIcon,
 } from '@mui/icons-material'
-import { usePreferences } from '@context'
 import { useLocalStorage } from '@hooks'
+import { usePreferences } from '@context'
+import MenuIcon from '@mui/icons-material/Menu';
+import { Drawer, Sheet } from '@mui/joy';
 import { Link } from '@components/link'
+import { Brand } from '@components/brand'
 
 const menuItems = [
-  { id: 'pfas',         path: '/pfas',        label: 'Targeted Primary', Icon: TableIcon,
-    subitems: [
-      { id: 'table',      path: '/pfas/table',   label: 'Data',            Icon: TableIcon },
-      { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations',  Icon: ChartsIcon },
-      { id: 'compare',    path: '/pfas/compare', label: 'Comparison',      Icon: CompareIcon },
-    ]
-  },
-  { id: 'ucmr5',        path: 'pfas2',        label: 'Targeted Secondary Data', Icon: TableIcon },
-  { id: 'non-targeted', path: 'non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
-  { id: 'analytes',     path: 'analytes',     label: 'Analytes',                Icon: AnalytesIcon },
+  { id: 'about',        path: '/about',        label: 'About',                   Icon: AboutIcon },
+  { id: 'pfas',         path: '/pfas',         label: 'Targeted Primary',        Icon: TableIcon },
+  { id: 'ucmr5',        path: '/pfas2',        label: 'Targeted Secondary',      Icon: TableIcon },
+  { id: 'non-targeted', path: '/non-targeted', label: 'Non-Targeted',            Icon: NonTargetedIcon },
+  { id: 'analytes',     path: '/analytes',     label: 'Analytes',                Icon: AnalytesIcon },
 ]
 
 const NavDropdown = function NavDropdown({ label, subitems = [] }) {
@@ -117,7 +114,7 @@ NavDropdown.propTypes = {
 };
 
 export const DashboardMenu = () => {
-  const preferences = usePreferences()
+  const preferences = usePreferences();
 
   return (
     <List
@@ -129,8 +126,12 @@ export const DashboardMenu = () => {
         '--List-flex': 1,
         justifyContent: 'flex-end',
         p: 0,
-        '& > *:first-of-type': { borderLeft: '1px solid var(--joy-palette-neutral-outlinedBorder)' },
-        '& > *:not(:last-of-type)': { borderRight: '1px solid var(--joy-palette-neutral-outlinedBorder)' },
+        '& > *:first-of-type': {
+          borderLeft: '1px solid var(--joy-palette-neutral-outlinedBorder)',
+        },
+        '& > *:not(:last-of-type)': {
+          borderRight: '1px solid var(--joy-palette-neutral-outlinedBorder)',
+        },
         '.MuiListItemButton-root': {
           transition: 'background-color 250ms',
           borderRadius: 'sm',
@@ -150,27 +151,93 @@ export const DashboardMenu = () => {
       }}
     >
       {
-        menuItems.map(({ Icon, id, label, path, subitems = [] }) => subitems?.length ? (
-          <NavDropdown
-            key={ `nav-${ id }` }
-            label={ label }
-            subitems={ subitems }
-          />
-        ) : (
-          <ListItem role="navigation" key={ `nav-${ id }` }>
-            <ListItemButton
-              size="lg" variant="soft"
-              component={ Link } nav to={ path }
-              role="menuitem" aria-label={ label }
-            >
-              <ListItemDecorator>
-                <Icon />
-              </ListItemDecorator>
-              { label }
-            </ListItemButton>
-          </ListItem>
-        ))
+        menuItems.map(({ Icon, id, label, path, subitems = [] }) =>
+          subitems?.length ? (
+            <NavDropdown
+              key={`nav-${id}`}
+              label={label}
+              subitems={subitems}
+            />
+          ) : (
+            <ListItem role="navigation" key={`nav-${id}`}>
+              <ListItemButton
+                size="lg" variant="soft"
+                component={Link} nav to={path}
+                role="menuitem" aria-label={label}
+              >
+                <ListItemDecorator><Icon /></ListItemDecorator>
+                {label}
+              </ListItemButton>
+            </ListItem>
+          )
+        )
       }
     </List>
-  )
-}
+  );
+};
+
+
+export const CompactDashboardMenu = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const toggleDrawer = () => setDrawerOpen(prev => !prev);
+
+  return (
+    <>
+      <IconButton
+        variant="soft"
+        onClick={ toggleDrawer }
+        sx={{ ml: 'auto' }}
+        aria-label="Open navigation menu"
+      >
+        <MenuIcon />
+      </IconButton>
+      <Drawer open={drawerOpen} onClose={ toggleDrawer }>
+        <Sheet
+          variant="plain"
+          sx={{ p: 2, width: 280 }}
+          role="presentation"
+          onClick={ toggleDrawer }
+          onKeyDown={ toggleDrawer }
+        >
+          <Brand />
+
+          <br />
+
+          <List orientation="vertical">
+            {menuItems.map(({ Icon, id, label, path, subitems = [] }) =>
+              subitems?.length ? (
+                <Fragment key={`nav-${id}`}>
+                  <Typography level="title-sm" sx={{ mt: 1 }}>
+                    {label}
+                  </Typography>
+                  {subitems.map((item) => (
+                    <ListItemButton
+                      key={item.id}
+                      component={Link}
+                      nav
+                      to={item.path}
+                    >
+                      <ListItemDecorator><item.Icon /></ListItemDecorator>
+                      {item.label}
+                    </ListItemButton>
+                  ))}
+                </Fragment>
+              ) : (
+                <ListItemButton
+                  key={`nav-${id}`}
+                  component={Link}
+                  nav
+                  to={path}
+                >
+                  <ListItemDecorator><Icon /></ListItemDecorator>
+                  {label}
+                </ListItemButton>
+              )
+            )}
+          </List>
+        </Sheet>
+      </Drawer>
+    </>
+  );
+};

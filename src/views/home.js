@@ -1,23 +1,16 @@
-import PropTypes from 'prop-types'
 import { ContentPage } from '@components/layout'
 import {
   Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
   Stack,
   Typography,
 } from '@mui/joy'
 import {
   ViewList as TableIcon,
-  ArrowForward as LinkIcon,
 } from '@mui/icons-material'
-import { Markdown } from '@components/markdown'
-import { Link } from '@components/link'
+import { PolicyCard } from '@components/policy-card'
+import { ViewCard } from '@components/view-card';
 
-const homeViewCards = [
+const dataViews = [
   {
     path: '/pfas',
     icon: <TableIcon color="default" />,
@@ -63,94 +56,30 @@ in the CompTox Chemical Dashboard.`,
   },
 ]
 
-const shimmerHoverStyle = {
-  position: 'relative',
-  overflow: 'hidden',
-  zIndex: 1,
-  '&::before': {
-    zIndex: -1,
-    content: '""',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: 'calc(100% + 1rem)',
-    height: '100%',
-    backgroundColor: 'var(--joy-palette-primary-300)',
-    filter: 'opacity(0.2)',
-    transform: 'translate(calc(100% - 2rem))',
-    clipPath: 'polygon(1rem 0, 100% 0, 100% 100%, 0 100%)',
-    transition: 'transform 300ms, filter 350ms 100ms',
-  },
-  '&:hover': {
-    color: 'var(--joy-palette-text-primary)',
-  },
-  '&:hover::before': {
-    filter: 'opacity(0.0)',
-    transform: ' translate(-1rem)',
-    transition: 'transform 300ms, filter 350ms 200ms',
-  }
-};
-
-const animateButtonContentsStyle = {
-  perspective: '100px',
-  '.text': { fontSize: '150%', transform: 'translate3d(0, 0, -10px)', transition: 'transform 300ms' },
-  '.icon': { transform: 'translate3d(0, 0, -10px)', transition: 'transform 200ms' },
-  '&:hover .icon': { transform: 'translate3d(6px, 0, 0)', transition: 'transform 500ms ease-out' },
-  '&:hover .text': { transform: 'translate3d(-2px, 0, 0)', transition: 'transform 250ms ease-out' },
-};
-
-const ViewCard = ({ title, description, icon, path }) => {
-  return (
-    <Card variant="outlined" sx={{ p: 1 }}>
-      <CardContent component={ Stack } direction="column">
-        <Stack sx={{
-          padding: '2rem',
-          flex: '0 0 40px',
-        }}>
-          <Typography level="h3" startDecorator={ icon } sx={{ fontWeight: '300' }}>
-            { title }
-          </Typography>
-        </Stack>
-        <Divider />
-        <Box sx={{ padding: '1rem 1rem 0 1rem', flex: 1 }}>
-          <Markdown>{ description }</Markdown>
-        </Box>
-      </CardContent>
-      
-      <CardActions>
-        <Button
-          variant="soft"
-          component={ Link }
-          to={ path }
-          sx={{
-            ...shimmerHoverStyle,
-            ...animateButtonContentsStyle,
-            padding: '1rem 0',
-          }}
-          endDecorator={ <LinkIcon className="icon" /> }
-        ><span className="text">View</span></Button>
-      </CardActions>
-    </Card>
-  )
-}
-
-ViewCard.propTypes = {
-  description: PropTypes.string.isRequired,
-  icon: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  path: PropTypes.string.isRequired,
-}
-
 export const HomeView = () => {
   return (
     <ContentPage maxWidth="lg">
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography level="h1">OPAL</Typography>
-        <Typography level="h2" sx={{ fontWeight: '200' }}>Observational PFAS Access portaL</Typography>
-      </Box>
-      
-      <br />
-      <Divider />
+
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={ 4 }
+        sx={{
+          borderLeft: '1.5px solid var(--joy-palette-divider)',
+          borderBottom: '1.5px solid var(--joy-palette-divider)',
+          borderTopLeftRadius: '2rem',
+        }}
+      >
+        <Box sx={{ flex: 3 }} pl={ 3 }>
+          <Typography level="h1" sx={{ fontSize: '400%' }}>OPAL</Typography>
+          <Typography level="h2" sx={{ fontWeight: '200' }}>Observational PFAS Access portaL</Typography>
+        </Box>
+        <Box sx={{ flex: 2 }}>
+          <PolicyCard />
+        </Box>
+      </Stack>
+
       <br />
 
       <Stack
@@ -174,15 +103,7 @@ export const HomeView = () => {
         }}
       >
         {
-          homeViewCards.map(({ path, icon, title, description }) => (
-            <ViewCard
-              key={ `card-${ path }` }
-              path={ path }
-              icon={ icon }
-              title={ title }
-              description={ description }
-            />
-          ))
+          dataViews.map(cardData => <ViewCard key={ `card-${ cardData.path }` } { ...cardData } />)
         }
       </Stack>
     

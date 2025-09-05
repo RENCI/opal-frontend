@@ -30,7 +30,7 @@ main {
 }
 
 a {
-  color: var(--joy-palette-primary-main);
+  color: var(--joy-palette-info-dark);
   transition: color 250ms;
   &:hover {
     color: var(--joy-palette-primary-light);

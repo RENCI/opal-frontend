@@ -1,10 +1,10 @@
-import api from './'
-import { batchFetch } from './batch-fetch'
-import { chemicalFormulaLaTeX } from '@util'
+import api from './';
+import { batchFetch } from './batch-fetch';
+import { chemicalFormulaLaTeX } from '@util';
 
 export const fetchSampleData = (onProgress) => async () =>
   await batchFetch({
-    endpoint: '/pfas_sample_data',
+    endpoint: '/pfas_sample_data_npl',
     perPage: 250,
     batchSize: 9,
     onProgress,
@@ -39,6 +39,51 @@ export const fetchAnalytes = async () => await api.get(
       formula_latex: String(chemicalFormulaLaTeX(analyte.formula)),
     }))
   ).catch(error => {
-    console.error(error.message)
-    return []
+    console.error(`Fetching superfund sites failed: ${ error.message }`);
+    return [];
   })
+
+export const fetchSuperfundSites = (onProgress) => async () =>
+  await batchFetch({
+    endpoint: '/superfund_npl',
+    perPage: 25,
+    batchSize: 5,
+    onProgress,
+  });
+
+export const fetchSamplesNearSuperfundSites = ({
+  miles,
+  pi,
+  pfasb,
+}) => async () => {
+  const baseUrl = `${ process.env.API_HOST }/podm/api/distance_from_npl`;
+  
+  // build query path
+  let path = `/miles=${ miles }&pi=${ pi }`;
+  if (pfasb !== undefined) {
+    path += `&pfasb=${ pfasb ? 'True' : 'False' }`;
+  }
+  path += '/get-distance/?format=json';
+
+  try {
+    const response = await fetch(`${ baseUrl }${ path }`);
+    if (!response.ok) {
+      throw new Error(`Fetching superfund sites failed: ${ response.statusText }`);
+    }
+
+    const data = await response.json();
+
+    // transform
+    return data.map(entry => ({
+      id: entry.ogc_fid.toString(),
+      name: entry.npl_site_name,
+      latitude: entry.npd_latitude,
+      longitude: entry.npl_longitude,
+      pfas: entry.pfas,
+      score: entry.npl_site_score,
+    }));
+  } catch (error) {
+    console.error('Failed to fetch Superfund sites:', error);
+    return [];
+  }
+};
