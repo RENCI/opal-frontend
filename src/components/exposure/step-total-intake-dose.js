@@ -6,8 +6,8 @@ export const TotalIntakeDoseStep = () => {
   const { analytes, media } = useExposureForm();
 
   const isBelowThreshold = useMemo(() => {
-    return media.totalIntakeDose < media.rfdThreshold.current
-  }, [media.rfdThreshold.current, media.totalIntakeDose])
+    return media.totalIntakeDose < media.rfdThreshold
+  }, [media.rfdThreshold, media.totalIntakeDose])
 
   return (
     <Stack direction="column" spacing={ 2 }>
@@ -34,7 +34,7 @@ export const TotalIntakeDoseStep = () => {
       {
        <Typography>
           { isBelowThreshold ? 'Smaller than' : 'Not smaller than' } 80% of RfD Threshold,{' '}
-          <Typography variant="soft">{ media.rfdThreshold.current }</Typography>.
+          <Typography variant="soft">{ media.rfdThreshold }</Typography>.
         </Typography>
       }
     </Stack>

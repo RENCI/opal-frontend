@@ -89,7 +89,7 @@ export const ExposureForm = ({ data = [] }) => {
   const totalIntakeDose = useMemo(() => {
     return Object.keys(mediumIntakeDoses).reduce((acc, medium) => acc + mediumIntakeDoses[medium], 0);
   }, [mediumIntakeDoses]);
-  const [rfdThreshold, setRfdThreshold] = useState(1.2);
+  const rfdThreshold = useMemo(() => 0.8 * rfd, [rfd]);
 
   const [calculationMethod, setCalculationMethod] = useState(null);
 
@@ -136,10 +136,7 @@ export const ExposureForm = ({ data = [] }) => {
           set: setMediumStatistic,
         },
         totalIntakeDose,
-        rfdThreshold: {
-          current: rfdThreshold,
-          set: setRfdThreshold,
-        },
+        rfdThreshold,
       },
       calculationMethod: {
         current: calculationMethod,

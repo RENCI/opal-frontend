@@ -48,7 +48,7 @@ export const ResultsStep = () => {
       <Typography>
         Below 80% RfD Threshold:{' '}
         <Typography variant="soft">
-          { media.totalIntakeDose < media.rfdThreshold.current ? 'Yes' : 'No' }
+          { media.totalIntakeDose < media.rfdThreshold ? 'Yes' : 'No' }
         </Typography>.
       </Typography>
       <Typography>
