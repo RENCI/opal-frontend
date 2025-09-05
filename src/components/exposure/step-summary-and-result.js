@@ -60,7 +60,7 @@ export const ResultsStep = () => {
           <tr>
             <td>&nbsp;</td>
             <td><Typography textAlign="center">Intake Rate</Typography></td>
-            <td><Typography textAlign="center">Concentrations</Typography></td>
+            <td><Typography textAlign="center">Concentration</Typography></td>
             <td><Typography textAlign="center">Intake Dose</Typography></td>
           </tr>
         </thead>
