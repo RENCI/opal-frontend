@@ -31,6 +31,8 @@ import { CalculationMethodStep } from './step-calculation-method';
 import { ResultsStep } from './step-summary-and-result';
 import { RscValueStep } from './step-rsc-value';
 
+const DEBUG_MODE = false;
+
 const steps = [
   { id: 'analyte-select',       label: 'Analyte Selection',             content: <AnalyteSelectStep /> },
   { id: 'rfd',                  label: 'Reference Dose',                content: <ReferenceDoseStep /> },
@@ -100,8 +102,7 @@ export const ExposureForm = ({ data = [] }) => {
       value = 100 * mediumIntakeDoses['water'] / totalIntakeDose
     }
     if (calculationMethod === 'subtraction') {
-      const waterRfd = 10;
-      value = 100 * (waterRfd - totalIntakeDose + mediumIntakeDoses['water']) / waterRfd;
+      value = 100 * (rfd - totalIntakeDose + mediumIntakeDoses['water']) / rfd;
     }
     return clamp(20, value, 80);
   }, [mediumIntakeDoses, totalIntakeDose, calculationMethod]);
@@ -179,9 +180,13 @@ export const ExposureForm = ({ data = [] }) => {
             <PaginationButtons />
           </CardActions>
         </Card>
-        <Card variant="soft" sx={{ flex: 1 }}>
-          <ExposureFormDebugger />
-        </Card>
+        {
+          DEBUG_MODE && (
+            <Card variant="soft" sx={{ flex: 1 }}>
+              <ExposureFormDebugger />
+            </Card>
+          )
+        }
       </Stack>
     </ExposureFormContext.Provider>
   );
