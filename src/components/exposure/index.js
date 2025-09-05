@@ -102,8 +102,7 @@ export const ExposureForm = ({ data = [] }) => {
       value = 100 * mediumIntakeDoses['water'] / totalIntakeDose
     }
     if (calculationMethod === 'subtraction') {
-      const waterRfd = 10;
-      value = 100 * (waterRfd - totalIntakeDose + mediumIntakeDoses['water']) / waterRfd;
+      value = 100 * (rfd - totalIntakeDose + mediumIntakeDoses['water']) / rfd;
     }
     return clamp(20, value, 80);
   }, [mediumIntakeDoses, totalIntakeDose, calculationMethod]);
