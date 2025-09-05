@@ -12,18 +12,20 @@ const SIZES = {
 export const ContentPage = ({ children, maxWidth = 'md', sx }) => {
   return (
     <Fragment>
-      <Box sx={{
-        flex: 1,
-        mt: '3.5rem',
-        mb: '4rem',
-        px: 2,
-        // minWidth: SIZES[maxWidth],
-        maxWidth: SIZES[maxWidth],
-        mx: 'auto',
-        ...sx
-      }}>
-        { children }
-      </Box>
+      <Box
+        className="content-page"
+        sx={{
+          flex: 1,
+          mt: '3.5rem',
+          mb: '4rem',
+          px: 2,
+          // minWidth: SIZES[maxWidth],
+          width: '100%',
+          maxWidth: SIZES[maxWidth],
+          mx: 'auto',
+          ...sx
+        }}
+      >{ children }</Box>
     </Fragment>
   )
 }

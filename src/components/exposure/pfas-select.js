@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   FormControl,
@@ -14,8 +14,8 @@ export const PfasSelect = ({
   value,
   onChange,
   disabledAnalytes = [],
+  helpText,
 }) => {
-  console.log({ disabledAnalytes })
   const sortedAnalytes = useMemo(() => (
     Array.isArray(analytes)
       ? [...analytes].sort((a, b) => a.abbreviation.localeCompare(b.abbreviation))
@@ -26,7 +26,7 @@ export const PfasSelect = ({
       <FormLabel
         htmlFor="pfas-select-button"
         id="pfas-select-label"
-      >Select Analyte</FormLabel> 
+      >Select PFAS Analyte</FormLabel> 
       <Select
         placeholder="Select PFAS Chemical"
         value={ value }
@@ -59,6 +59,9 @@ export const PfasSelect = ({
           ))
         }
       </Select>
+      {
+        helpText && <Typography level="body-sm" color="neutral">{ helpText }</Typography>
+      }
     </FormControl>
   );
 };
@@ -67,5 +70,6 @@ PfasSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   disabledAnalytes: PropTypes.arrayOf(PropTypes.string),
+  helpText: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 

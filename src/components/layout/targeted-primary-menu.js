@@ -7,15 +7,17 @@ import {
   DonutSmall as ChartsIcon,
   CompareArrows as CompareIcon,
   Map as MapIcon,
+  Science as ExposureIcon,
 } from '@mui/icons-material';
 import { usePreferences } from '@context';
 import { Link } from '@components/link';
 
 const pfasMenuItems = [
-  { id: 'table',      path: '/pfas/table',   label: 'Table',            Icon: TableIcon },
-  { id: 'charts',     path: '/pfas/charts',  label: 'Visualizations',   Icon: ChartsIcon },
-  { id: 'compare',    path: '/pfas/compare', label: 'Comparison',       Icon: CompareIcon },
-  { id: 'map',        path: '/pfas/map',     label: 'Map',              Icon: MapIcon },
+  { id: 'table',    path: '/pfas/table',    label: 'Table',          Icon: TableIcon },
+  { id: 'charts',   path: '/pfas/charts',   label: 'Visualizations', Icon: ChartsIcon },
+  { id: 'compare',  path: '/pfas/compare',  label: 'Comparison',     Icon: CompareIcon },
+  { id: 'map',      path: '/pfas/map',      label: 'Map',            Icon: MapIcon },
+  { id: 'exposure', path: '/pfas/exposure', label: 'Exposure',       Icon: ExposureIcon },
 ];
 
 export const TargetedPrimaryMenu = () => {
