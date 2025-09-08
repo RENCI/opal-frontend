@@ -48,7 +48,7 @@ export const ResultsStep = () => {
       <Typography>
         Below 80% RfD Threshold:{' '}
         <Typography variant="soft">
-          { media.totalIntakeDose < media.rfdThreshold.current ? 'Yes' : 'No' }
+          { media.totalIntakeDose < media.rfdThreshold ? 'Yes' : 'No' }
         </Typography>.
       </Typography>
       <Typography>
@@ -60,7 +60,7 @@ export const ResultsStep = () => {
           <tr>
             <td>&nbsp;</td>
             <td><Typography textAlign="center">Intake Rate</Typography></td>
-            <td><Typography textAlign="center">Concentrations</Typography></td>
+            <td><Typography textAlign="center">Concentration</Typography></td>
             <td><Typography textAlign="center">Intake Dose</Typography></td>
           </tr>
         </thead>

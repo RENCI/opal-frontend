@@ -15,7 +15,7 @@ export const analytes = [
     dtxsid: 'DTXSID5030030',
     formula: 'C4HF9O3S',
     formula_latex: 'C_{4}HF_{9}O_{3}S',
-    rfd: 3e-4
+    rfd: 300
   },
   {
     id: 'pfda',
@@ -69,7 +69,7 @@ export const analytes = [
     dtxsid: 'DTXSID7040150',
     formula: 'C6HF13O3S',
     formula_latex: 'C_{6}HF_{13}O_{3}S',
-    rfd: 2e-5
+    rfd: 20
   },
   {
     id: 'pfna',
@@ -78,7 +78,7 @@ export const analytes = [
     dtxsid: 'DTXSID8031863',
     formula: 'C9HF17O2',
     formula_latex: 'C_{9}HF_{17}O_{2}',
-    rfd: 3e-6
+    rfd: 3
   },
   {
     id: 'pfns',
@@ -96,7 +96,7 @@ export const analytes = [
     dtxsid: 'DTXSID8031865',
     formula: 'C8HF15O2',
     formula_latex: 'C_{8}HF_{15}O_{2}',
-    rfd: 1.5e-9
+    rfd: 0.0015
   },
   {
     id: 'pfos',
@@ -105,7 +105,7 @@ export const analytes = [
     dtxsid: 'DTXSID3031864',
     formula: 'C8HF17O3S',
     formula_latex: 'C_{8}HF_{17}O_{3}S',
-    rfd: 7.9e-9
+    rfd: 0.0079
   },
   {
     id: 'pfpea',

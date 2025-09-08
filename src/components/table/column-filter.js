@@ -49,7 +49,7 @@ export const ColumnFilter = ({ column }) => {
     <select
       onChange={ e => column.setFilterValue(e.target.value) }
       value={ columnFilterValue }
-      style={{ backgroundColor: 'inherit', color: 'inherit' }}
+      style={{ backgroundColor: 'var(--joy-palette-background-surface)', color: 'inherit' }}
       aria-label={ `${ column.id } select filter` }
     >
       <option value="">All</option>
