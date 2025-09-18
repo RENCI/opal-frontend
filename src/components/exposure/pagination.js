@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useExposureForm } from './';
 import {
   Button,
@@ -6,8 +7,13 @@ import {
   NavigateNext as NextIcon,
   NavigateBefore as PrevIcon,
 } from '@mui/icons-material';
+
 export const PaginationButtons = () => {
-  const { steps } = useExposureForm();
+  const { calculationMethod, media, steps } = useExposureForm();
+
+  const disableNext = useMemo(() => {
+    return !steps.all?.[steps.current]?.nextIf({ calculationMethod, media });
+  }, [calculationMethod.current, media.current, steps.current]);
 
   return (
     <>
@@ -17,7 +23,7 @@ export const PaginationButtons = () => {
         startDecorator={ <PrevIcon /> } 
       >Prev</Button>
       <Button
-        disabled={ steps.current === steps.all - 1 }
+        disabled={ disableNext }
         onClick={ () => steps.set(prev => Math.min(prev + 1, steps.all.length)) }
         endDecorator={ <NextIcon /> } 
       >Next</Button>

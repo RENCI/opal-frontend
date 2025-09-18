@@ -1,80 +1,95 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button,
   Divider,
-  FormControl,
+  Option,
+  Select,
   Stack,
   Typography,
 } from '@mui/joy';
-import { useExposureForm } from './';
 import { capitalize, mean, median, percentile } from '@util';
 
-const StatisticOption = ({ label, value, selected, onClick }) => {
+import { useExposureForm } from './';
+
+import { TotalIntakeDoseStep } from './step-total-intake-dose';
+import { CalculationMethodStep } from './step-calculation-method';
+
+const getValues = (data, analyte, medium) => data
+  .filter(d => d.original.medium === medium)
+  .map((d) => d.original[`${ analyte }_concentration`])
+  .filter(v => v != null && !isNaN(v));
+
+const renderOption = (stat, value) => {
   return (
-    <FormControl orientation="horizontal" size="sm">
-      <Button variant={ selected ? 'solid' : 'soft' } onClick={ onClick }>{ label }</Button>
+    <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
+      <Typography level="body-md">{ stat }</Typography>
       <Typography
-        variant="soft"
+        level="body-sm"
         sx={{
-          flex: 1,
           fontFamily: 'monospace',
           fontSize: '80%',
           textAlign: 'right',
-          verticalAlign: 'middle',
-          padding: 'var(--joy-spacing)',
         }}
-      >{ value }</Typography>
-    </FormControl>
+      >
+        { value }
+      </Typography>
+    </Stack>
   );
 };
 
-StatisticOption.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-  selected: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
-
-const getValues = (data, analyte, medium) => {
-  return data
-    .filter(d => d.original.medium === medium)
-    .map((d) => d.original[`${analyte}_concentration`])
-    .filter(v => v != null && !isNaN(v) /* && v > 0 */);
-}
-
-const MediumStatisticalOptionButtons = ({ medium, onChange }) => {
+export const MediumStatisticalOptionSelect = ({ medium, onChange }) => {
   const { analytes, data } = useExposureForm();
   const values = getValues(data, analytes.selected.id, medium);
   const [selected, setSelected] = useState(null);
 
-  const handleClick = newValue => {
-    setSelected(newValue);
-    onChange(newValue);
-  };
+  const stats = [
+    { key: 'average', label: 'Average', value: mean(values) },
+    { key: 'median', label: 'Median', value: median(values) },
+    { key: '0%', label: '0th percentile', value: percentile(values, 0) },
+    { key: '25%', label: '25th percentile', value: percentile(values, 25) },
+    { key: '50%', label: '50th percentile', value: percentile(values, 50) },
+    { key: '75%', label: '75th percentile', value: percentile(values, 75) },
+    { key: '100%', label: '100th percentile', value: percentile(values, 100) },
+  ];
 
   return (
     <Stack direction="column" gap={ 2 } sx={{ flex: 1 }}>
       <Typography level="h3">{ capitalize(medium) }</Typography>
 
-      <StatisticOption label="Average" value={ mean(values) } selected={ selected === 'average' } onClick={ () => handleClick('average') } />
-      <StatisticOption label="Median" value={ median(values) } selected={ selected === 'median' } onClick={ () => handleClick('median') } />
-      <StatisticOption label="0th percentile" value={ percentile(values, 0) } selected={ selected === '0%' } onClick={ () => handleClick('0%') } />
-      <StatisticOption label="25th percentile" value={ percentile(values, 25) } selected={ selected === '25%' } onClick={ () => handleClick('25%') } />
-      <StatisticOption label="50th percentile" value={ percentile(values, 50) } selected={ selected === '50%' } onClick={ () => handleClick('50%') } />
-      <StatisticOption label="75th percentile" value={ percentile(values, 75) } selected={ selected === '75%' } onClick={ () => handleClick('75%') } />
-      <StatisticOption label="100th percentile" value={ percentile(values, 100) } selected={ selected === '100%' } onClick={ () => handleClick('100%') } />
+      <Select
+        placeholder="Select a statistic"
+        value={ selected }
+        onChange={ (event, newValue) => {
+          setSelected(newValue);
+          onChange(newValue);
+        }}
+        renderValue={ ({ label }) => {
+          const [statistic, value] = label.split('\n\n');
+          return renderOption(statistic, value);
+        } }
+      >
+        { stats.map(stat => (
+          <Option key={ stat.key } value={ stat.key }>
+            { renderOption(stat.label, stat.value) }
+          </Option>
+        )) }
+      </Select>
     </Stack>
   );
 };
 
-MediumStatisticalOptionButtons.propTypes = {
+MediumStatisticalOptionSelect.propTypes = {
   medium: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
 export const MediaConcentrationsStep = () => {
-  const { analytes, data, media } = useExposureForm();
+  const { analytes, data, media, sufficientSize } = useExposureForm();
+
+  const proceed = useMemo(() => {
+    if (media.current.length === 0) { return false; }
+    return media.current.every(medium => medium in media.statistics.current)
+  }, [media.current, media.statistics.current])
 
   const handleChange = medium => statistic => {
     const analyte = analytes.selected.id;
@@ -113,22 +128,27 @@ export const MediaConcentrationsStep = () => {
     media.statistics.set(medium, result);
   };
 
+  if (!sufficientSize) {
+    return 'nope';
+  }
+
 
   return (
     <Stack gap={ 2 }>
-      <Typography level="h2">Media Concentrations</Typography>
+      <Typography level="h3" textAlign="center">Media Concentrations</Typography>
       <Divider />
 
       <Typography>
-        Choose the statistical measure for each medium 
-        This affects how conservative or typical the estimate will be, from minimum (e.g., 0th percentile) 
-        to maximum (100th percentile), or typical values like the median or mean.
+        Choose the statistical measure for each medium.
+        This affects how conservative or typical the estimate will be,
+        from minimum (e.g., 0th percentile) to maximum (100th percentile),
+        or typical measures of central tendency, like the median and mean.
       </Typography>
 
       <Stack direction="row" gap={ 4 }>
         {
           media.current.map(medium => (
-            <MediumStatisticalOptionButtons
+            <MediumStatisticalOptionSelect
               key={ `medium-${ medium }-intake` }
               medium={ medium }
               onChange={ handleChange(medium) }
@@ -136,6 +156,20 @@ export const MediaConcentrationsStep = () => {
           ))
         }
       </Stack>
+
+      {
+        proceed && (
+          <>
+            <Divider />
+            <TotalIntakeDoseStep />
+            <Divider />
+            <CalculationMethodStep />
+          </>
+        )
+      }
+
+      <Divider />
+
     </Stack>
   );
 };
