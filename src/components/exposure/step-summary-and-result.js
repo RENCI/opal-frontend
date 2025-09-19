@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import { Divider, Stack, Typography } from '@mui/joy';
+import { Card, CardContent, Divider, Stack, Table, Typography } from '@mui/joy';
 import { useExposureForm } from './';
 import { capitalize } from '@util';
+
+import { RscValueStep } from './step-rsc-value';
 
 const SummaryValue = ({ children = <span>&nbsp;</span> }) => {
   return (
@@ -25,37 +27,51 @@ export const ResultsStep = () => {
   const { avgBodyWeight, data, media, rfd } = useExposureForm();
   return (
     <Stack gap={ 2 }>
-      <Typography level="h2">Summary</Typography>
+      <Typography level="h2">Summary & Result</Typography>
       <Divider />
 
       <Typography>
-        Review the key values and assumptions entered in the previous steps. 
+        We are ready for the final Relative Source Contribution estimate calculation.
         This summary brings together the dataset size, reference dose (RfD), body weight, 
         intake rates, and calculated doses across environmental media. 
+        Review these key values and the assumptions entered in the previous steps here. 
         Confirm that these values reflect the conditions you want to evaluate 
-        before moving to the final exposure calculation.
+        before moving to the final exposure calculation, and view the RSC estimate at the bottom.
       </Typography>
 
-      <Typography>
-        Dataset size: <Typography variant="soft">{ data.length.toLocaleString() }</Typography>.
-      </Typography>
-      <Typography>
-        PFAS RfD Value: <SummaryValue>{ rfd.current }</SummaryValue>.
-      </Typography>
-      <Typography>
-        Average Body Weight &mdash; Target Group: <SummaryValue>{ avgBodyWeight.current }</SummaryValue>.
-      </Typography>
-      <Typography>
-        Below 80% RfD Threshold:{' '}
-        <Typography variant="soft">
-          { media.totalIntakeDose < media.rfdThreshold ? 'Yes' : 'No' }
-        </Typography>.
-      </Typography>
-      <Typography>
-        Total Intake Dose: <Typography variant="soft">{ media.totalIntakeDose }</Typography>.
-      </Typography>
+      <Card>
+        <CardContent>
+          <Typography>
+            <Typography fontWeight="bold">Dataset size:</Typography>
+            <SummaryValue>{ data.length.toLocaleString() }</SummaryValue>
+          </Typography>
+          <Typography>
+            <Typography fontWeight="bold">PFAS RfD Value:</Typography>
+            <SummaryValue>{ rfd.current } mg/kg/day</SummaryValue>
+          </Typography>
+          <Typography>
+            <Typography fontWeight="bold">Average Body Weight &mdash; Target Group:</Typography>
+            <SummaryValue>{ avgBodyWeight.current } kg</SummaryValue>
+          </Typography>
+          <Typography>
+            <Typography fontWeight="bold">Below 80% RfD Threshold:</Typography>
+            <Typography variant="soft">
+              { media.totalIntakeDose < media.rfdThreshold ? 'Yes' : 'No' }
+            </Typography>
+          </Typography>
+          <Typography>
+            <Typography fontWeight="bold">Total Intake Dose:</Typography>
+            <SummaryValue>{ media.totalIntakeDose }</SummaryValue>
+          </Typography>
+          
+        </CardContent>  
+      </Card>
 
-      <table style={{ borderSpacing: 'var(--joy-spacing)' }}>
+      <Table
+        variant="outlined"
+        borderAxis="both"
+        aria-label="summary table"
+      >
         <thead>
           <tr>
             <td>&nbsp;</td>
@@ -77,12 +93,12 @@ export const ResultsStep = () => {
             ))
           }
         </tbody>
-      </table>
+      </Table>
 
-      <Typography>
-        If any of these values appear incorrect, feel free to go back and adjust them. 
-        When satisfied, continue to generate the final exposure estimate.
-      </Typography>
+      <Divider />
+
+      <RscValueStep />
+
     </Stack>
   );
 };

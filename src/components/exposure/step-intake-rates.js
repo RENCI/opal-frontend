@@ -1,11 +1,13 @@
 import {
-  Divider,
   Stack,
   Typography,
 } from '@mui/joy';
-import { NumberInput } from '@components/form';
+
 import { useExposureForm } from '.';
 import { capitalize } from '@util';
+
+import { NumberInput } from '@components/form';
+import { MediumIcon } from '@components/medium-icon';
 
 const mediumIntakeRates = {
   water: 'L/day',
@@ -17,11 +19,9 @@ export const IntakeRatesStep = () => {
   const { analytes, media } = useExposureForm();
 
   return (
-    <Stack direction="column" spacing={ 2 }>
-      <Typography level="h2">Medium Intake Rates</Typography>
-      <Divider />
-
-      <Typography>
+    <Stack direction="column" gap={ 2 }>
+      <Typography level="h4">Intake Rates</Typography>
+      <Typography level="body-sm">
         Intake rates represent the average amount of a substance taken in from each environmental medium. 
         These values are integral to the exposure calculation. Please enter the intake rate for each medium 
         where <strong>{ analytes.selected.abbreviation }</strong> is present. Use appropriate units 
@@ -29,18 +29,30 @@ export const IntakeRatesStep = () => {
         Default values are provided and can be adjusted as needed.
       </Typography>
 
-      {
-        media.current.map(medium => (
-          <NumberInput
-            key={ `medium-${ medium }-intake-rate` }
-            name={ capitalize(medium) }
-            label={ `Intake Rate for ${ capitalize(medium) }` }
-            value={ media.intakeRates.current[medium] }
-            setValue={ newValue => media.intakeRates.set(medium, newValue) }
-            inputProps={{ endDecorator: mediumIntakeRates[medium] || '' }}
-          />
-        ))
-      }
+      <Stack
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        gap={ 2 }
+      >
+        {
+          media.current.map(medium => (
+            <Stack key={ `medium-${ medium }-intake-rate` } direction="row" sx={{ flex: 1 }}>
+              <NumberInput
+                name={ capitalize(medium) }
+                label={
+                  <Typography startDecorator={ <MediumIcon medium={ medium } /> }>Intake Rate for { capitalize(medium) }</Typography>
+                }
+                value={ media.intakeRates.current[medium] }
+                setValue={ newValue => media.intakeRates.set(medium, newValue) }
+                inputProps={{
+                  endDecorator: mediumIntakeRates[medium] || '',
+                }}
+              />
+            </Stack>
+          ))
+        }
+      </Stack>
     </Stack>
   );
 };

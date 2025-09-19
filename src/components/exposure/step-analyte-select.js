@@ -13,6 +13,9 @@ import { useExposureForm } from '.';
 import { capitalize } from '@util';
 import { MediumIcon } from '@components/medium-icon';
 
+import { ReferenceDoseStep } from './step-rfd';
+import { IntakeRatesStep } from './step-intake-rates';
+
 export const AnalyteSelectStep = () => {
   const { data, media, analytes } = useExposureForm();
 
@@ -29,7 +32,7 @@ export const AnalyteSelectStep = () => {
 
   return (
     <Stack direction="column" spacing={ 2 }>
-      <Typography level="h2">Select an Analyte</Typography>
+      <Typography level="h3" textAlign="center">Analyte Selection</Typography>
       <Divider />
       
       <Typography>
@@ -41,27 +44,38 @@ export const AnalyteSelectStep = () => {
         Your inputs will support a tailored exposure estimate based on the currently selected PFAS samples.
       </Typography>
 
-      <Stack direction="row" justifyContent="center" my={ 4 }>
-        <PfasSelect
-          value={ analytes.selected.id }
-          onChange={ id => analytes.set(id) }
-          disabledAnalytes={ disabledAnalytes }
-          helpText="Choose the PFAS compound to use in the exposure calculation."
-        />
-      </Stack>
+      <Stack direction="row" justifyContent="center" gap={ 2 }>
+        <Stack justifyContent="center" alignItems="center" sx={{ flex: 1 }}>
+          <PfasSelect
+            value={ analytes.selected.id }
+            onChange={ id => analytes.set(id) }
+            disabledAnalytes={ disabledAnalytes }
+          />
+        </Stack>
 
-      <Typography>
-        Media with detected <strong>{ analytes.selected.name }</strong> in the current dataset:
-      </Typography>
+        <Divider orientation="vertical" />
+        
+        <Stack gap={ 1 } sx={{ flex: 1 }}>
+          <Typography level="title-sm">
+            Media with detected <strong>{ analytes.selected.name }</strong>:
+          </Typography>
+          <List size="sm">{ media.current.sort().map(medium => (
+            <ListItem key={ `selected-analytes-media-${ medium }` }>
+              <ListItemDecorator><MediumIcon medium={ medium } /></ListItemDecorator>
+              <ListItemContent>{ capitalize(medium) }</ListItemContent>
+            </ListItem>
+          )) }</List>
+        </Stack>
+      </Stack>
       
-      <List>{
-        media.current.sort().map(medium => (
-          <ListItem key={ `selected-analytes-media-${ medium }` }>
-            <ListItemDecorator><MediumIcon medium={ medium } /></ListItemDecorator>
-            <ListItemContent>{ capitalize(medium) }</ListItemContent>
-          </ListItem>
-        ))
-      }</List>
+      <Divider />
+
+      <ReferenceDoseStep />
+
+      <Divider />
+
+      <IntakeRatesStep />
+
     </Stack>
   );
 };

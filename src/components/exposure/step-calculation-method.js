@@ -1,4 +1,8 @@
-import { Button, Divider, Stack, Typography } from '@mui/joy';
+import {
+  Button,
+  Stack,
+  Typography,
+} from '@mui/joy';
 import { useExposureForm } from './';
 
 export const CalculationMethodStep = () => {
@@ -6,9 +10,7 @@ export const CalculationMethodStep = () => {
 
   return (
     <Stack spacing={ 2 }>
-      <Typography level="h2">Relevant Regulatory Actions</Typography>
-
-      <Divider />
+      <Typography level="h3">Relevant Regulatory Actions</Typography>
 
       <Typography>
         Choose the calculation method to apply in the exposure estimate. 

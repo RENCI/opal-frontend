@@ -7,8 +7,8 @@ import {
 
 export const NumberInput = ({ name, label = '', value, setValue, inputProps = {} }) => {
   return (
-    <FormControl>
-      <FormLabel htmlFor={ name }>
+    <FormControl sx={{ width: '100%' }}>
+      <FormLabel htmlFor={ name } sx={{ width: '100%' }}>
         { label }
       </FormLabel>
       <Input
@@ -29,7 +29,7 @@ export const NumberInput = ({ name, label = '', value, setValue, inputProps = {}
 
 NumberInput.propTypes = {
   name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.node.isRequired]),
   setValue: PropTypes.func,
   value: PropTypes.number.isRequired,
   inputProps: PropTypes.object,

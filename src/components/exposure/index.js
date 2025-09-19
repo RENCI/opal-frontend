@@ -22,27 +22,32 @@ import { PaginationButtons } from './pagination';
 import { ExposureFormDebugger } from './debugger';
 
 import { AnalyteSelectStep } from './step-analyte-select';
-import { ReferenceDoseStep } from './step-rfd';
-import { IntakeRatesStep } from './step-intake-rates';
-import { SampleSizeCheckStep } from './step-sample-size-check';
 import { MediaConcentrationsStep } from './step-media-concentrations';
-import { TotalIntakeDoseStep } from './step-total-intake-dose';
-import { CalculationMethodStep } from './step-calculation-method';
 import { ResultsStep } from './step-summary-and-result';
-import { RscValueStep } from './step-rsc-value';
 
 const DEBUG_MODE = false;
 
 const steps = [
-  { id: 'analyte-select',       label: 'Analyte Selection',             content: <AnalyteSelectStep /> },
-  { id: 'rfd',                  label: 'Reference Dose',                content: <ReferenceDoseStep /> },
-  { id: 'intake-rates',         label: 'Intake Rates',                  content: <IntakeRatesStep /> },
-  { id: 'data-size-check',      label: 'Sample Size Check',             content: <SampleSizeCheckStep /> },
-  { id: 'media',                label: 'Media Concentrations',          content: <MediaConcentrationsStep /> },
-  { id: 'dose',                 label: 'Total Intake Dose',             content: <TotalIntakeDoseStep /> },
-  { id: 'calculation-method',   label: 'Relevant Regulatory Actions',   content: <CalculationMethodStep /> },
-  { id: 'summary',              label: 'Summary',                       content: <ResultsStep /> },
-  { id: 'rsc',                  label: 'RSC Value',                     content: <RscValueStep /> },
+  {
+    id: 'analyte-select',
+    label: 'Analyte Selection',
+    content: <AnalyteSelectStep />,
+    nextIf: () => true,
+  },
+  {
+    id: 'media',
+    label: 'Media Concentrations',
+    content: <MediaConcentrationsStep />,
+    nextIf: ({ calculationMethod, media }) => (media.current.length > 0)
+      && media.current.every(medium => medium in media.statistics.current)
+      && calculationMethod.current,
+  },
+  {
+    id: 'summary',
+    label: 'Summary & Result',
+    content: <ResultsStep />,
+    nextIf: () => false,
+  },
 ];
 
 const ExposureFormContext = createContext({ });
@@ -66,6 +71,8 @@ export const ExposureForm = ({ data = [] }) => {
     }, new Set());
     return [...media];
   }, [data, selectedAnalyteId]);
+
+  const sufficientSize = useMemo(() => data.length >= 238, [data]);
 
   const [rfd, setRfd] = useState(0.05);
   const [avgBodyWeight, setAvgBodyWeight] = useState(70);
@@ -124,6 +131,7 @@ export const ExposureForm = ({ data = [] }) => {
         current: rfd,
         set: setRfd,
       },
+      sufficientSize,
       media: {
         current: selectedAnalyteMedia,
         intakeRates: {
@@ -147,43 +155,50 @@ export const ExposureForm = ({ data = [] }) => {
     }}>
       <Typography level="h1" textAlign="center">PFAS Exposure Calculator</Typography>
       <Divider />
-      <Stepper sx={{ width: '100%', margin: 'calc(3 * var(--joy-spacing)) 0' }}>
-        {
-          steps.map((step, i) => (
-            <Step
-              key={ step.id }
-              orientation="vertical"
-              active={ currentStep == i }
-              indicator={
-                <StepIndicator
-                  variant={ currentStep <= i ? 'solid' : 'outlined' }
-                  color={ currentStep < i ? 'neutral' : 'primary' }
-                >{ currentStep <= i ? i + 1 : <CompleteIcon /> }</StepIndicator>
-              }
-            ><StepButton onClick={ () => setCurrentStep(i) }>{ step.label }</StepButton></Step>
-          ))
-        }
-      </Stepper>
-      <Stack direction="row" gap={ 2 }>
-        <Card sx={{ flex: 1 }}>
-          <CardContent sx={{ minHeight: '500px' }}>
-            { steps[currentStep].content }
-          </CardContent>
-          <CardActions sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 'var(--joy-spacing)',
-          }}>
-            <PaginationButtons />
-          </CardActions>
-        </Card>
-        {
-          DEBUG_MODE && (
-            <Card variant="soft" sx={{ flex: 1 }}>
-              <ExposureFormDebugger />
-            </Card>
-          )
-        }
+
+      <Stack direction={{ xs: 'column', md: 'row' }} gap={ 2 } sx={{ marginTop: '2rem' }}>
+        <Stepper
+          orientation="vertical"
+          sx={{ minWidth: '250px' }}
+        >
+          {
+            steps.map((step, i) => (
+              <Step
+                key={ step.id }
+                orientation="vertical"
+                active={ currentStep == i }
+                indicator={
+                  <StepIndicator
+                    variant={ currentStep <= i ? 'solid' : 'outlined' }
+                    color={ currentStep < i ? 'neutral' : 'primary' }
+                  >{ currentStep <= i ? i + 1 : <CompleteIcon /> }</StepIndicator>
+                }
+              ><StepButton onClick={ () => setCurrentStep(i) }>{ step.label }</StepButton></Step>
+            ))
+          }
+        </Stepper>
+        <Stack direction="row" gap={ 2 }>
+          <Card sx={{ flex: 1 }}>
+            <CardContent sx={{ minHeight: '500px' }}>
+              { steps[currentStep].content }
+            </CardContent>
+            <CardActions sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 'var(--joy-spacing)',
+              padding: 'calc(2 * var(--joy-spacing))',
+            }}>
+              <PaginationButtons />
+            </CardActions>
+          </Card>
+          {
+            DEBUG_MODE && (
+              <Card variant="soft" sx={{ flex: 1 }}>
+                <ExposureFormDebugger />
+              </Card>
+            )
+          }
+        </Stack>
       </Stack>
     </ExposureFormContext.Provider>
   );
